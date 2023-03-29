@@ -6,8 +6,8 @@ name: Build Next.JS Application
 
 on:
   # Runs on pushes targeting the default branch
-  pull_request:
   push:
+  
   workflow_dispatch:
 
 jobs:
