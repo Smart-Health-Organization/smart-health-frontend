@@ -2,14 +2,11 @@
 #
 # To get started with Next.js see: https://nextjs.org/docs/getting-started
 #
-name: Build Next.JS DEV
+name: Build Next.JS
 
 on:
   # Runs on pushes targeting the default branch
-  push:
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+  pull-request:
 
 jobs:
   # Build job
@@ -54,3 +51,28 @@ jobs:
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
       - name: Build with Next.js
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
+  approve:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if checks have passed
+        uses: actions/github-script@v4
+        with:
+          script: |
+            const prNumber = context.payload.pull_request.number;
+            const { data: checks } = await octokit.checks.listForRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: context.payload.pull_request.head.sha
+            });
+            const allChecksPass = checks.check_runs.every(check => check.conclusion === 'success');
+            if (allChecksPass) {
+              await octokit.pulls.createReview({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: prNumber,
+                event: 'APPROVE'
+              });
+            }
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
