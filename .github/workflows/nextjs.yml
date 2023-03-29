@@ -2,11 +2,13 @@
 #
 # To get started with Next.js see: https://nextjs.org/docs/getting-started
 #
-name: Build Next.JS
+name: Build Next.JS Action
 
 on:
   # Runs on pushes targeting the default branch
-  pull_request:
+  push
+  pull_request
+  workflow_dispatch
 
 jobs:
   # Build job
