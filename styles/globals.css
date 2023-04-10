@@ -141,6 +141,7 @@ a.ajuda {
 
 a {
   cursor: pointer;
+  text-decoration: none;
 }
 
 .icon {
