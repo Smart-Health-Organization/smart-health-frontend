@@ -23,7 +23,7 @@ export default function Home() {
 
           <header className='topbar'>
             <h1 className='title' ><Image src={'/favicon.png'} width={62.25} height={58.5}></Image>  <span className='displayMobile'>Smart Health</span></h1>
-            <Link href={"/"} className='entrar'>ENTRAR</Link>
+            <Link href={"/login"} className='entrar'>ENTRAR</Link>
           </header>
 
           <main className='content'>

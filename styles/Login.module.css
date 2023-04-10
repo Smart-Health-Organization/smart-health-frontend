@@ -1,0 +1,171 @@
+h2.description {
+  font-size: 30px;
+  margin: 0;
+  margin-bottom: 20px;
+  color: #303030;
+  line-height: 40px;
+}
+
+p.description {
+  font-size: 18px;
+  margin: 0;
+  color: #30303070;
+  line-height: 20px;
+}
+
+.description {
+  font-style: normal;
+  font-weight: 700;
+
+  color: #303030;
+}
+
+.login {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 80%;
+  background: #F8DEBD;
+  border: 1px solid #F1F1F1;
+  border-radius: 40px;
+}
+
+.notRegister {
+  background: #D08726;
+  width: 40%;
+  height: 100%;
+  border-radius: 40px 0 0 40px;
+  border: 1px solid #F1F1F1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.loginDiv {
+  width: 60%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.notRegister h2,
+.notRegister p {
+  color: #FFF;
+  text-align: center;
+  margin-bottom: 0;
+  max-width: 80%;
+}
+
+.notRegister p {
+  font-weight: 300;
+}
+
+.notRegister>img {
+  margin-bottom: 40px;
+}
+
+.notRegister>a {
+  color: #FFF;
+  border: 4px solid #FFFFFF;
+  border-radius: 30px;
+  padding: 18px 50px;
+  margin-top: 40px;
+  font-weight: 800;
+  font-size: 20px;
+}
+
+.loginDiv h2,
+.loginDiv p {
+  margin-bottom: 0;
+  color: #000;
+}
+
+form.formLogin {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  height: 40%;
+  justify-content: center;
+  align-items: center;
+}
+
+form.formLogin>input {
+  border: none;
+
+  background: #D08726;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 16px;
+
+  width: 80%;
+  height: 60px;
+
+  margin: 10px;
+
+  font-weight: 600;
+  font-size: 18px;
+  color: #000;
+
+  padding-left: 20px;
+}
+
+form.formLogin>input::placeholder {
+  color: #FFFFFF60;
+}
+
+.loginDiv>a {
+  background: #36320A;
+  color: #FFF;
+  border-radius: 30px;
+  padding: 22px 58px;
+  font-weight: 800;
+  font-size: 20px;
+  margin-top: 15px;
+}
+
+@media (max-width: 1200px) {
+
+  .login {
+    width: 120%;
+    height: 100%;
+    flex-direction: column-reverse;
+  }
+
+  .notRegister {
+    border-radius: 0 0 40px 40px;
+    width: 100%;
+  }
+
+  .notRegister h2 {
+    display: none;
+  }
+
+  .notRegister>a {
+    margin-top: 20px;
+  }
+
+  .notRegister>img {
+    display: none;
+  }
+
+  .notRegister,
+  .loginDiv {
+    padding: 25px 0;
+  }
+
+  .loginDiv {
+    width: 100%;
+  }
+
+  form.formLogin {
+    width: 100%;
+  }
+
+  form.formLogin>input {
+    width: 80%;
+  }
+}
