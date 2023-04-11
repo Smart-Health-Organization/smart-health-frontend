@@ -88,11 +88,13 @@ img.funcionalidades {
   }
 
   p.funcionalidades {
-    width: 90%;
+    width: 85%;
+    max-width: 400px;
   }
 
   .infos {
     min-width: unset;
+    width: 100%;
   }
 
   .image1 {

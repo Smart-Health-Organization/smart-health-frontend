@@ -17,8 +17,6 @@ export default function Home() {
       </Head>
       <div className='container'>
 
-        <div className='left-menu'></div>
-
         <div className='main'>
 
           <header className='topbar'>
