@@ -20,7 +20,7 @@ export default function Home() {
         <div className='main'>
 
           <header className='topbar'>
-            <h1 className='title' ><Image src={'/favicon.png'} width={62.25} height={58.5}></Image>  <span className='displayMobile'>Smart Health</span></h1>
+            <h1 className='title' ><Image alt={"Smart Health"} src={'/favicon.png'} width={62.25} height={58.5}></Image>  <span className='displayMobile'>Smart Health</span></h1>
             <Link href={"/login"} className='entrar'>ENTRAR</Link>
           </header>
 
@@ -36,31 +36,33 @@ export default function Home() {
                 <h3 className={styles.funcionalidades}>
                   Nossas Funcionalidades
                 </h3>
-                <p className={styles.funcionalidades}>
-                  <Image className={styles.funcionalidades} src={'/item.png'} width={15} height={22}></Image>
-                  Acompanhamento de Antropometria Completa!
-                </p>
-                <p className={styles.funcionalidades}>
-                  <Image className={styles.funcionalidades} src={'/item.png'} width={15} height={22}></Image>
-                  Acompanhamento de Exames Médicos!
-                </p>
-                <p className={styles.funcionalidades}>
-                  <Image className={styles.funcionalidades} src={'/item.png'} width={15} height={22}></Image>
-                  Gestão de Exames Alterados!
-                </p>
-                <p className={styles.funcionalidades}>
-                  <Image className={styles.funcionalidades} src={'/item.png'} width={15} height={22}></Image>
-                  Facilidade no Upload de Exames Médicos!
-                </p>
-                <p className={styles.funcionalidades}>
-                  <Image className={styles.funcionalidades} src={'/item.png'} width={15} height={22}></Image>
-                  Disponibilidade de Compartilhamento de dados!
-                </p>
+                <div style={{display: "flex", width: "100%", flexDirection: "row", flexWrap: "wrap"}}>
+                  <p className={styles.funcionalidades}>
+                    <Image alt={"features"} className={styles.funcionalidades} src={'/item.png'} width={15} height={22}></Image>
+                    Acompanhamento de Antropometria Completa!
+                  </p>
+                  <p className={styles.funcionalidades}>
+                    <Image alt={"features"} className={styles.funcionalidades} src={'/item.png'} width={15} height={22}></Image>
+                    Acompanhamento de Exames Médicos!
+                  </p>
+                  <p className={styles.funcionalidades}>
+                    <Image alt={"features"} className={styles.funcionalidades} src={'/item.png'} width={15} height={22}></Image>
+                    Gestão de Exames Alterados!
+                  </p>
+                  <p className={styles.funcionalidades}>
+                    <Image alt={"features"} className={styles.funcionalidades} src={'/item.png'} width={15} height={22}></Image>
+                    Facilidade no Upload de Exames Médicos!
+                  </p>
+                  <p className={styles.funcionalidades}>
+                    <Image alt={"features"} className={styles.funcionalidades} src={'/item.png'} width={15} height={22}></Image>
+                    Disponibilidade de Compartilhamento de dados!
+                  </p>
+                </div>
               </div>
             </div>
 
             <div className={styles.images}>
-              <Image className={styles.image1} src={'/background.png'} width={500} height={500}></Image>
+              <Image alt={"background"} className={styles.image1} src={'/background.png'} width={500} height={500}></Image>
             </div>
 
           </main>

@@ -40,7 +40,7 @@ p.funcionalidades {
   display: flex;
   width: 400px;
   padding: 15px 20px;
-  margin: 8px;
+  margin: 4px;
   margin-left: 0;
 }
 
@@ -89,7 +89,7 @@ img.funcionalidades {
 
   p.funcionalidades {
     width: 85%;
-    max-width: 400px;
+    max-width: 350px;
   }
 
   .infos {
