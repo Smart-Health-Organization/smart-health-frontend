@@ -37,17 +37,6 @@ body {
   margin: 25px 0;
 }
 
-.left-menu {
-  width: 90px;
-  min-width: 90px;
-  height: 100%;
-
-  background: #FFFFFF;
-  border: 1px solid #E8E7E7;
-  box-shadow: 0px 1px 50px rgba(0, 0, 0, 0.08);
-  border-radius: 25px 6px 6px 25px;
-}
-
 .main {
   display: flex;
   flex-direction: column;
@@ -169,11 +158,7 @@ a {
     justify-content: center;
     align-items: center;
   }
-  
-  .left-menu {
-    display: none;
-  }
-  
+
   .main {
     width: 80%;
     margin: 10px 0;

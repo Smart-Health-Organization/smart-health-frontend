@@ -35,7 +35,7 @@ export default function Home() {
             <h1 className='title time'>{date}</h1>
           </header>
 
-          <main className='content' style={{ justifyContent: 'center', alignItems: 'center' }}>
+          <main className='content' style={{ justifyContent: 'center', alignItems: 'center'}}>
             <div className={styles.login}>
               <div className={styles.notRegister}>
                 <Image src={'/favicon_white.png'} width={62.25} height={58.5}></Image>
@@ -43,23 +43,26 @@ export default function Home() {
                   Seja bem-vindo&#40;a&#41;!
                 </h2>
                 <p className={styles.description}>
-                  Não tem uma conta? Registre agora mesmo.
+                  Já é cadastrado? Acesse sua conta agora mesmo.
                 </p>
-                <Link href={"/register"}>REGISTRAR</Link>
+                <Link href={"/login"}>LOGIN</Link>
               </div>
 
               <div className={styles.loginDiv}>
                 <h2 className={styles.description}>
-                  Entre
+                  Registrar-se
                 </h2>
                 <p className={styles.description}>
-                  Insira email e senha
+                  Preencha o formulário
                 </p>
-                <form className={styles.formLogin}>
+                <form className={styles.formLogin} style={{height: '60%'}}>
+                  <input type='text' placeholder={"Nome"}></input>
+                  <input type='number' placeholder={"Idade"}></input>
                   <input type='email' placeholder={"Email"}></input>
+                  <input type='text' placeholder={"Login"}></input>
                   <input type='password' placeholder={"Senha"}></input>
                 </form>
-                <a>Entrar</a>
+                <a>Cadastrar</a>
               </div>
             </div>
           </main>
