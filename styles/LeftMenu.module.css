@@ -42,7 +42,7 @@ a.mobileMenu {
 .menu {
   position: absolute;
   top: 0;
-  right: 0;
+  left: 0;
 
   display: flex;
 
@@ -80,9 +80,13 @@ a.mobileMenu {
   font-size: 20px;
 }
 
-.menuList a svg {
+.menuList a[data-actualpage="true"] {
   color: #D08726;
+}
+
+.menuList a svg {
   margin-right: 15px;
+  width: 30px;
   font-size: 30px;
 }
 

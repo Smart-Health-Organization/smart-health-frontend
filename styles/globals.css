@@ -97,6 +97,7 @@ h1.title > img {
 
 h1.time {
   white-space: nowrap;
+  width: unset;
 }
 
 a.entrar {
@@ -165,8 +166,8 @@ a {
   }
 }
 
-@media (max-width: 990px) {
+@media (max-width: 1200px) {
   .displayMobile {
-    display: none;
+    display: none !important;
   }
 }

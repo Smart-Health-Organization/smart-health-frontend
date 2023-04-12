@@ -1,8 +1,7 @@
+import LeftMenu from '@/components/leftMenu';
 import Head from 'next/head'
-import styles from '@/styles/Login.module.css'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
-import Link from 'next/link';
 
 export default function Home() {
   const [date, setDate] = useState("date");
@@ -28,40 +27,18 @@ export default function Home() {
       </Head>
       <div className='container'>
 
+        <LeftMenu></LeftMenu>
+
         <div className='main' style={{ justifyContent: 'flex-start' }}>
 
           <header className='topbar'>
-            <h1 className='title' ><Image alt={"logo"} src={'/favicon.png'} width={62.25} height={58.5}></Image>  <span className='displayMobile'>Smart Health</span></h1>
+            <h1 className='title displayMobile' ><Image alt={"logo"} src={'/favicon.png'} width={62.25} height={58.5}></Image> Smart Health</h1>
+            <LeftMenu isMobile></LeftMenu>
             <h1 className='title time'>{date}</h1>
           </header>
 
           <main className='content' style={{ justifyContent: 'center', alignItems: 'center' }}>
-            <div className={styles.login}>
-              <div className={styles.notRegister}>
-                <Image alt={"logo branca"} src={'/favicon_white.png'} width={62.25} height={58.5}></Image>
-                <h2 className={styles.description}>
-                  Seja bem-vindo&#40;a&#41;!
-                </h2>
-                <p className={styles.description}>
-                  Não tem uma conta? Registre agora mesmo.
-                </p>
-                <Link href={"/register"}>REGISTRAR</Link>
-              </div>
 
-              <div className={styles.loginDiv}>
-                <h2 className={styles.description}>
-                  Entre
-                </h2>
-                <p className={styles.description}>
-                  Insira email e senha
-                </p>
-                <form className={styles.formLogin}>
-                  <input type='email' placeholder={"Email"}></input>
-                  <input type='password' placeholder={"Senha"}></input>
-                </form>
-                <a>Entrar</a>
-              </div>
-            </div>
           </main>
         </div>
       </div>
