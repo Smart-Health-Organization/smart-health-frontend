@@ -1,52 +1,43 @@
 import styles from '@/styles/LeftMenu.module.css'
 import { faCircleUser, faIdCard } from '@fortawesome/free-regular-svg-icons';
-import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect } from 'react';
 import * as ReactDOMClient from 'react-dom/client';
 
 let firstRender = true;
 
-export default function LeftMenu(props) {
+const pages = [
+    { name: "Página Inicial", path: "/", icon: faCircleUser },
+    { name: "Meu perfil", path: "/profile", icon: faIdCard }];
 
-    function openMenu() {
-        document.getElementById("menu").style.width = "300px";
-        document.getElementById("menu").style.height = "auto";
-        document.getElementById("menu").style.minHeight = (45 + 40 * 2) + "px";
-        document.getElementById("openMenu").style.display = "none";
-        setTimeout(() => document.getElementById("menuList").style.display = "flex", 300);
 
-    }
-
-    function closeMenu() {
-        document.getElementById("menu").style.width = "0";
-        document.getElementById("menu").style.height = "0";
-        document.getElementById("menu").style.minHeight = "0";
-        document.getElementById("openMenu").style.display = "flex";
-        document.getElementById("menuList").style.display = "none";
-    }
+export default function LeftMenu() {
 
     useEffect(() => {
 
         if (firstRender) {
-            document.body.addEventListener("click", (e) => {
-                if (e.target.id != "menu" && e.target.id != "openMenu" && e.target.parentNode.id != "openMenu" && e.target.parentNode.parentNode.id != "openMenu") {
-                    closeMenu();
-                }
-            });
-
-            let pages = [
-                {name: "Página Inicial", path: "/", icon: <FontAwesomeIcon icon={faCircleUser} /> }, 
-                {name: "Meu perfil", path: "/profile",  icon: <FontAwesomeIcon icon={faIdCard} /> }];
-
             let linkElements = [];
-            const menuList = ReactDOMClient.createRoot(document.getElementById("menuList"));
+            const menuList = ReactDOMClient.createRoot(document.getElementById("leftMenuList"));
+
+            linkElements.push(<Image alt={"logo"} src={'/favicon.png'} width={41.5} height={39}></Image>)
 
             for (let i = 0; i < pages.length; i++) {
-                let link = <Link key={i} href={pages[i].path} data-actualpage={window.location.pathname == pages[i].path}>{pages[i].icon} {pages[i].name}</Link>;
+                let link = <Link key={i} href={pages[i].path}>
+                        <FontAwesomeIcon data-actualpage={window.location.pathname == pages[i].path} icon={pages[i].icon} />
+                        <span className={styles.descriptionItemMenu}> {pages[i].name}</span>
+                    </Link>;
                 linkElements.push(link);
             }
+
+            let exit = <a key={pages.length}>
+                    <FontAwesomeIcon data-actualpage={"false"} icon={faRightFromBracket} />
+                    <span className={styles.descriptionItemMenu}> Sair</span>
+                </a>;
+
+            linkElements.push(exit);
 
             menuList.render(linkElements);
 
@@ -55,24 +46,8 @@ export default function LeftMenu(props) {
 
     });
 
-    if (props.isMobile) {
-        return (
-            <div className={styles.divMenuMobile}>
-                <a id="openMenu" className={styles.mobileMenu} onClick={openMenu}>
-                    <FontAwesomeIcon icon={faBars} />
-                </a>
-                <div id="menu" className={styles.menu}>
-                    <div id="menuList" className={styles.menuList}>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-    else {
-        return (
-            <div className={styles.leftMenu}>
-
-            </div>
-        );
-    }
+    return (
+        <div id='leftMenuList' className={styles.leftMenu}>
+        </div>
+    );
 }

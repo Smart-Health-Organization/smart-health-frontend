@@ -1,6 +1,6 @@
-import LeftMenu from '@/components/leftMenu';
+import LeftMenu from '@/components/leftMenu'
+import MobileMenu from '@/components/mobileMenu'
 import Head from 'next/head'
-import Image from 'next/image'
 import { useEffect, useState } from 'react'
 
 export default function Home() {
@@ -28,12 +28,12 @@ export default function Home() {
       <div className='container'>
 
         <LeftMenu></LeftMenu>
-
-        <div className='main' style={{ justifyContent: 'flex-start' }}>
+ 
+        <div className='main authPage' style={{ justifyContent: 'flex-start' }}>
 
           <header className='topbar'>
-            <h1 className='title displayMobile' ><Image alt={"logo"} src={'/favicon.png'} width={62.25} height={58.5}></Image> Smart Health</h1>
-            <LeftMenu isMobile></LeftMenu>
+            <h1 className='title displayMobile'>Smart Health</h1>
+            <MobileMenu></MobileMenu>
             <h1 className='title time'>{date}</h1>
           </header>
 
