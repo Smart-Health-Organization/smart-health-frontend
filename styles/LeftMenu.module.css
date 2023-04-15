@@ -37,17 +37,18 @@
   align-items: center;
 }
 
-.leftMenu svg {
+.leftMenu svg{
   font-size: 30px;
-  color: #FFF;
-  background-color: #303030;
+  background-color: #FFFFFF;
+  color: #303030;
   padding: 15px;
   border-radius: 12px;
 }
 
-.leftMenu svg[data-actualpage="false"] {
-  background-color: #FFFFFF;
-  color: #303030;
+.leftMenu svg[data-actualpage="true"],
+.leftMenu a:hover svg {
+  color: #FFF;
+  background-color: #303030;
 }
 
 .descriptionItemMenu {
