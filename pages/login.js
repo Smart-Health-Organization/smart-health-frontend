@@ -31,14 +31,14 @@ export default function Home() {
         <div className='main' style={{ justifyContent: 'flex-start' }}>
 
           <header className='topbar'>
-            <h1 className='title' ><Image src={'/favicon.png'} width={62.25} height={58.5}></Image>  <span className='displayMobile'>Smart Health</span></h1>
+            <h1 className='title' ><Image alt={"logo"} src={'/favicon.png'} width={62.25} height={58.5}></Image>  <span className='displayMobile'>Smart Health</span></h1>
             <h1 className='title time'>{date}</h1>
           </header>
 
           <main className='content' style={{ justifyContent: 'center', alignItems: 'center' }}>
             <div className={styles.login}>
               <div className={styles.notRegister}>
-                <Image src={'/favicon_white.png'} width={62.25} height={58.5}></Image>
+                <Image alt={"logo branca"} src={'/favicon_white.png'} width={62.25} height={58.5}></Image>
                 <h2 className={styles.description}>
                   Seja bem-vindo&#40;a&#41;!
                 </h2>

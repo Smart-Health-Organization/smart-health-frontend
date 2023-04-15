@@ -62,7 +62,7 @@ export default function Home() {
             </div>
 
             <div className={styles.images}>
-              <Image alt={"background"} className={styles.image1} src={'/background.png'} width={500} height={500}></Image>
+              <Image alt={"background"} priority className={styles.image1} src={'/background.png'} width={500} height={500}></Image>
             </div>
 
           </main>

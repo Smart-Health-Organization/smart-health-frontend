@@ -1,0 +1,62 @@
+p.userInfos {
+  margin-top: 0;
+  font-weight: 200;
+  text-decoration: underline;
+}
+
+h2.userInfos {
+  margin-bottom: 0;
+}
+
+div.userInfos {
+  display: flex;
+  flex-direction: column;
+  width: 350px;
+  margin: 15px;
+  margin-left: 0;
+}
+
+div.userInfos > div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin: 15px;
+  margin-left: 0;
+}
+
+div.userInfos input,
+div.userInfos select {
+  background: #EAF0F7;
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  color:#6A6969;
+}
+
+div.userInfos label,
+div.userInfos select {
+  width: 175px;
+}
+
+div.userInfos input {
+  width: 60%;
+}
+
+div.userInfos label {
+  color:#6A6969;
+}
+
+div.userInfos > div.changePassword {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 350px;
+  margin: 15px;
+  margin-left: 0;
+}
+
+div.changePassword input {
+  margin: 15px 0 0 0;
+}

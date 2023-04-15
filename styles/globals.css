@@ -22,6 +22,7 @@ body {
 
 .container {
   display: flex;
+  position: relative;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
@@ -91,12 +92,13 @@ h1.title {
   color: #303030;
 }
 
-h1.title > img {
+h1.title>img {
   margin-right: 15px;
 }
 
 h1.time {
   white-space: nowrap;
+  width: unset;
 }
 
 a.entrar {
@@ -165,8 +167,16 @@ a {
   }
 }
 
-@media (max-width: 990px) {
+@media (max-width: 1200px) {
   .displayMobile {
-    display: none;
+    display: none !important;
   }
+
+  .authPage {
+    margin-left: unset !important;
+  }
+}
+
+.authPage {
+  margin-left: 150px;
 }
