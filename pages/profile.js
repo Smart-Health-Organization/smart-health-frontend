@@ -26,6 +26,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.png" />
       </Head>
+
       <div className='container'>
 
         <LeftMenu></LeftMenu>
@@ -38,7 +39,7 @@ export default function Home() {
             <h1 className='title time'>{date}</h1>
           </header>
 
-          <main className='content' style={{ justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column' }}>
+          <main className='content' style={{ justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column', marginBottom: '25px' }}>
             <h1>Configuração - Meu perfil</h1>
 
             <h2 className={styles.userInfos} id='userName'>Nome Sobrenome</h2>

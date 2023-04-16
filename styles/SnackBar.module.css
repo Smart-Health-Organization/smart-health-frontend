@@ -1,0 +1,74 @@
+.snackbar,
+.snackbarWarning,
+.snackbarSuccess {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 4px 90px rgba(0, 0, 0, 0.30);
+
+    position: fixed;
+    top: 15px;
+    right: 15px;
+
+    min-width: 300px;
+    max-width: 300px;
+    min-height: 100px;
+
+    z-index: 1000;
+
+    border-radius: 10px;
+
+    animation-name: snackbarFadeIn;
+    animation-duration: 200ms;
+    animation-fill-mode: forwards;
+}
+
+@keyframes snackbarFadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.snackbar p,
+.snackbarWarning p,
+.snackbarSuccess p {
+    color: #6A6969;
+    word-break: break-all;
+    margin: 10px;
+}
+
+.snackbar {
+    background-color: #FFF;
+}
+
+.snackbarSuccess p {
+    color: #FFF;
+}
+
+.snackbarWarning {
+    background-color: #FFCC00;
+}
+
+.snackbarSuccess {
+    background-color: #5cb85c;
+}
+
+
+.snackbarFadeOut {
+    animation-name: snackbarFadeOut;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes snackbarFadeOut {
+    100% {
+        opacity: 0;
+    }
+    0% {
+        opacity: 1;
+    }
+}
