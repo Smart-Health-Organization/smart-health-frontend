@@ -72,3 +72,8 @@
         opacity: 1;
     }
 }
+
+.hiddenSnackbar,
+.hiddenSnackbar * {
+    display: none;
+}

@@ -31,7 +31,7 @@ export default function Home() {
         <div className='main' style={{ justifyContent: 'flex-start' }}>
 
           <header className='topbar'>
-            <h1 className='title' ><Image alt={"logo"} src={'/favicon.png'} width={62.25} height={58.5}></Image>  <span className='displayMobile'>Smart Health</span></h1>
+            <Link href={"./"}><h1 className='title' ><Image alt={"logo"} src={'/favicon.png'} width={62.25} height={58.5}></Image>  <span className='displayMobile'>Smart Health</span></h1></Link> 
             <h1 className='title time'>{date}</h1>
           </header>
 

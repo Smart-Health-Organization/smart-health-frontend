@@ -40,7 +40,7 @@ export default function Home() {
           </header>
 
           <main className='content' style={{ justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column', marginBottom: '25px' }}>
-            <h1>Configuração - Meu perfil</h1>
+            <h1 style={{margin: 0}}>Configuração - Meu perfil</h1>
 
             <h2 className={styles.userInfos} id='userName'>Nome Sobrenome</h2>
             <p className={styles.userInfos} id='userEmail'>email@mail.com</p>
