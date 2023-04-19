@@ -31,11 +31,11 @@ export default function Home() {
         <div className='main' style={{ justifyContent: 'flex-start' }}>
 
           <header className='topbar'>
-            <h1 className='title' ><Image alt={"logo"} src={'/favicon.png'} width={62.25} height={58.5}></Image>  <span className='displayMobile'>Smart Health</span></h1>
+            <Link href={"./"}><h1 className='title' ><Image alt={"logo"} src={'/favicon.png'} width={62.25} height={58.5}></Image>  <span className='displayMobile'>Smart Health</span></h1></Link>
             <h1 className='title time'>{date}</h1>
           </header>
 
-          <main className='content' style={{ justifyContent: 'center', alignItems: 'center'}}>
+          <main className='content' style={{ justifyContent: 'center', alignItems: 'center' }}>
             <div className={styles.login}>
               <div className={styles.notRegister}>
                 <Image alt={"logo"} src={'/favicon_white.png'} width={62.25} height={58.5}></Image>
@@ -55,7 +55,7 @@ export default function Home() {
                 <p className={styles.description}>
                   Preencha o formulário
                 </p>
-                <form className={styles.formLogin} style={{height: '60%'}}>
+                <form className={styles.formLogin} style={{ height: '60%' }}>
                   <input type='text' placeholder={"Nome"}></input>
                   <input type='number' placeholder={"Idade"}></input>
                   <input type='email' placeholder={"Email"}></input>
