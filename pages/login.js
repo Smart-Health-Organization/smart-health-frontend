@@ -1,23 +1,11 @@
 import Head from 'next/head'
 import styles from '@/styles/Login.module.css'
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
 import Link from 'next/link';
+import DateComponent from '@/components/date';
 
-export default function Home() {
-  const [date, setDate] = useState("date");
-
-  useEffect(() => {
-    const dateNow = Date.now();
-    const months = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
-    let dateAux = new Date(dateNow);
-
-    let day = dateAux.getDate();
-    let month = months[dateAux.getMonth()];
-    let year = dateAux.getFullYear();
-    setDate(day + " de " + month + ", " + year);
-  });
-
+export default function Login() {
+  
   return (
     <>
       <Head>
@@ -32,7 +20,7 @@ export default function Home() {
 
           <header className='topbar'>
             <Link href={"./"}><h1 className='title' ><Image alt={"logo"} src={'/favicon.png'} width={62.25} height={58.5}></Image>  <span className='displayMobile'>Smart Health</span></h1></Link> 
-            <h1 className='title time'>{date}</h1>
+            <DateComponent date={Date.now()}></DateComponent>
           </header>
 
           <main className='content' style={{ justifyContent: 'center', alignItems: 'center' }}>
