@@ -2,21 +2,9 @@ import LeftMenu from '@/components/leftMenu'
 import MobileMenu from '@/components/mobileMenu'
 import Head from 'next/head'
 import styles from '@/styles/Profile.module.css'
-import { useEffect, useState } from 'react'
+import DateComponent from '@/components/date'
 
-export default function Home() {
-  const [date, setDate] = useState("date");
-
-  useEffect(() => {
-    const dateNow = Date.now();
-    const months = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
-    let dateAux = new Date(dateNow);
-
-    let day = dateAux.getDate();
-    let month = months[dateAux.getMonth()];
-    let year = dateAux.getFullYear();
-    setDate(day + " de " + month + ", " + year);
-  });
+export default function Profile() {
 
   return (
     <>
@@ -36,7 +24,7 @@ export default function Home() {
           <header className='topbar'>
             <h1 className='title displayMobile'>Smart Health</h1>
             <MobileMenu></MobileMenu>
-            <h1 className='title time'>{date}</h1>
+            <DateComponent date={Date.now()}></DateComponent>
           </header>
 
           <main className='content' style={{ justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column', marginBottom: '25px' }}>
