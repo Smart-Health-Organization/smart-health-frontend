@@ -33,24 +33,26 @@
     }
 }
 
-.snackbar p,
-.snackbarWarning p,
-.snackbarSuccess p {
+.snackbar>ul>li,
+.snackbarWarning>ul>li,
+.snackbarSuccess>ul>li {
     color: #6A6969;
     word-break: break-all;
     margin: 10px;
+    user-select: all;
 }
 
 .snackbar {
     background-color: #FFF;
 }
 
-.snackbarSuccess p {
+.snackbarSuccess>ul>li,
+.snackbarWarning>ul>li {
     color: #FFF;
 }
 
 .snackbarWarning {
-    background-color: #FFCC00;
+    background-color: #F25F5C;
 }
 
 .snackbarSuccess {

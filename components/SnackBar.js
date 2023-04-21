@@ -8,20 +8,23 @@ export default function SnackBar(props) {
     useEffect(() => {
         if (!props.message) return;
 
+        if (!props.message.length) return;
+
         let snackbar = document.querySelector("#snackbar");
 
-        snackbar.classList.remove(styles.snackbarFadeOut);
-        snackbar.classList.remove(styles.hiddenSnackbar);
+        snackbar.classList = "";
         snackbar.classList.add(options[props.option]);
 
         setTimeout(() => {
             snackbar.classList.add(styles.snackbarFadeOut);
-        }, 3000);
+        }, 5000);
     });
 
     return (
         <div id="snackbar" className={styles.hiddenSnackbar}>
-            <p>{props.icon} {props.message}</p>
+            <ul>
+                {props.message}
+            </ul>
         </div>
     )
 }
