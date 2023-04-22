@@ -60,12 +60,12 @@ export default function Profile() {
       { headers: { Authorization: sessionStorage.getItem("token") } });
 
       setTypeOfMessage('success');
-      setErrorMessages([<li>Senha alterada com sucesso!</li>]);
+      setErrorMessages([<li key={0}>Senha alterada com sucesso!</li>]);
     }
     catch (error) {
       setTypeOfMessage('warning');
       if (!error.response.data.message.map) {
-        setErrorMessages([<li>{error.response.data.message}</li>]);
+        setErrorMessages([<li key={0}>{error.response.data.message}</li>]);
       }
       else {
         setErrorMessages(error.response.data.message.map((message, index) => {

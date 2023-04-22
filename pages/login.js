@@ -58,7 +58,7 @@ export default function Login() {
     }
     catch (error) {
       if (!error.response.data.message.map) {
-        setErrorMessages([<li>{error.response.data.message}</li>]);
+        setErrorMessages([<li key={0}>{error.response.data.message}</li>]);
       }
       else {
         setErrorMessages(error.response.data.message.map((message, index) => {
