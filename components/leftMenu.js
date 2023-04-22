@@ -32,10 +32,10 @@ export default function LeftMenu() {
                 linkElements.push(link);
             }
 
-            let exit = <a key={pages.length}>
+            let exit = <Link href={"/exit"} key={pages.length}>
                     <FontAwesomeIcon data-actualpage={"false"} icon={faRightFromBracket} />
                     <span className={styles.descriptionItemMenu}> Sair</span>
-                </a>;
+                </Link>;
 
             linkElements.push(exit);
 
