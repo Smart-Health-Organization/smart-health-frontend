@@ -14,6 +14,19 @@ export default function Register() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+
+    async function tryLogin() {
+      try {
+        if (sessionStorage.getItem("token") && sessionStorage.getItem("user")) {
+          await axios.get(process.env.NEXT_PUBLIC_API_URL + '/users/' + sessionStorage.getItem("user"), { headers: { Authorization: sessionStorage.getItem("token") } });
+          window.location.replace("/profile");
+        }
+      }
+      catch {}
+    }
+
+    tryLogin();
+
     document.querySelector("#name").focus();
   });
 
@@ -50,6 +63,7 @@ export default function Register() {
       const response = await axios.post(process.env.NEXT_PUBLIC_API_URL + '/login', { email: newUser.email, password: newUser.password });
 
       sessionStorage.setItem("token", "Bearer " + response.data.token);
+      sessionStorage.setItem("user", response.data.user.id);
 
       window.location.replace("/profile");
     }
