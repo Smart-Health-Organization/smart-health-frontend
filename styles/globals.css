@@ -175,8 +175,22 @@ a {
   .authPage {
     margin-left: unset !important;
   }
+
+  h1.title {
+    width: unset;
+  }
 }
 
 .authPage {
   margin-left: 150px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
 }

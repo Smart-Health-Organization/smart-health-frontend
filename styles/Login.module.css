@@ -94,7 +94,8 @@ form.formLogin {
   align-items: center;
 }
 
-form.formLogin>input {
+form.formLogin>input,
+form.formLogin>select {
   border: none;
 
   background: #D08726;
@@ -113,11 +114,15 @@ form.formLogin>input {
   padding-left: 20px;
 }
 
+form.formLogin>select {
+  width: calc(80% + 20px);
+}
+
 form.formLogin>input::placeholder {
   color: #FFFFFF60;
 }
 
-.loginDiv>a {
+.loginDiv>button {
   background: #36320A;
   color: #FFF;
   border-radius: 30px;
@@ -125,6 +130,12 @@ form.formLogin>input::placeholder {
   font-weight: 800;
   font-size: 20px;
   margin-top: 15px;
+  cursor: pointer;
+}
+
+.loginDiv>button:disabled {
+  background: #808080;
+  cursor: not-allowed;
 }
 
 @media (max-width: 1200px) {
