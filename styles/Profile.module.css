@@ -63,3 +63,25 @@ div.userInfos > div.changePassword {
 div.changePassword input {
   margin: 15px 0 0 0;
 }
+
+
+@media (max-width: 1200px) {
+
+  div.userInfos > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+
+  div.userInfos label,
+  div.userInfos input {
+    width: 70%;
+    margin-bottom: 5px;
+  }
+
+  div.userInfos input[type="text"] {
+    width: calc(70% - 20px);
+  }
+
+}
