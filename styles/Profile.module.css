@@ -35,9 +35,12 @@ div.userInfos select {
   color:#6A6969;
 }
 
-div.userInfos label,
-div.userInfos select {
+div.userInfos label {
   width: 175px;
+}
+
+div.userInfos input[type="text"] {
+  width: 155px;
 }
 
 div.userInfos input {
