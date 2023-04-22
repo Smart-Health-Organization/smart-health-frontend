@@ -115,7 +115,8 @@ a.entrar {
   padding: 10px 40px;
 }
 
-a.ajuda {
+a.ajuda,
+button.ajuda {
   font-style: normal;
   font-weight: 500;
   text-align: center;
@@ -127,6 +128,16 @@ a.ajuda {
 
   border: 2px;
   padding: 10px 40px;
+}
+
+button.ajuda {
+  cursor: pointer;
+}
+
+button.ajuda:disabled {
+  background: #808080;
+  cursor: not-allowed;
+
 }
 
 a.entrar,
@@ -175,8 +186,22 @@ a {
   .authPage {
     margin-left: unset !important;
   }
+
+  h1.title {
+    width: unset;
+  }
 }
 
 .authPage {
   margin-left: 150px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
 }

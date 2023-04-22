@@ -49,7 +49,7 @@ export default function MobileMenu() {
                 linkElements.push(link);
             }
 
-            let exit = <a key={pages.length}><FontAwesomeIcon data-actualpage={"false"} icon={faRightFromBracket} /> Sair</a>
+            let exit = <Link href={"/exit"} key={pages.length}><FontAwesomeIcon data-actualpage={"false"} icon={faRightFromBracket} /> Sair</Link>
 
             linkElements.push(exit);
 
