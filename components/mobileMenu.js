@@ -9,8 +9,8 @@ import * as ReactDOMClient from 'react-dom/client';
 let firstRender = true;
 
 const pages = [
-    { name: "Página Inicial", path: "/", icon: <FontAwesomeIcon icon={faCircleUser} /> },
-    { name: "Meu perfil", path: "/profile", icon: <FontAwesomeIcon icon={faIdCard} /> }];
+    { name: "Página Inicial", path: "/", icon: <FontAwesomeIcon key={1000} icon={faCircleUser} /> },
+    { name: "Meu perfil", path: "/profile", icon: <FontAwesomeIcon key={1001} icon={faIdCard} /> }];
 
 
 export default function MobileMenu() {
@@ -49,7 +49,7 @@ export default function MobileMenu() {
                 linkElements.push(link);
             }
 
-            let exit = <Link href={"/exit"} key={pages.length}><FontAwesomeIcon data-actualpage={"false"} icon={faRightFromBracket} /> Sair</Link>
+            let exit = <Link href={"/exit"} key={pages.length}><FontAwesomeIcon key={pages.length+1000} data-actualpage={"false"} icon={faRightFromBracket} /> Sair</Link>
 
             linkElements.push(exit);
 

@@ -40,7 +40,7 @@ export default function Exit() {
 
       <div className='container'>
 
-        <div className='main authPage' style={{ justifyContent: 'flex-start' }}>
+        <div className='main' style={{ justifyContent: 'flex-start' }}>
 
           <header className='topbar'>
             <h1 className='title displayMobile'>Smart Health</h1>

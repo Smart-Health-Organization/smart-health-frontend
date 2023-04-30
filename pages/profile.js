@@ -8,32 +8,35 @@ import SnackBar from '@/components/SnackBar'
 import Loading from '@/components/loading'
 import axios from 'axios'
 
+let first = true;
+
 export default function Profile() {
   const [errorMessages, setErrorMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [typeOfMessage, setTypeOfMessage] = useState('warning');
 
   useEffect(() => {
+    if (first) {
+      async function tryLogin() {
+        try {
+          if (!(sessionStorage.getItem("token") && sessionStorage.getItem("user"))) {
+            window.location.replace("/login");
+          }
+          const response = await axios.get(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem("user"), { headers: { Authorization: sessionStorage.getItem("token") } });
 
-    async function tryLogin() {
-      try {
-        if (!(sessionStorage.getItem("token") && sessionStorage.getItem("user"))) {
+          document.querySelector("#userName").innerHTML = response.data.nome;
+          document.querySelector("#userEmail").innerHTML = response.data.email;
+          document.querySelector("#age").value = response.data.idade;
+          document.querySelector("#sexo").value = response.data.sexo[0].toUpperCase() + response.data.sexo.slice(1);
+
+        }
+        catch {
           window.location.replace("/login");
         }
-        const response = await axios.get(process.env.NEXT_PUBLIC_API_URL + '/users/' + sessionStorage.getItem("user"), { headers: { Authorization: sessionStorage.getItem("token") } });
-        
-        document.querySelector("#userName").innerHTML = response.data.name;
-        document.querySelector("#userEmail").innerHTML = response.data.email;
-        document.querySelector("#age").value = response.data.age;
-        document.querySelector("#sexo").value = response.data.sexo[0].toUpperCase() + response.data.sexo.slice(1);
-
       }
-      catch { 
-        window.location.replace("/login");
-      }
+      tryLogin();
+      first = false;
     }
-
-    tryLogin();
   });
 
   function onEnter(e) {
@@ -55,23 +58,24 @@ export default function Profile() {
     setIsLoading(true);
 
     try {
-      await axios.patch(process.env.NEXT_PUBLIC_API_URL + '/users/' + sessionStorage.getItem("user") + '/resetpassword',
-      { oldPassword: document.querySelector("#oldPassword").value, newPassword: document.querySelector("#newPassword").value},
-      { headers: { Authorization: sessionStorage.getItem("token") } });
+      await axios.patch(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem("user") + '/redefinir-senha',
+        { senhaAntiga: document.querySelector("#oldPassword").value, NovaSenha: document.querySelector("#newPassword").value },
+        { headers: { Authorization: sessionStorage.getItem("token") } });
 
       setTypeOfMessage('success');
       setErrorMessages([<li key={0}>Senha alterada com sucesso!</li>]);
     }
     catch (error) {
       setTypeOfMessage('warning');
-      if (!error.response.data.message.map) {
-        setErrorMessages([<li key={0}>{error.response.data.message}</li>]);
-      }
-      else {
-        setErrorMessages(error.response.data.message.map((message, index) => {
-          return <li key={index}>{message}</li>
-        }));
-      }
+      if (error.response)
+        if (!error.response.data.message.map) {
+          setErrorMessages([<li key={0}>{error.response.data.message}</li>]);
+        }
+        else {
+          setErrorMessages(error.response.data.message.map((message, index) => {
+            return <li key={index}>{message}</li>
+          }));
+        }
     }
     finally {
       setIsLoading(false);
@@ -85,7 +89,7 @@ export default function Profile() {
         <meta name="description" content="Plataforma Web para Armazenamento, Acompanhamento e Compartilhamento Seguro de Resultados de Exames e Informações de Saúde." />
 
         <meta name="keywords" content="smart, health, plataforma, web, armazenamento, acompanhamento, compartilhamento, seguro, resultados, exames, informacoes, saude" />
-        
+
         <meta property="og:title" content="Smart Health - Meu perfil" />
         <meta property="og:type" content="website" />
         <meta property="og:description" content="Plataforma Web para Armazenamento, Acompanhamento e Compartilhamento Seguro de Resultados de Exames e Informações de Saúde." />
@@ -96,7 +100,7 @@ export default function Profile() {
         <meta name="twitter:description" content="Plataforma Web para Armazenamento, Acompanhamento e Compartilhamento Seguro de Resultados de Exames e Informações de Saúde." />
         <meta name="twitter:image" content={process.env.NEXT_PUBLIC_URL + '/favicon.png'} />
         <meta name="twitter:card" content="summary_large_image" />
-        
+
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.png" />
       </Head>
@@ -108,7 +112,7 @@ export default function Profile() {
 
         <LeftMenu></LeftMenu>
 
-        <div className='main authPage' style={{ justifyContent: 'flex-start' }}>
+        <div className='main authPage'>
 
           <header className='topbar'>
             <h1 className='title displayMobile'>Smart Health</h1>
@@ -132,7 +136,7 @@ export default function Profile() {
               </div>
             </div>
 
-            <hr style={{width: "50%", textAlign: "left", margin: "0"}}></hr>
+            <hr className={styles.hr}></hr>
 
             <div className={styles.userInfos}>
               <div className={styles.changePassword}>
@@ -144,6 +148,9 @@ export default function Profile() {
               Trocar senha
             </button>
           </main>
+
+          <footer className='invisibleFooter'>
+          </footer>
         </div>
       </div>
     </>
