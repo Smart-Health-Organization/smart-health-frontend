@@ -8,6 +8,8 @@ import axios from 'axios';
 import SnackBar from '@/components/SnackBar';
 import Loading from '@/components/loading';
 
+let first = true;
+
 export default function Register() {
 
   const [errorMessages, setErrorMessages] = useState([]);
@@ -15,25 +17,29 @@ export default function Register() {
 
   useEffect(() => {
 
-    async function tryLogin() {
-      try {
-        if (sessionStorage.getItem("token") && sessionStorage.getItem("user")) {
-          await axios.get(process.env.NEXT_PUBLIC_API_URL + '/users/' + sessionStorage.getItem("user"), { headers: { Authorization: sessionStorage.getItem("token") } });
-          window.location.replace("/profile");
+    if (first) {
+      async function tryLogin() {
+        try {
+          if (sessionStorage.getItem("token") && sessionStorage.getItem("user")) {
+            await axios.get(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem("user"), { headers: { Authorization: sessionStorage.getItem("token") } });
+            window.location.replace("/profile");
+          }
         }
+        catch { }
       }
-      catch {}
+
+      tryLogin();
+
+      document.querySelector("#name").focus();
+      first = false;
     }
-
-    tryLogin();
-
-    document.querySelector("#name").focus();
   });
 
   function onEnter(e) {
     if (e.key != 'Enter') return;
 
     if (!e.target.nextElementSibling) {
+      e.target.blur();
       register();
       return;
     }
@@ -49,33 +55,33 @@ export default function Register() {
     setIsLoading(true);
 
     const newUser = {
-      name: document.querySelector("#name").value,
-      age: Number(document.querySelector("#age").value),
+      nome: document.querySelector("#name").value,
+      idade: Number(document.querySelector("#age").value),
       sexo: document.querySelector("#sexo").value,
       email: document.querySelector("#email").value,
-      login: document.querySelector("#login").value,
-      password: document.querySelector("#password").value,
+      senha: document.querySelector("#password").value,
     }
 
     try {
       await axios.post(process.env.NEXT_PUBLIC_API_URL + '/signup', newUser);
 
-      const response = await axios.post(process.env.NEXT_PUBLIC_API_URL + '/login', { email: newUser.email, password: newUser.password });
+      const response = await axios.post(process.env.NEXT_PUBLIC_API_URL + '/login', { email: newUser.email, senha: newUser.senha });
 
       sessionStorage.setItem("token", "Bearer " + response.data.token);
-      sessionStorage.setItem("user", response.data.user.id);
+      sessionStorage.setItem("user", response.data.usuario.id);
 
       window.location.replace("/profile");
     }
     catch (error) {
-      if (!error.response.data.message.map) {
-        setErrorMessages([<li key={0}>{error.response.data.message}</li>]);
-      }
-      else {
-        setErrorMessages(error.response.data.message.map((message, index) => {
-          return <li key={index}>{message}</li>
-        }));
-      }
+      if (error.response)
+        if (!error.response.data.message.map) {
+          setErrorMessages([<li key={0}>{error.response.data.message}</li>]);
+        }
+        else {
+          setErrorMessages(error.response.data.message.map((message, index) => {
+            return <li key={index}>{message}</li>
+          }));
+        }
     }
     finally {
       setIsLoading(false);
@@ -89,7 +95,7 @@ export default function Register() {
         <meta name="description" content="Plataforma Web para Armazenamento, Acompanhamento e Compartilhamento Seguro de Resultados de Exames e Informações de Saúde." />
 
         <meta name="keywords" content="smart, health, plataforma, web, armazenamento, acompanhamento, compartilhamento, seguro, resultados, exames, informacoes, saude" />
-        
+
         <meta property="og:title" content="Smart Health - Registrar-se" />
         <meta property="og:type" content="website" />
         <meta property="og:description" content="Plataforma Web para Armazenamento, Acompanhamento e Compartilhamento Seguro de Resultados de Exames e Informações de Saúde." />
@@ -100,7 +106,7 @@ export default function Register() {
         <meta name="twitter:description" content="Plataforma Web para Armazenamento, Acompanhamento e Compartilhamento Seguro de Resultados de Exames e Informações de Saúde." />
         <meta name="twitter:image" content={process.env.NEXT_PUBLIC_URL + '/favicon.png'} />
         <meta name="twitter:card" content="summary_large_image" />
-        
+
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.png" />
       </Head>
@@ -137,7 +143,7 @@ export default function Register() {
                 <p className={styles.description}>
                   Preencha o formulário
                 </p>
-                <form className={styles.formLogin} style={{ height: '70%' }}>
+                <form className={styles.formLogin} style={{ height: '60%' }}>
                   <input onKeyDown={onEnter} id='name' type='text' placeholder={"Nome"}></input>
                   <input onKeyDown={onEnter} id='age' type='number' placeholder={"Idade"}></input>
                   <select onKeyDown={onEnter} id='sexo' >
@@ -146,7 +152,6 @@ export default function Register() {
                     <option value='feminino'>Feminino</option>
                   </select>
                   <input onKeyDown={onEnter} id='email' type='email' placeholder={"Email"}></input>
-                  <input onKeyDown={onEnter} id='login' type='text' placeholder={"Login"}></input>
                   <input onKeyDown={onEnter} id='password' type='password' placeholder={"Senha"}></input>
                 </form>
                 <button disabled={isLoading} onClick={register}>Cadastrar</button>

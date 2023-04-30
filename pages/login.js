@@ -8,6 +8,8 @@ import Loading from '@/components/loading';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
+let first = true;
+
 export default function Login() {
 
   const [errorMessages, setErrorMessages] = useState([]);
@@ -15,25 +17,28 @@ export default function Login() {
 
   useEffect(() => {
 
-    async function tryLogin() {
-      try {
-        if (sessionStorage.getItem("token") && sessionStorage.getItem("user")) {
-          await axios.get(process.env.NEXT_PUBLIC_API_URL + '/users/' + sessionStorage.getItem("user"), { headers: { Authorization: sessionStorage.getItem("token") } });
-          window.location.replace("/profile");
+    if (first) {
+      async function tryLogin() {
+        try {
+          if (sessionStorage.getItem("token") && sessionStorage.getItem("user")) {
+            await axios.get(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem("user"), { headers: { Authorization: sessionStorage.getItem("token") } });
+            window.location.replace("/profile");
+          }
         }
+        catch { }
       }
-      catch {}
+
+      tryLogin();
+
+      document.querySelector("#email").focus();
     }
-
-    tryLogin();
-
-    document.querySelector("#email").focus();
   });
 
   function onEnter(e) {
     if (e.key != 'Enter') return;
 
     if (!e.target.nextElementSibling) {
+      e.target.blur();
       login();
       return;
     }
@@ -49,22 +54,23 @@ export default function Login() {
     setIsLoading(true);
 
     try {
-      const response = await axios.post(process.env.NEXT_PUBLIC_API_URL + '/login', { email: document.querySelector("#email").value, password: document.querySelector("#password").value });
+      const response = await axios.post(process.env.NEXT_PUBLIC_API_URL + '/login', { email: document.querySelector("#email").value, senha: document.querySelector("#password").value });
 
       sessionStorage.setItem("token", "Bearer " + response.data.token);
-      sessionStorage.setItem("user", response.data.user.id);
+      sessionStorage.setItem("user", response.data.usuario.id);
 
       window.location.replace("/profile");
     }
     catch (error) {
-      if (!error.response.data.message.map) {
-        setErrorMessages([<li key={0}>{error.response.data.message}</li>]);
-      }
-      else {
-        setErrorMessages(error.response.data.message.map((message, index) => {
-          return <li key={index}>{message}</li>
-        }));
-      }
+      if (error.response)
+        if (!error.response.data.message.map) {
+          setErrorMessages([<li key={0}>{error.response.data.message}</li>]);
+        }
+        else {
+          setErrorMessages(error.response.data.message.map((message, index) => {
+            return <li key={index}>{message}</li>
+          }));
+        }
     }
     finally {
       setIsLoading(false);
@@ -79,7 +85,7 @@ export default function Login() {
         <meta name="description" content="Plataforma Web para Armazenamento, Acompanhamento e Compartilhamento Seguro de Resultados de Exames e Informações de Saúde." />
 
         <meta name="keywords" content="smart, health, plataforma, web, armazenamento, acompanhamento, compartilhamento, seguro, resultados, exames, informacoes, saude" />
-        
+
         <meta property="og:title" content="Smart Health - Entrar" />
         <meta property="og:type" content="website" />
         <meta property="og:description" content="Plataforma Web para Armazenamento, Acompanhamento e Compartilhamento Seguro de Resultados de Exames e Informações de Saúde." />
@@ -90,7 +96,7 @@ export default function Login() {
         <meta name="twitter:description" content="Plataforma Web para Armazenamento, Acompanhamento e Compartilhamento Seguro de Resultados de Exames e Informações de Saúde." />
         <meta name="twitter:image" content={process.env.NEXT_PUBLIC_URL + '/favicon.png'} />
         <meta name="twitter:card" content="summary_large_image" />
-        
+
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.png" />
       </Head>

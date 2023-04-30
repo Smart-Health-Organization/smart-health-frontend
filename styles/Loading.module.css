@@ -6,6 +6,7 @@
     height: 3px;
     background-color: #D08726;
     animation: loading 2s ease-in-out infinite;
+    z-index: 1000;
 }
 
 @keyframes loading {
