@@ -16,20 +16,21 @@ export default function Register() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-
     if (first) {
       async function tryLogin() {
         try {
+          setIsLoading(true);
           if (sessionStorage.getItem("token") && sessionStorage.getItem("user")) {
             await axios.get(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem("user"), { headers: { Authorization: sessionStorage.getItem("token") } });
             window.location.replace("/profile");
           }
         }
         catch { }
+        finally {
+          setIsLoading(false);
+        }
       }
-
       tryLogin();
-
       document.querySelector("#name").focus();
       first = false;
     }
@@ -116,7 +117,7 @@ export default function Register() {
 
       <div className='container'>
 
-        <div className='main' style={{ justifyContent: 'flex-start' }}>
+        <div className='main'>
 
           <header className='topbar'>
             <Link href={"./"}><h1 className='title' ><Image alt={"logo"} src={'/favicon.png'} width={62.25} height={58.5}></Image>  <span className='displayMobile'>Smart Health</span></h1></Link>
@@ -158,6 +159,9 @@ export default function Register() {
               </div>
             </div>
           </main>
+
+          <footer className='invisibleFooter'>
+          </footer>
         </div>
       </div>
     </>

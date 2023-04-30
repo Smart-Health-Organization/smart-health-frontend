@@ -16,7 +16,6 @@ export default function Profile() {
   const [typeOfMessage, setTypeOfMessage] = useState('warning');
 
   useEffect(() => {
-
     if (first) {
       async function tryLogin() {
         try {
@@ -35,8 +34,8 @@ export default function Profile() {
           window.location.replace("/login");
         }
       }
-
       tryLogin();
+      first = false;
     }
   });
 
@@ -113,7 +112,7 @@ export default function Profile() {
 
         <LeftMenu></LeftMenu>
 
-        <div className='main authPage' style={{ justifyContent: 'flex-start' }}>
+        <div className='main authPage'>
 
           <header className='topbar'>
             <h1 className='title displayMobile'>Smart Health</h1>
@@ -137,7 +136,7 @@ export default function Profile() {
               </div>
             </div>
 
-            <hr style={{ width: "50%", textAlign: "left", margin: "0" }}></hr>
+            <hr className={styles.hr}></hr>
 
             <div className={styles.userInfos}>
               <div className={styles.changePassword}>
@@ -149,6 +148,9 @@ export default function Profile() {
               Trocar senha
             </button>
           </main>
+
+          <footer className='invisibleFooter'>
+          </footer>
         </div>
       </div>
     </>

@@ -64,6 +64,11 @@ div.changePassword input {
   margin: 15px 0 0 0;
 }
 
+hr.hr {
+  width: 50%;
+  text-align: left;
+  margin: 0;
+}
 
 @media (max-width: 1200px) {
 
@@ -84,4 +89,7 @@ div.changePassword input {
     width: calc(70% - 20px);
   }
 
+  hr.hr {
+    width: 100%;
+  }
 }
