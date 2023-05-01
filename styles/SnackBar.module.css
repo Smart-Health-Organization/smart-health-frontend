@@ -11,8 +11,6 @@
     top: 15px;
     right: 15px;
 
-    min-width: 300px;
-    max-width: 300px;
     min-height: 100px;
 
     z-index: 1000;
@@ -37,8 +35,8 @@
 .snackbarWarning>ul>li,
 .snackbarSuccess>ul>li {
     color: #6A6969;
-    word-break: break-all;
     margin: 10px;
+    margin-right: 20px;
     user-select: all;
 }
 
