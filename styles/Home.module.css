@@ -1,35 +1,37 @@
 
 h2.description {
-  font-size: 40px;
+  font-size: 26px;
   margin: 0;
+  margin-bottom: 10px;
   color: #303030;
+  line-height: 40px;
+  white-space: nowrap;
 }
 
 p.description {
-  font-size: 20px;
+  font-size: 18px;
   margin: 0;
   color: #30303070;
+  line-height: 20px;
 }
 
 .description {
   font-style: normal;
   font-weight: 700;
-  font-size: 48px;
-  line-height: 60px;
 
   color: #303030;
 }
 
 h3.funcionalidades {
-  font-size: 30px;
-  margin-top: 50px;
+  font-size: 22px;
   color: #303030;
-}
+  margin-bottom: 10px;
+} 
 
 p.funcionalidades {
   font-style: normal;
   font-weight: 600;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 20px;
 
   background-color: #FFFFFF;
@@ -39,8 +41,8 @@ p.funcionalidades {
 
   display: flex;
   width: 400px;
-  padding: 15px 20px;
-  margin: 15px;
+  padding: 10px 20px;
+  margin: 4px;
   margin-left: 0;
 }
 
@@ -50,24 +52,58 @@ img.funcionalidades {
 
 .infos {
   display: flex;
-  flex-direction: row;
-  height: 60%;
-  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  height: 100%;
+  width: 50%;
 }
 
 .textinfos {
-  width: 50%;
-  height: 100%;
+  width: 100%;
 }
 
 .images {
   width: 50%;
   height: 100%;
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   align-items: center;
 }
 
-.textinfos, .images {
-  min-width: 500px;
+.image1 {
+  max-width: 450px;
+  height: auto;
+}
+
+@media (max-width: 1200px) {
+  .infos,
+  .images {
+    width: 90%;
+  }
+
+  .images {
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  h2.description {
+    white-space: normal;
+  }
+
+  p.funcionalidades {
+    width: 85%;
+    max-width: 350px;
+  }
+
+  .infos {
+    min-width: unset;
+    width: 100%;
+  }
+
+  .image1 {
+    width: 100%;
+  }
 }
