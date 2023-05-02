@@ -168,7 +168,7 @@ export default function Profile() {
   return (
     <>
       <Head>
-        <title>Smart Health - Meu perfil</title>
+        <title>Smart Health - Meu Perfil</title>
         <meta name="description" content="Plataforma Web para Armazenamento, Acompanhamento e Compartilhamento Seguro de Resultados de Exames e Informações de Saúde." />
 
         <meta name="keywords" content="smart, health, plataforma, web, armazenamento, acompanhamento, compartilhamento, seguro, resultados, exames, informacoes, saude" />
@@ -206,7 +206,7 @@ export default function Profile() {
           <main className='content' style={{ justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column', marginBottom: '25px' }}>
             <div className={styles.profile}>
               <h2 className={'subtitle'}>
-                Meu perfil
+                Meu Perfil
               </h2>
 
               <h3 className={styles.userInfos} id='userName'>Nome Sobrenome</h3>
