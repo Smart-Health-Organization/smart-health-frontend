@@ -207,6 +207,10 @@ a {
   h1.title {
     width: unset;
   }
+
+  h2.subtitle {
+    white-space: unset;
+  }
 }
 
 .authPage {
