@@ -25,9 +25,13 @@ export default function Profile() {
           const response = await axios.get(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem("user"), { headers: { Authorization: sessionStorage.getItem("token") } });
 
           document.querySelector("#userName").innerHTML = response.data.nome;
+          document.querySelector("#name").value = response.data.nome;
           document.querySelector("#userEmail").innerHTML = response.data.email;
+          document.querySelector("#email").value = response.data.email;
           document.querySelector("#age").value = response.data.idade;
+          document.querySelector("#age2").value = response.data.idade;
           document.querySelector("#sexo").value = response.data.sexo[0].toUpperCase() + response.data.sexo.slice(1);
+          document.querySelector("#sexo2").value = response.data.sexo[0].toUpperCase() + response.data.sexo.slice(1);
 
         }
         catch {
@@ -43,15 +47,14 @@ export default function Profile() {
     if (e.key != 'Enter') return;
 
     if (!e.target.nextElementSibling) {
-      changePassword();
       return;
     }
 
     e.target.nextElementSibling.focus();
   }
 
-  async function changePassword() {
-    if (isLoading) return;
+  async function changePassword(e) {
+    if ((e.key && e.key != 'Enter') || isLoading) return;
 
     setErrorMessages([]);
 
@@ -64,6 +67,86 @@ export default function Profile() {
 
       setTypeOfMessage('success');
       setErrorMessages([<li key={0}>Senha alterada com sucesso!</li>]);
+    }
+    catch (error) {
+      setTypeOfMessage('warning');
+      if (error.response)
+        if (!error.response.data.message.map) {
+          setErrorMessages([<li key={0}>{error.response.data.message}</li>]);
+        }
+        else {
+          setErrorMessages(error.response.data.message.map((message, index) => {
+            return <li key={index}>{message}</li>
+          }));
+        }
+    }
+    finally {
+      setIsLoading(false);
+    }
+  }
+
+  async function patch(e) {
+    if ((e.key && e.key != 'Enter') || isLoading) return;
+
+    setErrorMessages([]);
+
+    setIsLoading(true);
+
+    const newUser = {
+      nome: document.querySelector("#name").value,
+      idade: Number(document.querySelector("#age2").value),
+      sexo: document.querySelector("#sexo2").value,
+      email: document.querySelector("#email").value,
+    }
+
+    try {
+      await axios.patch(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem("user"), newUser, { headers: { Authorization: sessionStorage.getItem("token") } });
+
+      setTypeOfMessage('success');
+      setErrorMessages([<li key={0}>Alteração feita com sucesso!</li>]);
+
+      setTimeout(window.location.replace("/profile"), 3000);
+    }
+    catch (error) {
+      setTypeOfMessage('warning');
+      if (error.response)
+        if (!error.response.data.message.map) {
+          setErrorMessages([<li key={0}>{error.response.data.message}</li>]);
+        }
+        else {
+          setErrorMessages(error.response.data.message.map((message, index) => {
+            return <li key={index}>{message}</li>
+          }));
+        }
+    }
+    finally {
+      setIsLoading(false);
+    }
+  }
+
+  function confirmDelete() {
+    let choice = confirm("Tem certeza que deseja deletar sua conta?");
+    if (!choice) return;
+    deleteAccount();
+  }
+
+  async function deleteAccount() {
+    if (isLoading) return;
+
+    setErrorMessages([]);
+
+    setIsLoading(true);
+
+    try {
+      await axios.delete(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem("user"), { headers: { Authorization: sessionStorage.getItem("token") } });
+
+      sessionStorage.removeItem("token");
+      sessionStorage.removeItem("user");
+
+      setTypeOfMessage('success');
+      setErrorMessages([<li key={0}>Conta deletada com sucesso!</li>]);
+
+      setTimeout(window.location.replace("/exit"), 3000);
     }
     catch (error) {
       setTypeOfMessage('warning');
@@ -121,34 +204,61 @@ export default function Profile() {
           </header>
 
           <main className='content' style={{ justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column', marginBottom: '25px' }}>
-            <h2 className={'subtitle'}>
-              Configuração - Meu perfil
-            </h2>
+            <div className={styles.profile}>
+              <h2 className={'subtitle'}>
+                Meu perfil
+              </h2>
 
-            <h3 className={styles.userInfos} id='userName'>Nome Sobrenome</h3>
-            <p className={styles.userInfos} id='userEmail'>email@mail.com</p>
-            <div className={styles.userInfos}>
-              <div>
-                <label><input readOnly value={0} type='number' id='age'></input> anos</label>
-                <input readOnly value={"Sexo"} type='text' id='sexo'></input>
+              <h3 className={styles.userInfos} id='userName'>Nome Sobrenome</h3>
+              <p className={styles.userInfos} id='userEmail'>email@mail.com</p>
+              <div className={styles.userInfos}>
+                <div>
+                  <label><input className={styles.age} readOnly value={0} type='number' id='age'></input> anos</label>
+                  <input readOnly value={"Sexo"} type='text' id='sexo'></input>
+                </div>
               </div>
-              <div>
-                <label><input readOnly placeholder='Peso' type='number'></input> kg</label>
-                <label><input readOnly placeholder='Altura' type='number'></input> cm</label>
+
+              <hr className={styles.hr}></hr>
+
+              <div className={styles.userInfos}>
+                <h2 className={'subtitle'}>
+                  Editar informações
+                </h2>
+                <div className={styles.changePassword}>
+                  <input className={styles.edit} id='name' onKeyDown={onEnter} placeholder='Nome' type='text'></input>
+                  <input className={styles.edit} id='email' onKeyDown={onEnter} placeholder='Email' type='email'></input>
+                  <input className={styles.edit} id='sexo2' onKeyDown={onEnter} placeholder='Sexo' type='text'></input>
+                  <input className={styles.edit} id='age2' onKeyDown={patch} placeholder='Idade' type='number'></input>
+                </div>
               </div>
+              <button style={{ marginBottom: '30px' }} disabled={isLoading} onClick={patch} className='ajuda'>
+                Alterar os dados
+              </button>
+
+              <hr className={styles.hr}></hr>
+
+              <div className={styles.userInfos}>
+                <h2 className={'subtitle'}>
+                  Trocar senha
+                </h2>
+                <div className={styles.changePassword}>
+                  <input className={styles.edit} id='oldPassword' onKeyDown={onEnter} placeholder='Senha atual' type='password'></input>
+                  <input className={styles.edit} id='newPassword' onKeyDown={changePassword} placeholder='Nova senha' type='password'></input>
+                </div>
+              </div>
+              <button style={{ marginBottom: '30px' }} disabled={isLoading} onClick={changePassword} className='ajuda'>
+                Trocar senha
+              </button>
+
+              <hr className={styles.hr}></hr>
+
+              <div className={styles.userInfos}>
+              </div>
+              <button style={{ marginBottom: '30px' }} disabled={isLoading} onClick={confirmDelete} className='ajuda delete'>
+                Deletar conta
+              </button>
+
             </div>
-
-            <hr className={styles.hr}></hr>
-
-            <div className={styles.userInfos}>
-              <div className={styles.changePassword}>
-                <input id='oldPassword' onKeyDown={onEnter} placeholder='Senha atual' type='password'></input>
-                <input id='newPassword' onKeyDown={onEnter} placeholder='Nova senha' type='password'></input>
-              </div>
-            </div>
-            <button disabled={isLoading} onClick={changePassword} className='ajuda'>
-              Trocar senha
-            </button>
           </main>
 
           <footer className='invisibleFooter'>
