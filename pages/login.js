@@ -7,6 +7,8 @@ import SnackBar from '@/components/SnackBar';
 import Loading from '@/components/loading';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import onEnter from '@/functions/onEnter';
+import tryLogin from '@/functions/tryLogin';
 
 let first = true;
 
@@ -17,36 +19,11 @@ export default function Login() {
 
   useEffect(() => {
     if (first) {
-      async function tryLogin() {
-        try {
-          setIsLoading(true);
-          if (sessionStorage.getItem("token") && sessionStorage.getItem("user")) {
-            await axios.get(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem("user"), { headers: { Authorization: sessionStorage.getItem("token") } });
-            window.location.replace("/profile");
-          }
-        }
-        catch { }
-        finally {
-          setIsLoading(false);
-        }
-      }
-      tryLogin();
+      tryLogin(setIsLoading, axios);
       document.querySelector("#email").focus();
       first = false;
     }
   });
-
-  function onEnter(e) {
-    if (e.key != 'Enter') return;
-
-    if (!e.target.nextElementSibling) {
-      e.target.blur();
-      login();
-      return;
-    }
-
-    e.target.nextElementSibling.focus();
-  }
 
   async function login() {
     if (isLoading) return;
@@ -135,8 +112,8 @@ export default function Login() {
                   Insira email e senha
                 </p>
                 <form className={styles.formLogin}>
-                  <input onKeyDown={onEnter} id='email' type='email' placeholder={"Email"}></input>
-                  <input onKeyDown={onEnter} id='password' type='password' placeholder={"Senha"}></input>
+                  <input onKeyDown={e => onEnter(e, login)} id='email' type='email' placeholder={"Email"}></input>
+                  <input onKeyDown={e => onEnter(e, login)} id='password' type='password' placeholder={"Senha"}></input>
                 </form>
                 <button disabled={isLoading} onClick={login}>Entrar</button>
               </div>
