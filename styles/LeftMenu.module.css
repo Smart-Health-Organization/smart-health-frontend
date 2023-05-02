@@ -22,12 +22,12 @@
 }
 
 .leftMenu:hover {
-  width: 300px;
-  min-width: 300px;
+  width: 280px;
+  min-width: 280px;
 }
 
 .leftMenu * {
-  margin: 30px;
+  margin: 20px;
   margin-bottom: 0;
 }
 
@@ -38,11 +38,15 @@
 }
 
 .leftMenu svg{
-  font-size: 30px;
+  font-size: 25px;
   background-color: #FFFFFF;
   color: #303030;
   padding: 15px;
   border-radius: 12px;
+}
+
+.leftMenu img {
+  margin: 30px;
 }
 
 .leftMenu svg[data-actualpage="true"],
@@ -53,7 +57,7 @@
 
 .descriptionItemMenu {
   display: none;
-  margin-left: -10px;
+  margin-left: 0;
   white-space: nowrap;
 }
 

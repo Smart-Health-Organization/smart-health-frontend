@@ -121,9 +121,11 @@ export default function Profile() {
           </header>
 
           <main className='content' style={{ justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column', marginBottom: '25px' }}>
-            <h1 style={{ margin: 0 }}>Configuração - Meu perfil</h1>
+            <h2 className={'subtitle'}>
+              Configuração - Meu perfil
+            </h2>
 
-            <h2 className={styles.userInfos} id='userName'>Nome Sobrenome</h2>
+            <h3 className={styles.userInfos} id='userName'>Nome Sobrenome</h3>
             <p className={styles.userInfos} id='userEmail'>email@mail.com</p>
             <div className={styles.userInfos}>
               <div>

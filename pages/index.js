@@ -40,7 +40,7 @@ export default function Home() {
 
           <main className='content'>
             <div className={styles.infos}>
-              <h2 className={styles.description}>
+              <h2 className={'subtitle'}>
                 Software para Gestão de Saúde!
               </h2>
               <p className={styles.description}>

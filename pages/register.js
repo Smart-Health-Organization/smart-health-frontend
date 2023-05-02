@@ -7,6 +7,8 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import SnackBar from '@/components/SnackBar';
 import Loading from '@/components/loading';
+import onEnter from '@/functions/onEnter';
+import tryLogin from '@/functions/tryLogin';
 
 let first = true;
 
@@ -17,36 +19,11 @@ export default function Register() {
 
   useEffect(() => {
     if (first) {
-      async function tryLogin() {
-        try {
-          setIsLoading(true);
-          if (sessionStorage.getItem("token") && sessionStorage.getItem("user")) {
-            await axios.get(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem("user"), { headers: { Authorization: sessionStorage.getItem("token") } });
-            window.location.replace("/profile");
-          }
-        }
-        catch { }
-        finally {
-          setIsLoading(false);
-        }
-      }
-      tryLogin();
+      tryLogin(setIsLoading, axios);
       document.querySelector("#name").focus();
       first = false;
     }
   });
-
-  function onEnter(e) {
-    if (e.key != 'Enter') return;
-
-    if (!e.target.nextElementSibling) {
-      e.target.blur();
-      register();
-      return;
-    }
-
-    e.target.nextElementSibling.focus();
-  }
 
   async function register() {
     if (isLoading) return;
@@ -145,15 +122,15 @@ export default function Register() {
                   Preencha o formulário
                 </p>
                 <form className={styles.formLogin} style={{ height: '60%' }}>
-                  <input onKeyDown={onEnter} id='name' type='text' placeholder={"Nome"}></input>
-                  <input onKeyDown={onEnter} id='age' type='number' placeholder={"Idade"}></input>
-                  <select onKeyDown={onEnter} id='sexo' >
+                  <input onKeyDown={e => onEnter(e, register)} id='name' type='text' placeholder={"Nome"}></input>
+                  <input onKeyDown={e => onEnter(e, register)} id='age' type='number' placeholder={"Idade"}></input>
+                  <select onKeyDown={e => onEnter(e, register)} id='sexo' >
                     <option value=''>Selecione o sexo</option>
                     <option value='masculino'>Masculino</option>
                     <option value='feminino'>Feminino</option>
                   </select>
-                  <input onKeyDown={onEnter} id='email' type='email' placeholder={"Email"}></input>
-                  <input onKeyDown={onEnter} id='password' type='password' placeholder={"Senha"}></input>
+                  <input onKeyDown={e => onEnter(e, register)} id='email' type='email' placeholder={"Email"}></input>
+                  <input onKeyDown={e => onEnter(e, register)} id='password' type='password' placeholder={"Senha"}></input>
                 </form>
                 <button disabled={isLoading} onClick={register}>Cadastrar</button>
               </div>
