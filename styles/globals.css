@@ -166,6 +166,10 @@ a {
   margin-right: 15px;
 }
 
+.delete {
+  background-color: #F25F5C !important;
+}
+
 @media (max-width: 1200px) {
   .container {
     height: auto;
@@ -202,6 +206,10 @@ a {
 
   h1.title {
     width: unset;
+  }
+
+  h2.subtitle {
+    white-space: unset;
   }
 }
 
