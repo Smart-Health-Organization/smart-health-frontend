@@ -11,7 +11,7 @@ import tryLogin from '@/functions/tryLogin'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCloudArrowUp, faPlus, faXmark } from '@fortawesome/free-solid-svg-icons'
 
-let first = true;
+let firstAddExamRender = true;
 
 export default function AddExam() {
     const [errorMessages, setErrorMessages] = useState([]);
@@ -19,24 +19,41 @@ export default function AddExam() {
     const [isLoading, setIsLoading] = useState(false);
 
     const [examList, setExamList] = useState([]);
+    const [metricas, setMetricas] = useState([]);
+
 
     useEffect(() => {
-        if (first) {
+        if (firstAddExamRender) {
             tryLogin(setIsLoading, axios, false);
-            first = false;
+            getMetricas();
+            firstAddExamRender = false;
         }
     });
 
+    async function getMetricas() {
+        await axios.get(process.env.NEXT_PUBLIC_API_URL + '/metricas', { headers: { Authorization: sessionStorage.getItem("token") } }).then(response => {
+            for (let [index, item] of response.data.entries()) {
+                setMetricas(metricas => [...metricas, <option key={index + 1} id={item.nome} value={item.nome}>{item.nome}</option>]);
+            }
+        });
+    }
+
     function onChangeFileSelector(e) {
+        setErrorMessages([]);
+
         const fileList = e.target.files;
         readPDF(fileList[0]);
     }
 
     function dragOverHandler(ev) {
+        setErrorMessages([]);
+
         ev.preventDefault();
     }
 
     function dropHandler(ev) {
+        setErrorMessages([]);
+
         ev.preventDefault();
 
         if (ev.dataTransfer.items) {
@@ -53,65 +70,122 @@ export default function AddExam() {
         }
     }
 
-    function readPDF(file) {
+    async function readPDF(file) {
+        setErrorMessages([]);
+
         if (!file || !file.type)
             return;
         if (file.type != "application/pdf") {
             setErrorMessages([<li key={0}>Deve ser um arquivo PDF</li>]);
             return;
         }
-        console.log(file);
-        return;
+
+        setIsLoading(true);
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const response = await axios.post(process.env.NEXT_PUBLIC_API_URL + '/exames/pdf', formData, { headers: { Authorization: sessionStorage.getItem("token") } });
+
+            for (let item of response.data.itens) {
+                addExamItem(null, item.metrica, item.medida, item.unidade, metricas);
+            }
+
+            setTypeOfMessage('success');
+            setErrorMessages([<li key={0}>Exame lido com sucesso!</li>]);
+        }
+        catch (error) {
+            setTypeOfMessage('warning');
+            if (error.response)
+                if (!error.response.data.message.map) {
+                    setErrorMessages([<li key={0}>{error.response.data.message}</li>]);
+                }
+                else {
+                    setErrorMessages(error.response.data.message.map((message, index) => {
+                        return <li key={index}>{message}</li>
+                    }));
+                }
+        }
+        finally {
+            setIsLoading(false);
+        }
     }
 
-    async function addExamItem() {
+    async function addExamItem(e, selectedExame = null, medidaItem = "", umedidaItem = "", exameList = []) {
         setErrorMessages([]);
-        await setExamList(examList => [...examList, <ExamItem key={examList.length - 1}></ExamItem>]);
+
+        await setExamList(examList => [...examList, <ExamItem key={examList.length - 1} exameNome={selectedExame} medida={medidaItem} umedida={umedidaItem} exames={exameList}></ExamItem>]);
         document.querySelector('#examList').lastChild.scrollIntoView();
     }
 
     async function uploadExam() {
+        setErrorMessages([]);
+
         const examDate = document.querySelector("#examDate").value;
         if (examDate == "") {
+            setTypeOfMessage('warning');
             setErrorMessages([<li key={0}>Selecione uma data</li>]);
             return;
         }
         const examDateFormatted = new Date(examDate);
-        const examDateFormattedString = examDateFormatted.getDate() + "/" + (examDateFormatted.getMonth() + 1) + "/" + examDateFormatted.getFullYear();
+        const examDateFormattedString = ('0' + (examDateFormatted.getDate())).slice(-2) + "/" + ('0' + (examDateFormatted.getMonth() + 1)).slice(-2) + "/" + examDateFormatted.getFullYear();
 
         const examList = document.querySelectorAll('div[class*="exam_item"]');
 
         if (examList.length == 0) {
+            setTypeOfMessage('warning');
             setErrorMessages([<li key={0}>Adicione pelo menos um exame</li>]);
             return;
         }
 
         const exams = [];
-        for (let i=0; i<examList.length; i++) {
+        for (let i = 0; i < examList.length; i++) {
             let exam = {};
-            exam.exam = examList[i].querySelector('.exame').value;
-            if (exam.name === "")
+            exam.metrica = examList[i].querySelector('.exame > option:checked').value;
+            if (exam.metrica === "")
                 continue;
-            exam.medida = examList[i].querySelector('.medida').value;
-            if (exam.medida === "")
+            exam.medida = Number(examList[i].querySelector('.medida').value);
+            if (exam.medida === 0)
                 continue;
-            exam.umedida = examList[i].querySelector('.umedida').value;
-            if (exam.resultado === "")
+            exam.unidade = examList[i].querySelector('.umedida').value;
+            if (exam.unidade === "")
                 continue;
             exams.push(exam);
         }
         if (exams.length == 0) {
+            setTypeOfMessage('warning');
             setErrorMessages([<li key={0}>Adicione pelo menos um exame</li>]);
             return;
         }
 
         const data = {
-            date: examDateFormattedString,
+            data: examDateFormattedString,
             itens: exams
         }
 
-        console.log(data);
-    }   
+        setIsLoading(true);
+        try {
+            await axios.post(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem("user") + '/exames', data, { headers: { Authorization: sessionStorage.getItem("token") } });
+
+            setTypeOfMessage('success');
+            setErrorMessages([<li key={0}>Exames carregados com sucesso!</li>]);
+        }
+        catch (error) {
+            setTypeOfMessage('warning');
+            if (error.response)
+                if (!error.response.data.message.map) {
+                    setErrorMessages([<li key={0}>{error.response.data.message}</li>]);
+                }
+                else {
+                    setErrorMessages(error.response.data.message.map((message, index) => {
+                        return <li key={index}>{message}</li>
+                    }));
+                }
+        }
+        finally {
+            setIsLoading(false);
+        }
+    }
 
     return (
         <>
@@ -167,7 +241,7 @@ export default function AddExam() {
                             <div id={"examList"} className={styles.exam_list}>
                                 {examList}
                                 <div id={styles.addExamItem}>
-                                    <button onClick={addExamItem} className='ajuda'><FontAwesomeIcon icon={faPlus} /></button>
+                                    <button disabled={isLoading} onClick={() => addExamItem(null, "", "", "", metricas)} className='ajuda'><FontAwesomeIcon icon={faPlus} /></button>
                                 </div>
                             </div>
 
@@ -176,7 +250,7 @@ export default function AddExam() {
 
                             <hr className={styles.hr}></hr>
 
-                            <button onClick={uploadExam} id={styles.upload} className='ajuda'>Carregar</button>
+                            <button disabled={isLoading} onClick={uploadExam} id={styles.upload} className='ajuda'>Carregar</button>
                         </div>
                     </main>
 
@@ -187,6 +261,8 @@ export default function AddExam() {
 }
 
 function ExamItem(props) {
+
+    const [defaultValue, setDefaultValue] = useState(props.exameNome || "0");
 
     function deleteExamItem(e) {
         if (e.button != 0)
@@ -203,8 +279,11 @@ function ExamItem(props) {
     }
 
     return (
-        <div className={styles.exam_item}>
-            <input className={"exame"} placeholder='Exame' type='text' defaultValue={props.exame} />
+        <div id={props.examItemId} className={styles.exam_item}>
+            <select className={"exame"} name='Exame' defaultValue={defaultValue}>
+                <option value="0">Selecione um exame</option>
+                {props.exames}
+            </select>
             <h3>:</h3>
             <input className={"medida"} placeholder='Medida' type='text' defaultValue={props.medida} />
             <input className={"umedida"} placeholder='Unidade de medida' type='text' defaultValue={props.umedida} />

@@ -87,7 +87,8 @@ div.addexam h2 {
   margin: 10px 0;
 }
 
-div.exam_item input {
+div.exam_item input,
+div.exam_item select {
   background: #EAF0F7;
   border: none;
   border-radius: 10px;
