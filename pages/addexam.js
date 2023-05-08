@@ -8,6 +8,8 @@ import SnackBar from '@/components/SnackBar'
 import Loading from '@/components/loading'
 import axios from 'axios'
 import tryLogin from '@/functions/tryLogin'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCloudArrowUp } from '@fortawesome/free-solid-svg-icons'
 
 let first = true;
 
@@ -22,6 +24,43 @@ export default function AddExam() {
             first = false;
         }
     });
+
+    function onChangeFileSelector(e) {
+        const fileList = e.target.files;
+        readPDF(fileList[0]);
+    }
+
+    function dragOverHandler(ev) {
+        ev.preventDefault();
+    }
+
+    function dropHandler(ev) {
+        ev.preventDefault();
+
+        if (ev.dataTransfer.items) {
+            [...ev.dataTransfer.items].forEach((item, i) => {
+                if (item.kind === 'file') {
+                    const file = item.getAsFile();
+                    readPDF(file);
+                }
+            });
+        } else {
+            [...ev.dataTransfer.files].forEach((file, i) => {
+                readPDF(file);
+            });
+        }
+    }
+
+    function readPDF(file) {
+        if (!file || !file.type)
+            return;
+        if (file.type != "application/pdf") {
+            setErrorMessages([<li key={0}>Deve ser um arquivo PDF</li>]);
+            return;
+        }
+        console.log(file);
+        return;
+    }
 
     return (
         <>
@@ -63,12 +102,17 @@ export default function AddExam() {
 
                     <main className='content' style={{ justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column', marginBottom: '25px' }}>
                         <div className={styles.addexam}>
-
+                            <h2 className='subtitle'>Carregar meus exames</h2>
+                            <div id={styles.drop_zone} onDrop={dropHandler} onDragOver={dragOverHandler}>
+                                <label>
+                                    <FontAwesomeIcon icon={faCloudArrowUp} className={styles.drop_icon} />
+                                    <h3>Arraste e solte ou clique para subir um arquivo PDF.</h3>
+                                    <input type="file" id={styles.file_selector} accept=".pdf" onChange={onChangeFileSelector} />
+                                </label>
+                            </div>
                         </div>
                     </main>
 
-                    <footer className='invisibleFooter'>
-                    </footer>
                 </div>
             </div>
         </>
