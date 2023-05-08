@@ -9,7 +9,7 @@ import Loading from '@/components/loading'
 import axios from 'axios'
 import tryLogin from '@/functions/tryLogin'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCloudArrowUp } from '@fortawesome/free-solid-svg-icons'
+import { faCloudArrowUp, faPlus, faXmark } from '@fortawesome/free-solid-svg-icons'
 
 let first = true;
 
@@ -17,6 +17,8 @@ export default function AddExam() {
     const [errorMessages, setErrorMessages] = useState([]);
     const [typeOfMessage, setTypeOfMessage] = useState('warning');
     const [isLoading, setIsLoading] = useState(false);
+
+    const [examList, setExamList] = useState([]);
 
     useEffect(() => {
         if (first) {
@@ -61,6 +63,55 @@ export default function AddExam() {
         console.log(file);
         return;
     }
+
+    async function addExamItem() {
+        setErrorMessages([]);
+        await setExamList(examList => [...examList, <ExamItem key={examList.length - 1}></ExamItem>]);
+        document.querySelector('#examList').lastChild.scrollIntoView();
+    }
+
+    async function uploadExam() {
+        const examDate = document.querySelector("#examDate").value;
+        if (examDate == "") {
+            setErrorMessages([<li key={0}>Selecione uma data</li>]);
+            return;
+        }
+        const examDateFormatted = new Date(examDate);
+        const examDateFormattedString = examDateFormatted.getDate() + "/" + (examDateFormatted.getMonth() + 1) + "/" + examDateFormatted.getFullYear();
+
+        const examList = document.querySelectorAll('div[class*="exam_item"]');
+
+        if (examList.length == 0) {
+            setErrorMessages([<li key={0}>Adicione pelo menos um exame</li>]);
+            return;
+        }
+
+        const exams = [];
+        for (let i=0; i<examList.length; i++) {
+            let exam = {};
+            exam.exam = examList[i].querySelector('.exame').value;
+            if (exam.name === "")
+                continue;
+            exam.medida = examList[i].querySelector('.medida').value;
+            if (exam.medida === "")
+                continue;
+            exam.umedida = examList[i].querySelector('.umedida').value;
+            if (exam.resultado === "")
+                continue;
+            exams.push(exam);
+        }
+        if (exams.length == 0) {
+            setErrorMessages([<li key={0}>Adicione pelo menos um exame</li>]);
+            return;
+        }
+
+        const data = {
+            date: examDateFormattedString,
+            itens: exams
+        }
+
+        console.log(data);
+    }   
 
     return (
         <>
@@ -110,6 +161,22 @@ export default function AddExam() {
                                     <input type="file" id={styles.file_selector} accept=".pdf" onChange={onChangeFileSelector} />
                                 </label>
                             </div>
+
+                            <h3>Para adicionar um exame manualmente clique no botão <strong>" <FontAwesomeIcon icon={faPlus} /> "</strong>.</h3>
+
+                            <div id={"examList"} className={styles.exam_list}>
+                                {examList}
+                                <div id={styles.addExamItem}>
+                                    <button onClick={addExamItem} className='ajuda'><FontAwesomeIcon icon={faPlus} /></button>
+                                </div>
+                            </div>
+
+                            <h3>Data de realização do exame:</h3>
+                            <input id='examDate' type='date'></input>
+
+                            <hr className={styles.hr}></hr>
+
+                            <button onClick={uploadExam} id={styles.upload} className='ajuda'>Carregar</button>
                         </div>
                     </main>
 
@@ -117,4 +184,31 @@ export default function AddExam() {
             </div>
         </>
     )
+}
+
+function ExamItem(props) {
+
+    function deleteExamItem(e) {
+        if (e.button != 0)
+            return;
+        if (e.target.parentElement.parentElement.className === 'delete') {
+            e.target.parentElement.parentElement.parentElement.remove();
+            return;
+        }
+        if (e.target.parentElement.className === 'delete') {
+            e.target.parentElement.parentElement.remove();
+            return;
+        }
+        e.target.parentElement.remove();
+    }
+
+    return (
+        <div className={styles.exam_item}>
+            <input className={"exame"} placeholder='Exame' type='text' defaultValue={props.exame} />
+            <h3>:</h3>
+            <input className={"medida"} placeholder='Medida' type='text' defaultValue={props.medida} />
+            <input className={"umedida"} placeholder='Unidade de medida' type='text' defaultValue={props.umedida} />
+            <button onMouseUp={deleteExamItem} className='delete'><FontAwesomeIcon icon={faXmark} /></button>
+        </div>
+    );
 }
