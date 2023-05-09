@@ -1,6 +1,6 @@
 import styles from '@/styles/MobileMenu.module.css'
 import { faCircleUser, faIdCard } from '@fortawesome/free-regular-svg-icons';
-import { faBars, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faFileCirclePlus, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
 import { useEffect } from 'react';
@@ -10,7 +10,8 @@ let firstRender = true;
 
 const pages = [
     { name: "Página Inicial", path: "/", icon: <FontAwesomeIcon key={1000} icon={faCircleUser} /> },
-    { name: "Meu perfil", path: "/profile", icon: <FontAwesomeIcon key={1001} icon={faIdCard} /> }];
+    { name: "Cadastrar Exame", path: "/addexam", icon: <FontAwesomeIcon key={1001} icon={faFileCirclePlus} /> },
+    { name: "Meu Perfil", path: "/profile", icon: <FontAwesomeIcon key={1001} icon={faIdCard} /> }];
 
 
 export default function MobileMenu() {
