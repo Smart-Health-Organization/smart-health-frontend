@@ -242,7 +242,7 @@ export default function AddExam() {
                                 </label>
                             </div>
 
-                            <h3>Para adicionar um exame manualmente clique no botão <strong>" <FontAwesomeIcon icon={faPlus} /> "</strong>.</h3>
+                            <h3>Para adicionar um exame manualmente clique no botão <strong>&quot; <FontAwesomeIcon icon={faPlus} /> &quot;</strong>.</h3>
 
                             <div id={"examList"} className={styles.exam_list}>
                                 {examList}
