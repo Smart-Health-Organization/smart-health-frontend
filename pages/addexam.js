@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react'
 import SnackBar from '@/components/SnackBar'
 import Loading from '@/components/loading'
 import axios from 'axios'
+import { v4 as uuidv4 } from 'uuid'
 import tryLogin from '@/functions/tryLogin'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCloudArrowUp, faPlus, faXmark } from '@fortawesome/free-solid-svg-icons'
@@ -117,8 +118,12 @@ export default function AddExam() {
     async function addExamItem(e, selectedExame = null, medidaItem = "", umedidaItem = "", exameList = []) {
         setErrorMessages([]);
 
-        await setExamList(examList => [...examList, <ExamItem key={examList.length - 1} exameNome={selectedExame} medida={medidaItem} umedida={umedidaItem} exames={exameList}></ExamItem>]);
+        await setExamList(examList => [...examList, <ExamItem key={uuidv4()} examItemId={uuidv4()} exameNome={selectedExame} medida={medidaItem} umedida={umedidaItem} exames={exameList} removeExamItem={removeExamItem}></ExamItem>]);
         document.querySelector('#examList').lastChild.scrollIntoView();
+    }
+
+    async function removeExamItem(id) {
+        setExamList(examList => examList.filter(item => item.props.examItemId != id));
     }
 
     async function uploadExam() {
@@ -270,22 +275,22 @@ function ExamItem(props) {
 
     const [defaultValue, setDefaultValue] = useState(props.exameNome || "0");
 
-    function deleteExamItem(e) {
+    function deleteExamItem(e, removeExamItem) {
         if (e.button != 0)
             return;
         if (e.target.parentElement.parentElement.className === 'delete') {
-            e.target.parentElement.parentElement.parentElement.remove();
+            removeExamItem(e.target.parentElement.parentElement.parentElement.id);
             return;
         }
         if (e.target.parentElement.className === 'delete') {
-            e.target.parentElement.parentElement.remove();
+            removeExamItem(e.target.parentElement.parentElement.id);
             return;
         }
-        e.target.parentElement.remove();
+        removeExamItem(e.target.parentElement.id);
     }
 
-    return (<>
-        <div className={styles.exam_item}>
+    return (
+        <div id={props.examItemId} className={styles.exam_item}>
             <select className={"exame"} name='Exame' defaultValue={defaultValue}>
                 <option value="0">Selecione um exame</option>
                 {props.exames}
@@ -293,7 +298,7 @@ function ExamItem(props) {
             <h3>:</h3>
             <input className={"medida"} placeholder='Medida' type='text' defaultValue={props.medida} />
             <input className={"umedida"} placeholder='Unidade de medida' type='text' defaultValue={props.umedida} />
-            <button onMouseUp={deleteExamItem} className='delete'><FontAwesomeIcon icon={faXmark} /></button>
+            <button onMouseUp={e => deleteExamItem(e, props.removeExamItem)} className='delete'><FontAwesomeIcon icon={faXmark} /></button>
         </div>
-    </>);
+    );
 }
