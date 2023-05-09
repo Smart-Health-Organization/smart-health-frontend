@@ -43,6 +43,8 @@ export default function AddExam() {
 
         const fileList = e.target.files;
         readPDF(fileList[0]);
+
+        e.target.value = null;
     }
 
     function dragOverHandler(ev) {
@@ -76,6 +78,7 @@ export default function AddExam() {
         if (!file || !file.type)
             return;
         if (file.type != "application/pdf") {
+            setTypeOfMessage('info');
             setErrorMessages([<li key={0}>Deve ser um arquivo PDF</li>]);
             return;
         }
@@ -123,7 +126,7 @@ export default function AddExam() {
 
         const examDate = document.querySelector("#examDate").value;
         if (examDate == "") {
-            setTypeOfMessage('warning');
+            setTypeOfMessage('info');
             setErrorMessages([<li key={0}>Selecione uma data</li>]);
             return;
         }
@@ -133,7 +136,7 @@ export default function AddExam() {
         const examList = document.querySelectorAll('div[class*="exam_item"]');
 
         if (examList.length == 0) {
-            setTypeOfMessage('warning');
+            setTypeOfMessage('info');
             setErrorMessages([<li key={0}>Adicione pelo menos um exame</li>]);
             return;
         }
@@ -153,7 +156,7 @@ export default function AddExam() {
             exams.push(exam);
         }
         if (exams.length == 0) {
-            setTypeOfMessage('warning');
+            setTypeOfMessage('info');
             setErrorMessages([<li key={0}>Adicione pelo menos um exame</li>]);
             return;
         }
@@ -169,6 +172,9 @@ export default function AddExam() {
 
             setTypeOfMessage('success');
             setErrorMessages([<li key={0}>Exames carregados com sucesso!</li>]);
+
+            setExamList([]);
+            document.querySelector("#examDate").value = "";
         }
         catch (error) {
             setTypeOfMessage('warning');
@@ -232,7 +238,7 @@ export default function AddExam() {
                                 <label>
                                     <FontAwesomeIcon icon={faCloudArrowUp} className={styles.drop_icon} />
                                     <h3>Arraste e solte ou clique para subir um arquivo PDF.</h3>
-                                    <input type="file" id={styles.file_selector} accept=".pdf" onChange={onChangeFileSelector} />
+                                    <input type="file" id={styles.file_selector} accept=".pdf" onInput={onChangeFileSelector} />
                                 </label>
                             </div>
 
@@ -278,8 +284,8 @@ function ExamItem(props) {
         e.target.parentElement.remove();
     }
 
-    return (
-        <div id={props.examItemId} className={styles.exam_item}>
+    return (<>
+        <div className={styles.exam_item}>
             <select className={"exame"} name='Exame' defaultValue={defaultValue}>
                 <option value="0">Selecione um exame</option>
                 {props.exames}
@@ -289,5 +295,5 @@ function ExamItem(props) {
             <input className={"umedida"} placeholder='Unidade de medida' type='text' defaultValue={props.umedida} />
             <button onMouseUp={deleteExamItem} className='delete'><FontAwesomeIcon icon={faXmark} /></button>
         </div>
-    );
+    </>);
 }
