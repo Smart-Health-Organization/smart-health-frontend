@@ -119,10 +119,14 @@ export default function AddExam() {
         setErrorMessages([]);
 
         await setExamList(examList => [...examList, <ExamItem key={uuidv4()} examItemId={uuidv4()} exameNome={selectedExame} medida={medidaItem} umedida={umedidaItem} exames={exameList} removeExamItem={removeExamItem}></ExamItem>]);
-        document.querySelector('#examList').lastChild.scrollIntoView();
+
+        setTimeout(() => {
+            document.querySelector('#examList').lastChild.scrollIntoView();
+        });
     }
 
     async function removeExamItem(id) {
+        setErrorMessages([]);
         setExamList(examList => examList.filter(item => item.props.examItemId != id));
     }
 
@@ -247,13 +251,8 @@ export default function AddExam() {
                                 </label>
                             </div>
 
-                            <h3>Para adicionar um exame manualmente clique no botão <strong>&quot; <FontAwesomeIcon icon={faPlus} /> &quot;</strong>.</h3>
-
                             <div id={"examList"} className={styles.exam_list}>
                                 {examList}
-                                <div id={styles.addExamItem}>
-                                    <button disabled={isLoading} onClick={() => addExamItem(null, "", "", "", metricas)} className='ajuda'><FontAwesomeIcon icon={faPlus} /></button>
-                                </div>
                             </div>
 
                             <h3>Data de realização do exame:</h3>
@@ -291,13 +290,13 @@ function ExamItem(props) {
 
     return (
         <div id={props.examItemId} className={styles.exam_item}>
-            <select className={"exame"} name='Exame' defaultValue={defaultValue}>
+            <select disabled className={"exame"} name='Exame' defaultValue={defaultValue}>
                 <option value="0">Selecione um exame</option>
                 {props.exames}
             </select>
             <h3>:</h3>
-            <input className={"medida"} placeholder='Medida' type='text' defaultValue={props.medida} />
-            <input className={"umedida"} placeholder='Unidade de medida' type='text' defaultValue={props.umedida} />
+            <input disabled className={"medida"} placeholder='Medida' type='text' defaultValue={props.medida} />
+            <input disabled className={"umedida"} placeholder='Unidade de medida' type='text' defaultValue={props.umedida} />
             <button onMouseUp={e => deleteExamItem(e, props.removeExamItem)} className='delete'><FontAwesomeIcon icon={faXmark} /></button>
         </div>
     );
