@@ -1,0 +1,19 @@
+
+name: Pull request into prod 
+
+on:
+  # Runs on pushes targeting the prod branch
+  pull_request:
+    branches:
+      - 'prod'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check pull request
+        run: |
+          if [ github.head_ref != 'dev' ]; then
+            echo "Pull requests into prod branch must be made from the dev branch"
+            exit 1
+          fi
