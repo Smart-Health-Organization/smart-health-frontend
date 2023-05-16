@@ -2,7 +2,6 @@
 name: Pull request 
 
 on:
-  # Runs on pushes targeting the prod branch
   pull_request:
 
 jobs:
@@ -11,7 +10,7 @@ jobs:
     steps:
       - name: Check pull request
         run: |
-          if [ github.head_ref != 'dev' && github.base_ref == 'prod' ]; then
+          if [[ github.head_ref != 'dev' && github.base_ref = 'prod' ]]; then
             echo "Pull requests into prod branch must be made from the dev branch"
             exit 1
           else
