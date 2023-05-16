@@ -1,5 +1,5 @@
 
-name: Pull request into prod 
+name: Pull request 
 
 on:
   # Runs on pushes targeting the prod branch
