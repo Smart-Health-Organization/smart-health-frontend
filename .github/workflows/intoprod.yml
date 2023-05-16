@@ -10,6 +10,11 @@ jobs:
     steps:
       - name: Check pull request
         run: |
+          echo github.head_ref
+          echo github.base_ref
+          echo github.head_ref != 'dev'
+          echo github.base_ref = 'prod'
+          echo [ github.head_ref != 'dev' && github.base_ref = 'prod' ]
           if [[ github.head_ref != 'dev' && github.base_ref = 'prod' ]]; then
             echo "Pull requests into prod branch must be made from the dev branch"
             exit 1
