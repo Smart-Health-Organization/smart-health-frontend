@@ -15,6 +15,6 @@ jobs:
             echo "Pull requests into prod branch must be made from the dev branch"
             exit 1
           else
-            echo "Pull request into prod branch is valid"
+            echo "Pull request is valid"
             exit 0
           fi
