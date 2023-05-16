@@ -9,9 +9,31 @@ import Loading from '@/components/loading'
 import axios from 'axios'
 import tryLogin from '@/functions/tryLogin'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import Chart from 'chart.js/auto'
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
+    Filler
+} from 'chart.js'
+import { Line } from 'react-chartjs-2'
 import { faDna } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
+
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
+    Filler
+);
 
 let first = true;
 
@@ -20,7 +42,7 @@ export default function Exams() {
     const [typeOfMessage, setTypeOfMessage] = useState('warning');
     const [isLoading, setIsLoading] = useState(false);
 
-    const [canvas, setCanvas] = useState([]);
+    const [charts, setCharts] = useState([]);
 
     useEffect(() => {
         if (first) {
@@ -56,61 +78,50 @@ export default function Exams() {
 
     async function showExams(examsList) {
         Object.keys(examsList).forEach((examitem) => {
-            const canvas = <div className={styles.card_chart} key={examitem + "card"}>
+            let dataExam = [...examsList[examitem]];
+            dataExam = dataExam.reverse();
+
+            const data = {
+                labels: dataExam.map(row => new Date(row.data).toLocaleDateString()),
+                datasets: [
+                    {
+                        label: examitem + ' - ' + dataExam[0].unidade,
+                        data: dataExam.map(row => row.medida),
+                        borderColor: "#F3A53F",
+                        backgroundColor: "rgba(248, 222, 189, 0.6)",
+                        borderWidth: 4,
+                        fill: true,
+                    }
+                ]
+            };
+
+            const options = {
+                cubicInterpolationMode: 'monotone',
+                plugins: {
+                    legend: {
+                        display: false,
+                    },
+                    tooltip: {
+                        enabled: false,
+                    }
+                },
+                maintainAspectRatio: false,
+            }
+
+            const chart = <div className={styles.card_chart} key={examitem}>
                 <div className={styles.chart_info}>
                     <h3><FontAwesomeIcon icon={faDna} /> {examitem}</h3>
                     <h3 className={styles.gray}>ATUAL</h3>
                     <h2>{examsList[examitem][0].medida} <span className={styles.gray}>{examsList[examitem][0].unidade}</span> <span className={styles.isAlterado}>{examsList[examitem][0].isAlterado ? "Alterado" : "Normal"}</span></h2>
                 </div>
-                <div key={examitem + "div"} className={styles.chart_container}>
-                    <canvas className='examItem' key={examitem} id={examitem}></canvas>
+                <div className={styles.chart_container}>
+                    <Line
+                        data={data}
+                        options={options}
+                    />
                 </div>
             </div>;
-            setCanvas((oldCanvas) => [...oldCanvas, canvas]);
-        });
-
-        setTimeout(() => {
-
-            for (let examitem in examsList) {
-                let data = examsList[examitem];
-
-                data = data.reverse();
-
-                if (!document.getElementById(examitem))
-                    continue;
-
-                new Chart(
-                    document.getElementById(examitem),
-                    {
-                        type: 'line',
-                        data: {
-                            labels: data.map(row => new Date(row.data).toLocaleDateString()),
-                            datasets: [
-                                {
-                                    label: examitem + ' - ' + data[0].unidade,
-                                    data: data.map(row => row.medida),
-                                    borderColor: "#F3A53F",
-                                    backgroundColor: "rgba(248, 222, 189, 0.6)",
-                                    borderWidth: 4,
-                                    fill: true,
-                                }
-                            ]
-                        },
-                        options: {
-                            cubicInterpolationMode: 'monotone',
-                            plugins: {
-                                legend: {
-                                    display: false,
-                                },
-                                tooltip: {
-                                    enabled: false,
-                                }
-                            },
-                            maintainAspectRatio: false,
-                        }
-                    }
-                );
-            }
+            setCharts((oldCharts) => [...oldCharts, chart]);
         });
     }
 
@@ -155,12 +166,10 @@ export default function Exams() {
                     <main className='content' style={{ justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column', marginBottom: '25px' }}>
                         <div className={styles.exams}>
                             <h2 className='subtitle' style={{ marginBottom: "30px" }}>Meus exames</h2>
-                            {canvas.length > 0
-                                ? canvas
+                            {charts.length > 0
+                                ? charts
                                 : <h2>Nenhum exame cadastrado. Adicione exames <Link style={{ color: "#E79B38" }} href={"/addexam"}>aqui</Link>. </h2>
                             }
-
-
                         </div>
                     </main>
 
