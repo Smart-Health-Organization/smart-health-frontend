@@ -55,8 +55,6 @@ export default function Exams() {
     }
 
     async function showExams(examsList) {
-        console.log(examsList);
-
         Object.keys(examsList).forEach((examitem) => {
             const canvas = <div className={styles.card_chart} key={examitem + "card"}>
                 <div className={styles.chart_info}>
@@ -77,8 +75,6 @@ export default function Exams() {
                 let data = examsList[examitem];
 
                 data = data.reverse();
-
-                console.log(data)
 
                 if (!document.getElementById(examitem))
                     continue;
@@ -161,7 +157,7 @@ export default function Exams() {
                             <h2 className='subtitle' style={{ marginBottom: "30px" }}>Meus exames</h2>
                             {canvas.length > 0
                                 ? canvas
-                                : <h2>Nenhum exame cadastrado. Adicione exames <Link style={{color: "#E79B38"}} href={"/addexam"}>aqui</Link>. </h2>
+                                : <h2>Nenhum exame cadastrado. Adicione exames <Link style={{ color: "#E79B38" }} href={"/addexam"}>aqui</Link>. </h2>
                             }
 
 

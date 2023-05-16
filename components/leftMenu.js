@@ -39,7 +39,7 @@ export default function LeftMenu() {
         linkElements.push(exit);
 
         menuList.render(linkElements);
-    });
+    }, []);
 
     return (
         <div id='leftMenuList' className={styles.leftMenu}>

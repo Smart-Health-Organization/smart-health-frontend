@@ -52,7 +52,7 @@ export default function MobileMenu() {
         linkElements.push(exit);
 
         menuList.render(linkElements);
-    });
+    }, []);
 
     return (
         <div className={styles.divMenuMobile}>
