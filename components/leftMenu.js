@@ -1,6 +1,6 @@
 import styles from '@/styles/LeftMenu.module.css'
 import { faCircleUser, faIdCard } from '@fortawesome/free-regular-svg-icons';
-import { faFileCirclePlus, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { faChartPie, faFileCirclePlus, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -11,6 +11,7 @@ let firstRender = true;
 
 const pages = [
     { name: "Página Inicial", path: "/", icon: faCircleUser },
+    { name: "Ver Exames", path: "/exams", icon: faChartPie },
     { name: "Cadastrar Exame", path: "/addexam", icon: faFileCirclePlus },
     { name: "Meu Perfil", path: "/profile", icon: faIdCard }];
 
