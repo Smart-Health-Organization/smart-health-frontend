@@ -6,8 +6,6 @@ import Link from 'next/link';
 import { useEffect } from 'react';
 import * as ReactDOMClient from 'react-dom/client';
 
-let firstRender = true;
-
 const pages = [
     { name: "Página Inicial", path: "/", icon: <FontAwesomeIcon key={1000} icon={faCircleUser} /> },
     { name: "Ver Exames", path: "/exams", icon: <FontAwesomeIcon key={1001} icon={faChartPie} /> },
@@ -35,31 +33,25 @@ export default function MobileMenu() {
     }
 
     useEffect(() => {
-
-        if (firstRender) {
-            document.body.addEventListener("click", (e) => {
-                if (e.target.id != "menu" && e.target.id != "openMenu" && e.target.parentNode.id != "openMenu" && e.target.parentNode.parentNode.id != "openMenu") {
-                    closeMenu();
-                }
-            });
-
-            let linkElements = [];
-            const menuList = ReactDOMClient.createRoot(document.getElementById("menuList"));
-
-            for (let i = 0; i < pages.length; i++) {
-                let link = <Link key={i} href={pages[i].path} data-actualpage={window.location.pathname == pages[i].path}>{pages[i].icon} {pages[i].name}</Link>;
-                linkElements.push(link);
+        document.body.addEventListener("click", (e) => {
+            if (e.target.id != "menu" && e.target.id != "openMenu" && e.target.parentNode.id != "openMenu" && e.target.parentNode.parentNode.id != "openMenu") {
+                closeMenu();
             }
+        });
 
-            let exit = <Link href={"/exit"} key={pages.length}><FontAwesomeIcon key={pages.length+1000} data-actualpage={"false"} icon={faRightFromBracket} /> Sair</Link>
+        let linkElements = [];
+        const menuList = ReactDOMClient.createRoot(document.getElementById("menuList"));
 
-            linkElements.push(exit);
-
-            menuList.render(linkElements);
-
-            firstRender = false;
+        for (let i = 0; i < pages.length; i++) {
+            let link = <Link key={i} href={pages[i].path} data-actualpage={window.location.pathname == pages[i].path}>{pages[i].icon} {pages[i].name}</Link>;
+            linkElements.push(link);
         }
 
+        let exit = <Link href={"/exit"} key={pages.length}><FontAwesomeIcon key={pages.length + 1000} data-actualpage={"false"} icon={faRightFromBracket} /> Sair</Link>
+
+        linkElements.push(exit);
+
+        menuList.render(linkElements);
     });
 
     return (

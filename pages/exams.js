@@ -11,6 +11,7 @@ import tryLogin from '@/functions/tryLogin'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Chart from 'chart.js/auto'
 import { faDna } from '@fortawesome/free-solid-svg-icons'
+import Link from 'next/link'
 
 let first = true;
 
@@ -64,7 +65,7 @@ export default function Exams() {
                     <h2>{examsList[examitem][0].medida} <span className={styles.gray}>{examsList[examitem][0].unidade}</span> <span className={styles.isAlterado}>{examsList[examitem][0].isAlterado ? "Alterado" : "Normal"}</span></h2>
                 </div>
                 <div key={examitem + "div"} className={styles.chart_container}>
-                    <canvas width="4" height="1" className='examItem' key={examitem} id={examitem}></canvas>
+                    <canvas className='examItem' key={examitem} id={examitem}></canvas>
                 </div>
             </div>;
             setCanvas((oldCanvas) => [...oldCanvas, canvas]);
@@ -104,8 +105,12 @@ export default function Exams() {
                             plugins: {
                                 legend: {
                                     display: false,
+                                },
+                                tooltip: {
+                                    enabled: false,
                                 }
-                            }
+                            },
+                            maintainAspectRatio: false,
                         }
                     }
                 );
@@ -153,8 +158,13 @@ export default function Exams() {
 
                     <main className='content' style={{ justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column', marginBottom: '25px' }}>
                         <div className={styles.exams}>
-                            <h2 className='subtitle'>Meus exames</h2>
-                            {canvas}
+                            <h2 className='subtitle' style={{ marginBottom: "30px" }}>Meus exames</h2>
+                            {canvas.length > 0
+                                ? canvas
+                                : <h2>Nenhum exame cadastrado. Adicione exames <Link style={{color: "#E79B38"}} href={"/addexam"}>aqui</Link>. </h2>
+                            }
+
+
                         </div>
                     </main>
 
