@@ -68,7 +68,7 @@ body {
 .footer, .invisibleFooter {
   height: 63px;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
 }
 

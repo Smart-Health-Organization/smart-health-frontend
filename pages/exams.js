@@ -40,7 +40,7 @@ let first = true;
 export default function Exams() {
     const [errorMessages, setErrorMessages] = useState([]);
     const [typeOfMessage, setTypeOfMessage] = useState('warning');
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     const [charts, setCharts] = useState([]);
 
@@ -57,7 +57,7 @@ export default function Exams() {
         try {
             const response = await axios.get(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem("user") + '/exame-itens', { headers: { Authorization: sessionStorage.getItem("token") } });
 
-            showExams(response.data.data);
+            await showExams(response.data.data);
         }
         catch (error) {
             setTypeOfMessage('warning');
@@ -72,7 +72,7 @@ export default function Exams() {
                 }
         }
         finally {
-            setIsLoading(false);
+            setTimeout(() => { setIsLoading(false) });
         }
     }
 
@@ -128,18 +128,18 @@ export default function Exams() {
     return (
         <>
             <Head>
-                <title>Smart Health - Cadastrar Exame</title>
+                <title>Smart Health - Ver Exame</title>
                 <meta name="description" content="Plataforma Web para Armazenamento, Acompanhamento e Compartilhamento Seguro de Resultados de Exames e Informações de Saúde." />
 
                 <meta name="keywords" content="smart, health, plataforma, web, armazenamento, acompanhamento, compartilhamento, seguro, resultados, exames, informacoes, saude" />
 
-                <meta property="og:title" content="Smart Health - Meu perfil" />
+                <meta property="og:title" content="Smart Health - Ver Exame" />
                 <meta property="og:type" content="website" />
                 <meta property="og:description" content="Plataforma Web para Armazenamento, Acompanhamento e Compartilhamento Seguro de Resultados de Exames e Informações de Saúde." />
                 <meta property="og:url" content={process.env.NEXT_PUBLIC_URL} />
                 <meta property="og:image" content={process.env.NEXT_PUBLIC_URL + '/favicon.png'} />
 
-                <meta name="twitter:title" content="Smart Health - Meu perfil" />
+                <meta name="twitter:title" content="Smart Health - Ver Exame" />
                 <meta name="twitter:description" content="Plataforma Web para Armazenamento, Acompanhamento e Compartilhamento Seguro de Resultados de Exames e Informações de Saúde." />
                 <meta name="twitter:image" content={process.env.NEXT_PUBLIC_URL + '/favicon.png'} />
                 <meta name="twitter:card" content="summary_large_image" />
@@ -166,9 +166,11 @@ export default function Exams() {
                     <main className='content' style={{ justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column', marginBottom: '25px' }}>
                         <div className={styles.exams}>
                             <h2 className='subtitle' style={{ marginBottom: "30px" }}>Meus exames</h2>
-                            {charts.length > 0
-                                ? charts
-                                : <h2>Nenhum exame cadastrado. Adicione exames <Link style={{ color: "#E79B38" }} href={"/addexam"}>aqui</Link>. </h2>
+                            {isLoading ?
+                                null
+                                : charts.length > 0
+                                    ? charts
+                                    : <h2>Nenhum exame cadastrado. Adicione exames <Link style={{ color: "#E79B38" }} href={"/addexam"}>aqui</Link>. </h2>
                             }
                         </div>
                     </main>

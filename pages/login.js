@@ -115,7 +115,7 @@ export default function Login() {
                   <input onKeyDown={e => onEnter(e, login)} id='email' type='email' placeholder={"Email"}></input>
                   <input onKeyDown={e => onEnter(e, login)} id='password' type='password' placeholder={"Senha"}></input>
                 </form>
-                <button disabled={isLoading} onClick={login}>Entrar</button>
+                <button disabled={isLoading} onClick={login}>ENTRAR</button>
               </div>
             </div>
           </main>

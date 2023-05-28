@@ -14,6 +14,10 @@ export default function Profile() {
   const [errorMessages, setErrorMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [typeOfMessage, setTypeOfMessage] = useState('warning');
+  const [nome, setNome] = useState('');
+  const [email, setEmail] = useState('');
+  const [idade, setIdade] = useState(0);
+  const [sexo, setSexo] = useState('');
 
   useEffect(() => {
     if (first) {
@@ -26,12 +30,16 @@ export default function Profile() {
 
           document.querySelector("#userName").innerHTML = response.data.nome;
           document.querySelector("#name").value = response.data.nome;
+          setNome(response.data.nome);
           document.querySelector("#userEmail").innerHTML = response.data.email;
           document.querySelector("#email").value = response.data.email;
+          setEmail(response.data.email);
           document.querySelector("#age").value = response.data.idade;
           document.querySelector("#age2").value = response.data.idade;
+          setIdade(response.data.idade);
           document.querySelector("#sexo").value = response.data.sexo[0].toUpperCase() + response.data.sexo.slice(1);
-          document.querySelector("#sexo2").value = response.data.sexo[0].toUpperCase() + response.data.sexo.slice(1);
+          document.querySelector("#sexo2").value = response.data.sexo;
+          setSexo(response.data.sexo);
 
         }
         catch {
@@ -92,11 +100,29 @@ export default function Profile() {
 
     setIsLoading(true);
 
-    const newUser = {
-      nome: document.querySelector("#name").value,
-      idade: Number(document.querySelector("#age2").value),
-      sexo: document.querySelector("#sexo2").value,
-      email: document.querySelector("#email").value,
+    let newUser = {
+      nome: document.querySelector("#name").value != nome ? document.querySelector("#name").value : null,
+      idade: Number(document.querySelector("#age2").value) != idade ? Number(document.querySelector("#age2").value) : null,
+      sexo: document.querySelector("#sexo2").value.toLowerCase() != sexo ? document.querySelector("#sexo2").value : null,
+      email: document.querySelector("#email").value != email ? document.querySelector("#email").value : null,
+    }
+
+    newUser = Object.fromEntries(Object.entries(newUser).filter(([_, v]) => v != null));
+
+    console.log(newUser)
+
+    if (!Object.keys(newUser).length) {
+      setTypeOfMessage('info');
+      setErrorMessages([<li key={0}>Nenhuma alteração.</li>]);
+      setIsLoading(false);
+      return;
+    }
+
+    if (newUser.sexo === '') {
+      setTypeOfMessage('info');
+      setErrorMessages([<li key={0}>Selecione um sexo.</li>]);
+      setIsLoading(false);
+      return;
     }
 
     try {
@@ -227,7 +253,11 @@ export default function Profile() {
                 <div className={styles.changePassword}>
                   <input className={styles.edit} id='name' onKeyDown={onEnter} placeholder='Nome' type='text'></input>
                   <input className={styles.edit} id='email' onKeyDown={onEnter} placeholder='Email' type='email'></input>
-                  <input className={styles.edit} id='sexo2' onKeyDown={onEnter} placeholder='Sexo' type='text'></input>
+                  <select onKeyDown={onEnter} id='sexo2' >
+                    <option value=''>Selecione o sexo</option>
+                    <option value='masculino'>Masculino</option>
+                    <option value='feminino'>Feminino</option>
+                  </select>
                   <input className={styles.edit} id='age2' onKeyDown={patch} placeholder='Idade' type='number'></input>
                 </div>
               </div>
