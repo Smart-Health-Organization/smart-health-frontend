@@ -76,7 +76,6 @@ p.description {
   padding: 18px 50px;
   margin-top: 40px;
   font-weight: 800;
-  font-size: 20px;
 }
 
 .loginDiv h2,
@@ -128,9 +127,13 @@ form.formLogin>input::placeholder {
   border-radius: 30px;
   padding: 22px 58px;
   font-weight: 800;
-  font-size: 20px;
   margin-top: 15px;
   cursor: pointer;
+}
+
+.loginDiv>button,
+.notRegister>a {
+  font-size: 16px;
 }
 
 .loginDiv>button:disabled {

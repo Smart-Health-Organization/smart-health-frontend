@@ -132,7 +132,7 @@ export default function Register() {
                   <input onKeyDown={e => onEnter(e, register)} id='email' type='email' placeholder={"Email"}></input>
                   <input onKeyDown={e => onEnter(e, register)} id='password' type='password' placeholder={"Senha"}></input>
                 </form>
-                <button disabled={isLoading} onClick={register}>Cadastrar</button>
+                <button disabled={isLoading} onClick={register}>CADASTRAR</button>
               </div>
             </div>
           </main>

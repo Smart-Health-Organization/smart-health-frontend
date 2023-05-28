@@ -31,7 +31,8 @@
   margin-bottom: 0;
 }
 
-.leftMenu a {
+.leftMenu a,
+.leftMenu p {
   color: #000;
   display: flex;
   align-items: center;
@@ -61,13 +62,23 @@
   white-space: nowrap;
 }
 
-.leftMenu:hover .descriptionItemMenu {
+.descriptionItemMenuLogo {
+  margin-top: unset !important;
+  margin-left: 0;
+  font-weight: bolder;
+  display: none;
+  white-space: nowrap;
+}
+
+.leftMenu:hover .descriptionItemMenu,
+.leftMenu:hover .descriptionItemMenuLogo {
   display: unset;
   animation-name: openMenu;
   animation-duration: 200ms;
 }
 
-.leftMenu:hover a {
+.leftMenu:hover a,
+.leftMenu:hover p {
   width: 80%;
 }
 

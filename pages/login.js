@@ -38,7 +38,7 @@ export default function Login() {
       sessionStorage.setItem("token", "Bearer " + response.data.token);
       sessionStorage.setItem("user", response.data.usuario.id);
 
-      window.location.replace("/profile");
+      window.location.replace("/exams");
     }
     catch (error) {
       if (error.response)
@@ -115,7 +115,7 @@ export default function Login() {
                   <input onKeyDown={e => onEnter(e, login)} id='email' type='email' placeholder={"Email"}></input>
                   <input onKeyDown={e => onEnter(e, login)} id='password' type='password' placeholder={"Senha"}></input>
                 </form>
-                <button disabled={isLoading} onClick={login}>Entrar</button>
+                <button disabled={isLoading} onClick={login}>ENTRAR</button>
               </div>
             </div>
           </main>

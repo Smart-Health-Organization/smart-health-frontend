@@ -21,7 +21,7 @@ export default function LeftMenu() {
         let linkElements = [];
         const menuList = ReactDOMClient.createRoot(document.getElementById("leftMenuList"));
 
-        linkElements.push(<Image key={9999} alt={"logo"} src={'/favicon.png'} width={41.5} height={39}></Image>)
+        linkElements.push(<p href={""} key={9999}><Image alt={"logo"} src={'/favicon.png'} width={41.5} height={39}></Image><span className={styles.descriptionItemMenuLogo}> Smart Health</span></p>)
 
         for (let i = 0; i < pages.length; i++) {
             let link = <Link key={i} href={pages[i].path}>

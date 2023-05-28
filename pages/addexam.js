@@ -91,6 +91,8 @@ export default function AddExam() {
 
             const response = await axios.post(process.env.NEXT_PUBLIC_API_URL + '/exames/pdf', formData, { headers: { Authorization: sessionStorage.getItem("token") } });
 
+            setExamList([]);
+
             for (let item of response.data.itens) {
                 addExamItem(null, item.metrica, item.medida, item.unidade, metricas);
             }
@@ -210,13 +212,13 @@ export default function AddExam() {
 
                 <meta name="keywords" content="smart, health, plataforma, web, armazenamento, acompanhamento, compartilhamento, seguro, resultados, exames, informacoes, saude" />
 
-                <meta property="og:title" content="Smart Health - Meu perfil" />
+                <meta property="og:title" content="Smart Health - Cadastrar Exame" />
                 <meta property="og:type" content="website" />
                 <meta property="og:description" content="Plataforma Web para Armazenamento, Acompanhamento e Compartilhamento Seguro de Resultados de Exames e Informações de Saúde." />
                 <meta property="og:url" content={process.env.NEXT_PUBLIC_URL} />
                 <meta property="og:image" content={process.env.NEXT_PUBLIC_URL + '/favicon.png'} />
 
-                <meta name="twitter:title" content="Smart Health - Meu perfil" />
+                <meta name="twitter:title" content="Smart Health - Cadastrar Exame" />
                 <meta name="twitter:description" content="Plataforma Web para Armazenamento, Acompanhamento e Compartilhamento Seguro de Resultados de Exames e Informações de Saúde." />
                 <meta name="twitter:image" content={process.env.NEXT_PUBLIC_URL + '/favicon.png'} />
                 <meta name="twitter:card" content="summary_large_image" />

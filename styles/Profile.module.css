@@ -22,7 +22,7 @@ div.userInfos {
   margin-left: 0;
 }
 
-div.userInfos > div {
+div.userInfos>div {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -38,7 +38,7 @@ div.userInfos select {
   border: none;
   border-radius: 10px;
   padding: 10px;
-  color:#6A6969;
+  color: #6A6969;
 }
 
 div.userInfos label {
@@ -53,13 +53,18 @@ div.userInfos input.age {
   width: 60%;
 }
 
-div.userInfos input.edit {
+div.userInfos input.edit,
+div.userInfos select {
   width: 100% !important;
   max-width: 350px;
+  -ms-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  box-sizing: content-box;
 }
 
 div.userInfos label {
-  color:#6A6969;
+  color: #6A6969;
 }
 
 div.userInfos div.changePassword {
@@ -71,7 +76,8 @@ div.userInfos div.changePassword {
   margin-left: 0;
 }
 
-div.changePassword input {
+div.changePassword input,
+div.changePassword select {
   margin: 15px 0 0 0;
 }
 
@@ -83,7 +89,7 @@ hr.hr {
 
 @media (max-width: 1200px) {
 
-  div.userInfos > div {
+  div.userInfos>div {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
