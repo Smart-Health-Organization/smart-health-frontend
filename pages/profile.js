@@ -28,19 +28,12 @@ export default function Profile() {
           }
           const response = await axios.get(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem("user"), { headers: { Authorization: sessionStorage.getItem("token") } });
 
-          document.querySelector("#userName").innerHTML = response.data.nome;
-          document.querySelector("#name").value = response.data.nome;
           setNome(response.data.nome);
-          document.querySelector("#userEmail").innerHTML = response.data.email;
-          document.querySelector("#email").value = response.data.email;
           setEmail(response.data.email);
-          document.querySelector("#age").value = response.data.idade;
-          document.querySelector("#age2").value = response.data.idade;
           setIdade(response.data.idade);
-          document.querySelector("#sexo").value = response.data.sexo[0].toUpperCase() + response.data.sexo.slice(1);
-          document.querySelector("#sexo2").value = response.data.sexo;
           setSexo(response.data.sexo);
 
+          setTimeout(() => { document.querySelector("#sexo2").value = response.data.sexo });
         }
         catch {
           window.location.replace("/login");
@@ -108,8 +101,6 @@ export default function Profile() {
     }
 
     newUser = Object.fromEntries(Object.entries(newUser).filter(([_, v]) => v != null));
-
-    console.log(newUser)
 
     if (!Object.keys(newUser).length) {
       setTypeOfMessage('info');
@@ -235,12 +226,12 @@ export default function Profile() {
                 Meu Perfil
               </h2>
 
-              <h3 className={styles.userInfos} id='userName'>Nome Sobrenome</h3>
-              <p className={styles.userInfos} id='userEmail'>email@mail.com</p>
+              <h3 className={styles.userInfos} id='userName'>{nome || "Nome Sobrenome"}</h3>
+              <p className={styles.userInfos} id='userEmail'>{email || "email@mail.com"}</p>
               <div className={styles.userInfos}>
                 <div>
-                  <label><input className={styles.age} readOnly value={0} type='number' id='age'></input> anos</label>
-                  <input readOnly value={"Sexo"} type='text' id='sexo'></input>
+                  <label><input className={styles.age} readOnly defaultValue={idade || 0} type='number' id='age'></input> anos</label>
+                  <input readOnly defaultValue={(sexo ? sexo[0].toUpperCase() + sexo.slice(1) : '') || "Sexo"} type='text' id='sexo'></input>
                 </div>
               </div>
 
@@ -251,14 +242,14 @@ export default function Profile() {
                   Editar informações
                 </h2>
                 <div className={styles.changePassword}>
-                  <input className={styles.edit} id='name' onKeyDown={onEnter} placeholder='Nome' type='text'></input>
-                  <input className={styles.edit} id='email' onKeyDown={onEnter} placeholder='Email' type='email'></input>
-                  <select onKeyDown={onEnter} id='sexo2' >
+                  <input className={styles.edit} id='name' onKeyDown={onEnter} placeholder='Nome' type='text' defaultValue={nome || "Nome Sobrenome"}></input>
+                  <input className={styles.edit} id='email' onKeyDown={onEnter} placeholder='Email' type='email' defaultValue={email || "email@mail.com"}></input>
+                  <select onKeyDown={onEnter} id='sexo2'>
                     <option value=''>Selecione o sexo</option>
                     <option value='masculino'>Masculino</option>
                     <option value='feminino'>Feminino</option>
                   </select>
-                  <input className={styles.edit} id='age2' onKeyDown={patch} placeholder='Idade' type='number'></input>
+                  <input className={styles.edit} id='age2' onKeyDown={patch} placeholder='Idade' type='number' defaultValue={idade || 0}></input>
                 </div>
               </div>
               <button style={{ marginBottom: '30px' }} disabled={isLoading} onClick={patch} className='ajuda'>
