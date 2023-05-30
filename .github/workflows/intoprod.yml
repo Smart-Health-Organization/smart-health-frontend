@@ -1,0 +1,25 @@
+
+name: Pull request 
+
+on:
+  pull_request:
+
+jobs:
+  into-prod:
+    if:  ${{ github.base_ref == 'prod' && github.head_ref != 'dev' }} 
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check pull request
+        run: |
+            echo "Pull requests into prod branch must be made from the dev branch"
+            exit 1
+
+  into-dev-from-prod:
+    if:  ${{ github.base_ref == 'dev' && github.head_ref == 'prod' }} 
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check pull request
+        run: |
+            echo "Pull requests into dev branch cannot be made from the prod branch"
+            exit 1
+          

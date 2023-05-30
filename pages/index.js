@@ -40,7 +40,7 @@ export default function Home() {
 
           <main className='content'>
             <div className={styles.infos}>
-              <h2 className={styles.description}>
+              <h2 className={'subtitle'}>
                 Software para Gestão de Saúde!
               </h2>
               <p className={styles.description}>
@@ -82,11 +82,6 @@ export default function Home() {
           </main>
 
           <footer className='footer'>
-            <p>
-              <Link href={"/"}><FontAwesomeIcon className='icon' icon={faInstagram} /></Link>
-              <Link href={"/"}><FontAwesomeIcon className='icon' icon={faFacebookSquare} /></Link>
-              <Link href={"/"}><FontAwesomeIcon className='icon' icon={faLinkedin} /></Link>
-            </p>
             <Link href={"mailto:lima-stefany@outlook.com?subject=Smart Health - Ajuda&body=Olá Smart Health, gostaria ajuda em..."} className='ajuda'>
               <FontAwesomeIcon icon={faQuestionCircle} /> <span className='displayMobile'>Posso ajudar?</span>
             </Link>

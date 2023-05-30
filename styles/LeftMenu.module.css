@@ -22,27 +22,32 @@
 }
 
 .leftMenu:hover {
-  width: 300px;
-  min-width: 300px;
+  width: 280px;
+  min-width: 280px;
 }
 
 .leftMenu * {
-  margin: 30px;
+  margin: 20px;
   margin-bottom: 0;
 }
 
-.leftMenu a {
+.leftMenu a,
+.leftMenu p {
   color: #000;
   display: flex;
   align-items: center;
 }
 
 .leftMenu svg{
-  font-size: 30px;
+  font-size: 25px;
   background-color: #FFFFFF;
   color: #303030;
   padding: 15px;
   border-radius: 12px;
+}
+
+.leftMenu img {
+  margin: 30px;
 }
 
 .leftMenu svg[data-actualpage="true"],
@@ -53,17 +58,27 @@
 
 .descriptionItemMenu {
   display: none;
-  margin-left: -10px;
+  margin-left: 0;
   white-space: nowrap;
 }
 
-.leftMenu:hover .descriptionItemMenu {
+.descriptionItemMenuLogo {
+  margin-top: unset !important;
+  margin-left: 0;
+  font-weight: bolder;
+  display: none;
+  white-space: nowrap;
+}
+
+.leftMenu:hover .descriptionItemMenu,
+.leftMenu:hover .descriptionItemMenuLogo {
   display: unset;
   animation-name: openMenu;
   animation-duration: 200ms;
 }
 
-.leftMenu:hover a {
+.leftMenu:hover a,
+.leftMenu:hover p {
   width: 80%;
 }
 

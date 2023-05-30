@@ -68,7 +68,7 @@ body {
 .footer, .invisibleFooter {
   height: 63px;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
 }
 
@@ -101,6 +101,14 @@ h1.title>img {
 h1.time {
   white-space: nowrap;
   width: unset;
+}
+
+h2.subtitle {
+  font-size: 26px;
+  margin: 0;
+  color: #303030;
+  line-height: 40px;
+  white-space: nowrap;
 }
 
 a.entrar {
@@ -158,6 +166,10 @@ a {
   margin-right: 15px;
 }
 
+.delete {
+  background-color: #F25F5C !important;
+}
+
 @media (max-width: 1200px) {
   .container {
     height: auto;
@@ -194,6 +206,10 @@ a {
 
   h1.title {
     width: unset;
+  }
+
+  h2.subtitle {
+    white-space: unset;
   }
 }
 
