@@ -1,11 +1,11 @@
-import LeftMenu from '@/components/leftMenu'
-import MobileMenu from '@/components/mobileMenu'
+import LeftMenu from '@/components/LeftMenu'
+import MobileMenu from '@/components/MobileMenu'
 import Head from 'next/head'
 import styles from '@/styles/Exams.module.css'
-import DateComponent from '@/components/date'
+import DateComponent from '@/components/DateComponent'
 import { useEffect, useState } from 'react'
-import SnackBar from '@/components/SnackBar'
-import Loading from '@/components/loading'
+import SnackBar from '@/components/SnackBarComponent'
+import Loading from '@/components/LoadingComponent'
 import axios from 'axios'
 import tryLogin from '@/functions/tryLogin'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -23,6 +23,7 @@ import {
 import { Line } from 'react-chartjs-2'
 import { faDna } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
+import TopBar from '@/components/TopBar'
 
 ChartJS.register(
     CategoryScale,
@@ -102,7 +103,7 @@ export default function Exams() {
                         display: false,
                     },
                     tooltip: {
-                        enabled: false,
+                        enabled: true,
                     }
                 },
                 maintainAspectRatio: false,
@@ -153,15 +154,12 @@ export default function Exams() {
 
             <div className='container'>
 
-                <LeftMenu></LeftMenu>
+                <LeftMenu actualpage='/ver-exames'></LeftMenu>
 
                 <div className='main authPage'>
 
-                    <header className='topbar'>
-                        <h1 className='title displayMobile'>Smart Health</h1>
-                        <MobileMenu></MobileMenu>
-                        <DateComponent date={Date.now()}></DateComponent>
-                    </header>
+                    <TopBar actualpage='/ver-exames'></TopBar>
+
 
                     <main className='content' style={{ justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column', marginBottom: '25px' }}>
                         <div className={styles.exams}>

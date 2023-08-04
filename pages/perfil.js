@@ -1,12 +1,13 @@
-import LeftMenu from '@/components/leftMenu'
-import MobileMenu from '@/components/mobileMenu'
+import LeftMenu from '@/components/LeftMenu'
+import MobileMenu from '@/components/MobileMenu'
 import Head from 'next/head'
 import styles from '@/styles/Profile.module.css'
-import DateComponent from '@/components/date'
+import DateComponent from '@/components/DateComponent'
 import { useEffect, useState } from 'react'
-import SnackBar from '@/components/SnackBar'
-import Loading from '@/components/loading'
+import SnackBar from '@/components/SnackBarComponent'
+import Loading from '@/components/LoadingComponent'
 import axios from 'axios'
+import TopBar from '@/components/TopBar'
 
 let first = true;
 
@@ -210,15 +211,11 @@ export default function Profile() {
 
       <div className='container'>
 
-        <LeftMenu></LeftMenu>
+        <LeftMenu actualpage='/perfil'></LeftMenu>
 
         <div className='main authPage'>
 
-          <header className='topbar'>
-            <h1 className='title displayMobile'>Smart Health</h1>
-            <MobileMenu></MobileMenu>
-            <DateComponent date={Date.now()}></DateComponent>
-          </header>
+          <TopBar actualpage='/perfil'></TopBar>
 
           <main className='content' style={{ justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column', marginBottom: '25px' }}>
             <div className={styles.profile}>

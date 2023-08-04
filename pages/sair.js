@@ -1,7 +1,8 @@
 import Head from 'next/head'
-import DateComponent from '@/components/date'
+import DateComponent from '@/components/DateComponent'
 import { useEffect } from 'react'
-import Loading from '@/components/loading'
+import Loading from '@/components/LoadingComponent'
+import TopBar from '@/components/TopBar';
 
 export default function Exit() {
   useEffect(() => {
@@ -20,7 +21,7 @@ export default function Exit() {
         <meta name="description" content="Plataforma Web para Armazenamento, Acompanhamento e Compartilhamento Seguro de Resultados de Exames e Informações de Saúde." />
 
         <meta name="keywords" content="smart, health, plataforma, web, armazenamento, acompanhamento, compartilhamento, seguro, resultados, exames, informacoes, saude" />
-        
+
         <meta property="og:title" content="Smart Health - Plataforma Web para Armazenamento, Acompanhamento e Compartilhamento Seguro de Resultados de Exames e Informações de Saúde" />
         <meta property="og:type" content="website" />
         <meta property="og:description" content="Plataforma Web para Armazenamento, Acompanhamento e Compartilhamento Seguro de Resultados de Exames e Informações de Saúde." />
@@ -31,7 +32,7 @@ export default function Exit() {
         <meta name="twitter:description" content="Plataforma Web para Armazenamento, Acompanhamento e Compartilhamento Seguro de Resultados de Exames e Informações de Saúde." />
         <meta name="twitter:image" content={process.env.NEXT_PUBLIC_URL + '/favicon.png'} />
         <meta name="twitter:card" content="summary_large_image" />
-        
+
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.png" />
       </Head>
@@ -42,10 +43,7 @@ export default function Exit() {
 
         <div className='main' style={{ justifyContent: 'flex-start' }}>
 
-          <header className='topbar'>
-            <h1 className='title displayMobile'>Smart Health</h1>
-            <DateComponent date={Date.now()}></DateComponent>
-          </header>
+          <TopBar actualpage='/sair'></TopBar>
 
           <main className='content' style={{ justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column', marginBottom: '25px' }}>
             <h1>Saindo da conta...</h1>

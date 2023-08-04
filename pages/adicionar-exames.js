@@ -1,16 +1,17 @@
-import LeftMenu from '@/components/leftMenu'
-import MobileMenu from '@/components/mobileMenu'
+import LeftMenu from '@/components/LeftMenu'
+import MobileMenu from '@/components/MobileMenu'
 import Head from 'next/head'
 import styles from '@/styles/AddExam.module.css'
-import DateComponent from '@/components/date'
+import DateComponent from '@/components/DateComponent'
 import { useEffect, useState } from 'react'
-import SnackBar from '@/components/SnackBar'
-import Loading from '@/components/loading'
+import SnackBar from '@/components/SnackBarComponent'
+import Loading from '@/components/LoadingComponent'
 import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid'
 import tryLogin from '@/functions/tryLogin'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCloudArrowUp, faPlus, faXmark } from '@fortawesome/free-solid-svg-icons'
+import TopBar from '@/components/TopBar'
 
 let firstAddExamRender = true;
 
@@ -232,15 +233,11 @@ export default function AddExam() {
 
             <div className='container'>
 
-                <LeftMenu></LeftMenu>
+                <LeftMenu actualpage='/adicionar-exames'></LeftMenu>
 
                 <div className='main authPage'>
 
-                    <header className='topbar'>
-                        <h1 className='title displayMobile'>Smart Health</h1>
-                        <MobileMenu></MobileMenu>
-                        <DateComponent date={Date.now()}></DateComponent>
-                    </header>
+                    <TopBar actualpage='/adicionar-exames'></TopBar>
 
                     <main className='content' style={{ justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column', marginBottom: '25px' }}>
                         <div className={styles.addexam}>

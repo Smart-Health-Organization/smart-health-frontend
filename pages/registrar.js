@@ -2,13 +2,14 @@ import Head from 'next/head'
 import styles from '@/styles/Login.module.css'
 import Image from 'next/image'
 import Link from 'next/link';
-import DateComponent from '@/components/date';
+import DateComponent from '@/components/DateComponent';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import SnackBar from '@/components/SnackBar';
-import Loading from '@/components/loading';
+import SnackBar from '@/components/SnackBarComponent';
+import Loading from '@/components/LoadingComponent';
 import onEnter from '@/functions/onEnter';
 import tryLogin from '@/functions/tryLogin';
+import TopBar from '@/components/TopBar';
 
 let first = true;
 
@@ -96,10 +97,7 @@ export default function Register() {
 
         <div className='main'>
 
-          <header className='topbar'>
-            <Link href={"./"}><h1 className='title' ><Image alt={"logo"} src={'/favicon.png'} width={62.25} height={58.5}></Image>  <span className='displayMobile'>Smart Health</span></h1></Link>
-            <DateComponent date={Date.now()}></DateComponent>
-          </header>
+          <TopBar actualpage='/registrar'></TopBar>
 
           <main className='content' style={{ justifyContent: 'center', alignItems: 'center' }}>
             <div className={styles.login}>
