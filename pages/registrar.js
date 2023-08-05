@@ -2,7 +2,6 @@ import Head from 'next/head'
 import styles from '@/styles/Login.module.css'
 import Image from 'next/image'
 import Link from 'next/link';
-import DateComponent from '@/components/DateComponent';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import SnackBar from '@/components/SnackBarComponent';

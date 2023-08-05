@@ -1,4 +1,4 @@
-import LeftMenu from '@/components/LeftMenu'
+import LeftMenu from '@/components/LeftMenuComponent'
 import Head from 'next/head'
 import styles from '@/styles/Exams.module.css'
 import { useEffect, useState } from 'react'
@@ -22,6 +22,7 @@ import {
 } from 'chart.js'
 import { Line } from 'react-chartjs-2'
 import TopBar from '@/components/TopBar'
+import Link from 'next/link'
 
 ChartJS.register(
     CategoryScale,
@@ -155,7 +156,7 @@ export default function Exams() {
                                 <p>
                                     Adicione novos exames para acompanhar sua evolução.
                                 </p>
-                                <a className='ajuda' href='/adicionar-exames'>Adicionar</a>
+                                <Link className='ajuda' href='/adicionar-exames'>Adicionar</Link>
                             </div>
                         </div>
                     </main>

@@ -1,5 +1,5 @@
 import DateComponent from "./DateComponent";
-import MobileMenu from "./MobileMenu";
+import MobileMenu from "./MobileMenuComponent";
 
 export default function TopBar(props = { actualpage: "/" }) {
     return (

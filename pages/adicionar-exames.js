@@ -1,8 +1,6 @@
-import LeftMenu from '@/components/LeftMenu'
-import MobileMenu from '@/components/MobileMenu'
+import LeftMenu from '@/components/LeftMenuComponent'
 import Head from 'next/head'
 import styles from '@/styles/AddExam.module.css'
-import DateComponent from '@/components/DateComponent'
 import { useEffect, useState } from 'react'
 import SnackBar from '@/components/SnackBarComponent'
 import Loading from '@/components/LoadingComponent'
@@ -10,7 +8,7 @@ import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid'
 import tryLogin from '@/functions/tryLogin'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCloudArrowUp, faPlus, faXmark } from '@fortawesome/free-solid-svg-icons'
+import { faCloudArrowUp, faXmark } from '@fortawesome/free-solid-svg-icons'
 import TopBar from '@/components/TopBar'
 
 let firstAddExamRender = true;

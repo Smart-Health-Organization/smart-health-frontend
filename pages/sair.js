@@ -1,5 +1,4 @@
 import Head from 'next/head'
-import DateComponent from '@/components/DateComponent'
 import { useEffect } from 'react'
 import Loading from '@/components/LoadingComponent'
 import TopBar from '@/components/TopBar';
