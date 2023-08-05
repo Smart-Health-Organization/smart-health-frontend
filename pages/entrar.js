@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import onEnter from '@/functions/onEnter';
 import tryLogin from '@/functions/tryLogin';
-import TopBar from '@/components/TopBar';
+import DateComponent from '@/components/DateComponent';
 
 let first = true;
 
@@ -83,10 +83,13 @@ export default function Login() {
       <Loading on={isLoading}></Loading>
 
       <div className='container'>
-        
+
         <div className='main'>
 
-          <TopBar actualpage='/entrar'></TopBar>
+          <header className='topbar'>
+            <Link href={"/"}><h1 className='title' ><Image alt={"logo"} src={'/favicon.png'} width={62.25} height={58.5}></Image>  <span className='displayMobile'>Smart Health</span></h1></Link>
+            <h1 className='title time'><DateComponent date={Date.now()}></DateComponent></h1>
+          </header>
 
           <main className='content' style={{ justifyContent: 'center', alignItems: 'center' }}>
             <div className={styles.login}>
