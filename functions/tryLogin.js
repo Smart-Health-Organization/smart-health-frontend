@@ -9,7 +9,7 @@ export default async function tryLogin(setIsLoading, axios, redirect = true) {
         }
     }
     catch { 
-        if (!redirect) window.location.replace("/login");
+        if (!redirect) window.location.replace("/entrar");
     }
     finally {
         setIsLoading(false);

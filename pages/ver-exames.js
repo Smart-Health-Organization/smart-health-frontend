@@ -168,7 +168,7 @@ export default function Exams() {
                                 null
                                 : charts.length > 0
                                     ? charts
-                                    : <h2>Nenhum exame cadastrado. Adicione exames <Link style={{ color: "#E79B38" }} href={"/addexam"}>aqui</Link>. </h2>
+                                    : <h2>Nenhum exame cadastrado. Adicione exames <Link style={{ color: "#E79B38" }} href={"/adicionar-exames"}>aqui</Link>. </h2>
                             }
                         </div>
                     </main>

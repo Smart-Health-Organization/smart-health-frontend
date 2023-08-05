@@ -49,7 +49,7 @@ export default function Register() {
       sessionStorage.setItem("token", "Bearer " + response.data.token);
       sessionStorage.setItem("user", response.data.usuario.id);
 
-      window.location.replace("/profile");
+      window.location.replace("/perfil");
     }
     catch (error) {
       if (error.response)
@@ -109,7 +109,7 @@ export default function Register() {
                 <p className={styles.description}>
                   Já é cadastrado? Acesse sua conta agora mesmo.
                 </p>
-                <Link href={"/login"}>LOGIN</Link>
+                <Link href={"/entrar"}>LOGIN</Link>
               </div>
 
               <div className={styles.loginDiv}>
