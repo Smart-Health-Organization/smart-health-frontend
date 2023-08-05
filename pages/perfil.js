@@ -1,12 +1,11 @@
-import LeftMenu from '@/components/leftMenu'
-import MobileMenu from '@/components/mobileMenu'
+import LeftMenu from '@/components/LeftMenuComponent'
 import Head from 'next/head'
 import styles from '@/styles/Profile.module.css'
-import DateComponent from '@/components/date'
 import { useEffect, useState } from 'react'
-import SnackBar from '@/components/SnackBar'
-import Loading from '@/components/loading'
+import SnackBar from '@/components/SnackBarComponent'
+import Loading from '@/components/LoadingComponent'
 import axios from 'axios'
+import TopBar from '@/components/TopBar'
 
 let first = true;
 
@@ -24,7 +23,7 @@ export default function Profile() {
       async function tryLogin() {
         try {
           if (!(sessionStorage.getItem("token") && sessionStorage.getItem("user"))) {
-            window.location.replace("/login");
+            window.location.replace("/entrar");
           }
           const response = await axios.get(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem("user"), { headers: { Authorization: sessionStorage.getItem("token") } });
 
@@ -36,7 +35,7 @@ export default function Profile() {
           setTimeout(() => { document.querySelector("#sexo2").value = response.data.sexo });
         }
         catch {
-          window.location.replace("/login");
+          window.location.replace("/entrar");
         }
       }
       tryLogin();
@@ -122,7 +121,7 @@ export default function Profile() {
       setTypeOfMessage('success');
       setErrorMessages([<li key={0}>Alteração feita com sucesso!</li>]);
 
-      setTimeout(window.location.replace("/profile"), 3000);
+      setTimeout(window.location.replace("/perfil"), 3000);
     }
     catch (error) {
       setTypeOfMessage('warning');
@@ -163,7 +162,7 @@ export default function Profile() {
       setTypeOfMessage('success');
       setErrorMessages([<li key={0}>Conta deletada com sucesso!</li>]);
 
-      setTimeout(window.location.replace("/exit"), 3000);
+      setTimeout(window.location.replace("/sair"), 3000);
     }
     catch (error) {
       setTypeOfMessage('warning');
@@ -210,15 +209,11 @@ export default function Profile() {
 
       <div className='container'>
 
-        <LeftMenu></LeftMenu>
+        <LeftMenu actualpage='/perfil'></LeftMenu>
 
         <div className='main authPage'>
 
-          <header className='topbar'>
-            <h1 className='title displayMobile'>Smart Health</h1>
-            <MobileMenu></MobileMenu>
-            <DateComponent date={Date.now()}></DateComponent>
-          </header>
+          <TopBar actualpage='/perfil'></TopBar>
 
           <main className='content' style={{ justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column', marginBottom: '25px' }}>
             <div className={styles.profile}>
@@ -228,12 +223,9 @@ export default function Profile() {
 
               <h3 className={styles.userInfos} id='userName'>{nome || "Nome Sobrenome"}</h3>
               <p className={styles.userInfos} id='userEmail'>{email || "email@mail.com"}</p>
-              <div className={styles.userInfos}>
-                <div>
-                  <label><input className={styles.age} readOnly defaultValue={idade || 0} type='number' id='age'></input> anos</label>
-                  <input readOnly defaultValue={(sexo ? sexo[0].toUpperCase() + sexo.slice(1) : '') || "Sexo"} type='text' id='sexo'></input>
-                </div>
-              </div>
+              <p className={styles.userInfos2}>
+                {idade || 0} anos, {' ' + (sexo ? sexo[0].toUpperCase() + sexo.slice(1) : "Sexo")}.
+              </p>
 
               <hr className={styles.hr}></hr>
 
@@ -242,14 +234,18 @@ export default function Profile() {
                   Editar informações
                 </h2>
                 <div className={styles.changePassword}>
-                  <input className={styles.edit} id='name' onKeyDown={onEnter} placeholder='Nome' type='text' defaultValue={nome || "Nome Sobrenome"}></input>
-                  <input className={styles.edit} id='email' onKeyDown={onEnter} placeholder='Email' type='email' defaultValue={email || "email@mail.com"}></input>
-                  <select onKeyDown={onEnter} id='sexo2'>
-                    <option value=''>Selecione o sexo</option>
-                    <option value='masculino'>Masculino</option>
-                    <option value='feminino'>Feminino</option>
-                  </select>
-                  <input className={styles.edit} id='age2' onKeyDown={patch} placeholder='Idade' type='number' defaultValue={idade || 0}></input>
+                  <label><strong>Nome:</strong> <input className={styles.edit} id='name' onKeyDown={onEnter} placeholder='Nome' type='text' defaultValue={nome || "Nome Sobrenome"}></input></label>
+                  <label><strong>Email:</strong> <input className={styles.edit} id='email' onKeyDown={onEnter} placeholder='Email' type='email' defaultValue={email || "email@mail.com"}></input></label>
+                  <label>
+                    <strong>Sexo:</strong>
+                    &nbsp;
+                    <select onKeyDown={onEnter} id='sexo2'>
+                      <option value=''>Selecione o sexo</option>
+                      <option value='masculino'>Masculino</option>
+                      <option value='feminino'>Feminino</option>
+                    </select>
+                  </label>
+                  <label><strong>Idade:</strong> <input className={styles.edit} id='age2' onKeyDown={patch} placeholder='Idade' type='number' defaultValue={idade || 0}></input></label>
                 </div>
               </div>
               <button style={{ marginBottom: '30px' }} disabled={isLoading} onClick={patch} className='ajuda'>

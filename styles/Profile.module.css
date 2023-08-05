@@ -6,8 +6,13 @@ div.profile {
 
 p.userInfos {
   margin-top: 0;
+  margin-bottom: 8px;
   font-weight: 200;
   text-decoration: underline;
+}
+
+p.userInfos2 {
+  margin-top: 0;
 }
 
 h3.userInfos {
@@ -22,16 +27,6 @@ div.userInfos {
   margin-left: 0;
 }
 
-div.userInfos>div {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  width: 100%;
-  margin: 15px;
-  margin-left: 0;
-}
-
 div.userInfos input,
 div.userInfos select {
   background: #EAF0F7;
@@ -41,21 +36,12 @@ div.userInfos select {
   color: #6A6969;
 }
 
-div.userInfos label {
-  width: 175px;
-}
-
-div.userInfos input[type="text"] {
-  width: 155px;
-}
-
 div.userInfos input.age {
   width: 60%;
 }
 
 div.userInfos input.edit,
 div.userInfos select {
-  width: 100% !important;
   max-width: 350px;
   -ms-box-sizing: content-box;
   -moz-box-sizing: content-box;
@@ -81,6 +67,21 @@ div.changePassword select {
   margin: 15px 0 0 0;
 }
 
+div.changePassword label {
+  width: 100%;
+  max-width: 275px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+div.changePassword > label > input,
+div.changePassword > label > select {
+  max-width: 60% !important;
+  width: 60%;
+}
+
 hr.hr {
   width: 50%;
   text-align: left;
@@ -98,7 +99,6 @@ hr.hr {
 
   div.userInfos label,
   div.userInfos input {
-    width: 70%;
     margin-bottom: 5px;
   }
 

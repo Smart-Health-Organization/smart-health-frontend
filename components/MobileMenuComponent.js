@@ -1,19 +1,17 @@
 import styles from '@/styles/MobileMenu.module.css'
-import { faCircleUser, faIdCard } from '@fortawesome/free-regular-svg-icons';
-import { faBars, faChartPie, faFileCirclePlus, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { faIdCard } from '@fortawesome/free-regular-svg-icons';
+import { faFileCirclePlus, faHospitalUser, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Link from 'next/link';
 import { useEffect } from 'react';
-import * as ReactDOMClient from 'react-dom/client';
 
 const pages = [
-    { name: "Página Inicial", path: "/", icon: <FontAwesomeIcon key={1000} icon={faCircleUser} /> },
-    { name: "Ver Exames", path: "/exams", icon: <FontAwesomeIcon key={1001} icon={faChartPie} /> },
-    { name: "Cadastrar Exame", path: "/addexam", icon: <FontAwesomeIcon key={1001} icon={faFileCirclePlus} /> },
-    { name: "Meu Perfil", path: "/profile", icon: <FontAwesomeIcon key={1001} icon={faIdCard} /> }];
+    { name: "Ver Exames", path: "/ver-exames", icon: <FontAwesomeIcon icon={faHospitalUser} /> },
+    { name: "Cadastrar Exame", path: "/adicionar-exames", icon: <FontAwesomeIcon icon={faFileCirclePlus} /> },
+    { name: "Meu Perfil", path: "/perfil", icon: <FontAwesomeIcon icon={faIdCard} /> },
+    { name: "Sair", path: "/sair", icon: <FontAwesomeIcon icon={faRightFromBracket} /> }];
 
 
-export default function MobileMenu() {
+export default function MobileMenu(props = { actualpage: "/" }) {
 
     function openMenu() {
         document.getElementById("menu").style.width = "300px";
@@ -38,29 +36,23 @@ export default function MobileMenu() {
                 closeMenu();
             }
         });
-
-        let linkElements = [];
-        const menuList = ReactDOMClient.createRoot(document.getElementById("menuList"));
-
-        for (let i = 0; i < pages.length; i++) {
-            let link = <Link key={i} href={pages[i].path} data-actualpage={window.location.pathname == pages[i].path}>{pages[i].icon} {pages[i].name}</Link>;
-            linkElements.push(link);
-        }
-
-        let exit = <Link href={"/exit"} key={pages.length}><FontAwesomeIcon key={pages.length + 1000} data-actualpage={"false"} icon={faRightFromBracket} /> Sair</Link>
-
-        linkElements.push(exit);
-
-        menuList.render(linkElements);
     }, []);
+
+    let links = [];
+
+    for (let i = 0; i < pages.length; i++) {
+        links.push(<a key={i} href={pages[i].path} data-actualpage={props.actualpage == pages[i].path}>{pages[i].icon} {pages[i].name}</a>);
+    }
 
     return (
         <div className={styles.divMenuMobile}>
             <a id="openMenu" className={styles.mobileMenu} onClick={openMenu}>
-                <FontAwesomeIcon icon={faBars} />
+                <img alt={"logo"} src={'/favicon.png'} height={30} style={{ width: 'auto' }} />
             </a>
             <div id="menu" className={styles.menu}>
                 <div id="menuList" className={styles.menuList}>
+                    <a href={'/'} data-actualpage={false}><img alt={"logo"} src={'/favicon.png'} height={28} style={{ width: 'auto' }} /> <strong>Smart Health</strong></a>
+                    {links}
                 </div>
             </div>
         </div>
