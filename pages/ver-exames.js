@@ -1,14 +1,14 @@
 import LeftMenu from '@/components/LeftMenu'
-import MobileMenu from '@/components/MobileMenu'
 import Head from 'next/head'
 import styles from '@/styles/Exams.module.css'
-import DateComponent from '@/components/DateComponent'
 import { useEffect, useState } from 'react'
 import SnackBar from '@/components/SnackBarComponent'
 import Loading from '@/components/LoadingComponent'
 import axios from 'axios'
 import tryLogin from '@/functions/tryLogin'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faDna } from '@fortawesome/free-solid-svg-icons'
+import { faCircleQuestion } from '@fortawesome/free-regular-svg-icons'
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -21,8 +21,6 @@ import {
     Filler
 } from 'chart.js'
 import { Line } from 'react-chartjs-2'
-import { faDna } from '@fortawesome/free-solid-svg-icons'
-import Link from 'next/link'
 import TopBar from '@/components/TopBar'
 
 ChartJS.register(
@@ -36,95 +34,83 @@ ChartJS.register(
     Filler
 );
 
-let first = true;
-
 export default function Exams() {
     const [errorMessages, setErrorMessages] = useState([]);
     const [typeOfMessage, setTypeOfMessage] = useState('warning');
     const [isLoading, setIsLoading] = useState(true);
 
-    const [charts, setCharts] = useState([]);
+    const [exames, setExames] = useState([]);
 
     useEffect(() => {
-        if (first) {
-            tryLogin(setIsLoading, axios, false);
-            getExams();
-            first = false;
-        }
-    }, []);
-
-    async function getExams() {
+        tryLogin(setIsLoading, axios, false);
         setIsLoading(true);
-        try {
-            const response = await axios.get(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem("user") + '/exame-itens', { headers: { Authorization: sessionStorage.getItem("token") } });
+        axios.get(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem("user") + '/exame-itens',
+            { headers: { Authorization: sessionStorage.getItem("token") } }).then((response) => {
+                let examesLista = [];
+                const dados = response.data.data;
 
-            await showExams(response.data.data);
-        }
-        catch (error) {
-            setTypeOfMessage('warning');
-            if (error.response)
-                if (!error.response.data.message.map) {
-                    setErrorMessages([<li key={0}>{error.response.data.message}</li>]);
-                }
-                else {
-                    setErrorMessages(error.response.data.message.map((message, index) => {
-                        return <li key={index}>{message}</li>
-                    }));
-                }
-        }
-        finally {
-            setTimeout(() => { setIsLoading(false) });
-        }
-    }
+                Object.keys(dados).forEach((examitem) => {
+                    let dadosExames = [...dados[examitem]];
+                    dadosExames = dadosExames.reverse();
 
-    async function showExams(examsList) {
-        Object.keys(examsList).forEach((examitem) => {
-            let dataExam = [...examsList[examitem]];
-            dataExam = dataExam.reverse();
+                    const dadosGraficoExame = {
+                        labels: dadosExames.map(row => new Date(row.data).toLocaleDateString()),
+                        datasets: [
+                            {
+                                label: examitem + ' - ' + dadosExames[0].unidade,
+                                data: dadosExames.map(row => row.medida),
+                                borderColor: "#F3A53F",
+                                backgroundColor: "rgba(248, 222, 189, 0.6)",
+                                borderWidth: 4,
+                                fill: true,
+                            }
+                        ]
+                    };
 
-            const data = {
-                labels: dataExam.map(row => new Date(row.data).toLocaleDateString()),
-                datasets: [
-                    {
-                        label: examitem + ' - ' + dataExam[0].unidade,
-                        data: dataExam.map(row => row.medida),
-                        borderColor: "#F3A53F",
-                        backgroundColor: "rgba(248, 222, 189, 0.6)",
-                        borderWidth: 4,
-                        fill: true,
+                    const configuracaoGraficoExame = {
+                        cubicInterpolationMode: 'monotone',
+                        plugins: {
+                            legend: {
+                                display: false,
+                            },
+                            tooltip: {
+                                enabled: true,
+                            }
+                        },
+                        maintainAspectRatio: false,
                     }
-                ]
-            };
 
-            const options = {
-                cubicInterpolationMode: 'monotone',
-                plugins: {
-                    legend: {
-                        display: false,
-                    },
-                    tooltip: {
-                        enabled: true,
+                    examesLista.push(<div className={styles.card_chart} key={examitem}>
+                        <div className={styles.chart_info}>
+                            <h3><FontAwesomeIcon icon={faDna} /> {examitem}</h3>
+                            <h3 className={styles.gray}>ATUAL</h3>
+                            <h2>{dados[examitem][0].medida} <span className={[styles.gray, styles.umedida].join(" ")}>{dados[examitem][0].unidade}</span> <span data-isalterado={dados[examitem][0].isAlterado} className={styles.isAlterado}>{dados[examitem][0].isAlterado ? "Alterado" : "Normal"} <span className={styles.tooltip}><FontAwesomeIcon icon={faCircleQuestion} /> <span className={styles.tooltiptext}>De acordo com o Ministério da Saúde.</span></span></span></h2>
+                        </div>
+                        <div className={styles.chart_container}>
+                            <Line
+                                data={dadosGraficoExame}
+                                options={configuracaoGraficoExame}
+                            />
+                        </div>
+                    </div>);
+                });
+
+                setExames(examesLista);
+            }).catch((error) => {
+                setTypeOfMessage('warning');
+                if (error.response)
+                    if (!error.response.data.message.map) {
+                        setErrorMessages([<li key={0}>{error.response.data.message}</li>]);
                     }
-                },
-                maintainAspectRatio: false,
-            }
-
-            const chart = <div className={styles.card_chart} key={examitem}>
-                <div className={styles.chart_info}>
-                    <h3><FontAwesomeIcon icon={faDna} /> {examitem}</h3>
-                    <h3 className={styles.gray}>ATUAL</h3>
-                    <h2>{examsList[examitem][0].medida} <span className={styles.gray}>{examsList[examitem][0].unidade}</span> <span className={styles.isAlterado}>{examsList[examitem][0].isAlterado ? "Alterado" : "Normal"}</span></h2>
-                </div>
-                <div className={styles.chart_container}>
-                    <Line
-                        data={data}
-                        options={options}
-                    />
-                </div>
-            </div>;
-            setCharts((oldCharts) => [...oldCharts, chart]);
-        });
-    }
+                    else {
+                        setErrorMessages(error.response.data.message.map((message, index) => {
+                            return <li key={index}>{message}</li>
+                        }));
+                    }
+            }).finally(() => {
+                setIsLoading(false);
+            });
+    }, []);
 
     return (
         <>
@@ -164,12 +150,13 @@ export default function Exams() {
                     <main className='content' style={{ justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column', marginBottom: '25px' }}>
                         <div className={styles.exams}>
                             <h2 className='subtitle' style={{ marginBottom: "30px" }}>Meus exames</h2>
-                            {isLoading ?
-                                null
-                                : charts.length > 0
-                                    ? charts
-                                    : <h2>Nenhum exame cadastrado. Adicione exames <Link style={{ color: "#E79B38" }} href={"/adicionar-exames"}>aqui</Link>. </h2>
-                            }
+                            {exames}
+                            <div className={[styles.card_chart, styles.novosexames].join(" ")}>
+                                <p>
+                                    Adicione novos exames para acompanhar sua evolução.
+                                </p>
+                                <a className='ajuda' href='/adicionar-exames'>Adicionar</a>
+                            </div>
                         </div>
                     </main>
 
