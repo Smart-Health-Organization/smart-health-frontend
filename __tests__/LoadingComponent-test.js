@@ -30,5 +30,17 @@ describe('LoadingComponent', () => {
         expect(returnElement).not.toBeInTheDocument();
     });
 
-    //todo: testar estilo
+    it('LoadingComponent must have a class named "loadingBar"', () => {
+        // 1. renderizar o componente passando suas props
+        const renderredComponent = render(<LoadingComponent on={true} />,);
+
+        // 2. pegar o elemento que será testado
+        const returnElement = renderredComponent.container.firstChild;
+
+        // 3. Aplicar a ação que será testada
+        // nada a fazer
+
+        // 4. fazer o teste
+        expect(returnElement).toHaveClass('loadingBar');
+    });
 });

@@ -31,5 +31,17 @@ describe('LeftMenu', () => {
         expect(returnElement).toHaveAttribute('href', '/qualquer-link');
     });
 
-    //todo: testar estilo
+    it('LeftMenu must have a class named "leftMenu"', () => {
+        // 1. renderizar o componente passando suas props
+        const renderredComponent = render(<LeftMenu />,);
+
+        // 2. pegar o elemento que será testado
+        const returnElement = renderredComponent.container.firstChild;
+
+        // 3. Aplicar a ação que será testada
+        // nada a fazer
+
+        // 4. fazer o teste
+        expect(returnElement).toHaveClass('leftMenu');
+    });
 });
