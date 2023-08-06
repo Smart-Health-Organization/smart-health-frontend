@@ -1,4 +1,5 @@
-export default function DateComponent(props) {
+export default function DateComponent(props = { date: "" }) {
+    if (!props.date) return;
     const date = new Date(props.date);
     const months = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
 
