@@ -9,4 +9,4 @@ jobs:
     - name: Install modules
       run: npm install
     - name: Run tests
-      run: jest
+      run: npm test
