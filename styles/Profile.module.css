@@ -74,12 +74,14 @@ div.changePassword label {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  margin: 15px 0 0 0;
 }
 
 div.changePassword > label > input,
 div.changePassword > label > select {
   max-width: 60% !important;
   width: 60%;
+  margin: 0;
 }
 
 hr.hr {

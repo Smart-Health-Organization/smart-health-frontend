@@ -4,7 +4,7 @@ import styles from '../styles/SnackBar.module.css';
 const options = { "info": styles.snackbar, "warning": styles.snackbarWarning, "success": styles.snackbarSuccess };
 let fadingOut;
 
-export default function SnackBar(props) {
+export default function SnackBar(props = { message: [], option: "info" }) {
     const [style, setStyle] = useState([options[props.option]]);
 
     useEffect(() => setStyle([options[props.option]]), [props]);

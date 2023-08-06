@@ -3,6 +3,7 @@ import { faIdCard } from '@fortawesome/free-regular-svg-icons';
 import { faFileCirclePlus, faHospitalUser, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect } from 'react';
+import MobileMenuItem from './MobileMenuItem';
 
 const pages = [
     { name: "Ver Exames", path: "/ver-exames", icon: <FontAwesomeIcon icon={faHospitalUser} /> },
@@ -19,7 +20,6 @@ export default function MobileMenu(props = { actualpage: "/" }) {
         document.getElementById("menu").style.minHeight = (60 + 50 * pages.length) + "px";
         document.getElementById("openMenu").style.display = "none";
         setTimeout(() => document.getElementById("menuList").style.display = "flex", 300);
-
     }
 
     function closeMenu() {
@@ -41,7 +41,7 @@ export default function MobileMenu(props = { actualpage: "/" }) {
     let links = [];
 
     for (let i = 0; i < pages.length; i++) {
-        links.push(<a key={i} href={pages[i].path} data-actualpage={props.actualpage == pages[i].path}>{pages[i].icon} {pages[i].name}</a>);
+        links.push(<MobileMenuItem key={i} actualpage={props.actualpage} path={pages[i].path} icon={pages[i].icon} name={pages[i].name} />);
     }
 
     return (
