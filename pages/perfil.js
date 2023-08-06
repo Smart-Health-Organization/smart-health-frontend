@@ -7,8 +7,6 @@ import Loading from '@/components/LoadingComponent'
 import axios from 'axios'
 import TopBar from '@/components/TopBar'
 
-let first = true;
-
 export default function Profile() {
   const [errorMessages, setErrorMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -17,31 +15,38 @@ export default function Profile() {
   const [email, setEmail] = useState('');
   const [idade, setIdade] = useState(0);
   const [sexo, setSexo] = useState('');
+  const [nomeRef, setNomeRef] = useState('');
+  const [emailRef, setEmailRef] = useState('');
+  const [idadeRef, setIdadeRef] = useState(0);
+  const [sexoRef, setSexoRef] = useState('');
 
   useEffect(() => {
-    if (first) {
-      async function tryLogin() {
-        try {
-          if (!(sessionStorage.getItem("token") && sessionStorage.getItem("user"))) {
-            window.location.replace("/entrar");
-          }
-          const response = await axios.get(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem("user"), { headers: { Authorization: sessionStorage.getItem("token") } });
-
-          setNome(response.data.nome);
-          setEmail(response.data.email);
-          setIdade(response.data.idade);
-          setSexo(response.data.sexo);
-
-          setTimeout(() => { document.querySelector("#sexo2").value = response.data.sexo });
-        }
-        catch {
+    async function tryLogin() {
+      setIsLoading(true);
+      try {
+        if (!(sessionStorage.getItem("token") && sessionStorage.getItem("user"))) {
           window.location.replace("/entrar");
         }
+        const response = await axios.get(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem("user"), { headers: { Authorization: sessionStorage.getItem("token") } });
+
+        setNome(response.data.nome);
+        setEmail(response.data.email);
+        setIdade(response.data.idade);
+        setSexo(response.data.sexo);
+        setNomeRef(response.data.nome);
+        setEmailRef(response.data.email);
+        setIdadeRef(response.data.idade);
+        setSexoRef(response.data.sexo);
       }
-      tryLogin();
-      first = false;
+      catch {
+        window.location.replace("/entrar");
+      }
+      finally {
+        setIsLoading(false);
+      }
     }
-  });
+    tryLogin();
+  }, []);
 
   function onEnter(e) {
     if (e.key != 'Enter') return;
@@ -93,10 +98,10 @@ export default function Profile() {
     setIsLoading(true);
 
     let newUser = {
-      nome: document.querySelector("#name").value != nome ? document.querySelector("#name").value : null,
-      idade: Number(document.querySelector("#age2").value) != idade ? Number(document.querySelector("#age2").value) : null,
-      sexo: document.querySelector("#sexo2").value.toLowerCase() != sexo ? document.querySelector("#sexo2").value : null,
-      email: document.querySelector("#email").value != email ? document.querySelector("#email").value : null,
+      nome: nome != nomeRef ? nome : null,
+      idade: idade != idadeRef ? idade : null,
+      sexo: sexo != sexoRef ? sexo : null,
+      email: email != emailRef ? email : null,
     }
 
     newUser = Object.fromEntries(Object.entries(newUser).filter(([_, v]) => v != null));
@@ -221,10 +226,10 @@ export default function Profile() {
                 Meu Perfil
               </h2>
 
-              <h3 className={styles.userInfos} id='userName'>{nome || "Nome Sobrenome"}</h3>
-              <p className={styles.userInfos} id='userEmail'>{email || "email@mail.com"}</p>
+              <h3 className={styles.userInfos} id='userName'>{nomeRef || "Nome Sobrenome"}</h3>
+              <p className={styles.userInfos} id='userEmail'>{emailRef || "email@mail.com"}</p>
               <p className={styles.userInfos2}>
-                {idade || 0} anos, {' ' + (sexo ? sexo[0].toUpperCase() + sexo.slice(1) : "Sexo")}.
+                {idadeRef || 0} anos, {' ' + (sexoRef ? sexoRef[0].toUpperCase() + sexoRef.slice(1) : "Sexo")}.
               </p>
 
               <hr className={styles.hr}></hr>
@@ -234,18 +239,18 @@ export default function Profile() {
                   Editar informações
                 </h2>
                 <div className={styles.changePassword}>
-                  <label><strong>Nome:</strong> <input className={styles.edit} id='name' onKeyDown={onEnter} placeholder='Nome' type='text' defaultValue={nome || "Nome Sobrenome"}></input></label>
-                  <label><strong>Email:</strong> <input className={styles.edit} id='email' onKeyDown={onEnter} placeholder='Email' type='email' defaultValue={email || "email@mail.com"}></input></label>
+                  <label><strong>Nome:</strong> <input className={styles.edit} id='name' onKeyDown={onEnter} onChange={(e) => setNome(e.target.value)} placeholder='Nome Sobrenome' type='text' value={nome}></input></label>
+                  <label><strong>Email:</strong> <input className={styles.edit} id='email' onKeyDown={onEnter} onChange={(e) => setEmail(e.target.value)} placeholder='email@mail.com' type='email' value={email}></input></label>
                   <label>
                     <strong>Sexo:</strong>
                     &nbsp;
-                    <select onKeyDown={onEnter} id='sexo2'>
+                    <select value={sexo} onKeyDown={onEnter} onChange={(e) => setSexo(e.target.value)} id='sexo2'>
                       <option value=''>Selecione o sexo</option>
                       <option value='masculino'>Masculino</option>
                       <option value='feminino'>Feminino</option>
                     </select>
                   </label>
-                  <label><strong>Idade:</strong> <input className={styles.edit} id='age2' onKeyDown={patch} placeholder='Idade' type='number' defaultValue={idade || 0}></input></label>
+                  <label><strong>Idade:</strong> <input className={styles.edit} id='age2' onKeyDown={patch} onChange={(e) => setIdade(Number(e.target.value))} placeholder='Idade' type='number' value={idade}></input></label>
                 </div>
               </div>
               <button style={{ marginBottom: '30px' }} disabled={isLoading} onClick={patch} className='ajuda'>
