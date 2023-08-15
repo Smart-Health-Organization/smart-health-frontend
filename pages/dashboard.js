@@ -53,7 +53,7 @@ export default function Dashboard() {
     useEffect(() => {
         if (peso <= 0 || altura <= 0) return;
 
-        setImc(calcIMC((altura/100), peso));
+        setImc(calcIMC((altura / 100), peso));
     }, [peso, altura]);
 
     return (
@@ -96,16 +96,16 @@ export default function Dashboard() {
 
                             {exames.length == 0 ? <>
                                 <div className={styles.callaction}>
-                                    <p>
+                                    <p className={styles.infos}>
                                         Bem-vindo(a) ao <strong>Smart Health</strong>, a plataforma web para armazenamento, acompanhamento e compartilhamento seguro de resultados de exames e informações de saúde.
                                     </p>
-                                    <p>
+                                    <p className={styles.infos}>
                                         <strong><FontAwesomeIcon icon={faFileCirclePlus} /> Carregue exames: </strong>Carregue seus exames e informações de saúde de forma facilitada e rápida através de um upload de um arquivo PDF.
                                     </p>
-                                    <p>
+                                    <p className={styles.infos}>
                                         <strong><FontAwesomeIcon icon={faHospitalUser} /> Acompanhamento: </strong>Acompanhe a sua evolução na saúde através de gráficos, indicações e ferramentas que ajudam a você tomar decisões e definir as metas.
                                     </p>
-                                    <p>
+                                    <p className={styles.infos}>
                                         <strong><FontAwesomeIcon icon={faShare} /> Compartilhamento: </strong>Compartilhe seus exames e informações de saúde com profissionais da saúde e familiares de forma segura e prática com links de acesso fácil ou QR Code.
                                     </p>
                                 </div>
