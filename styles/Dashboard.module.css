@@ -221,6 +221,10 @@ div.content>div.callaction>* {
     text-align: center;
 }
 
+div.content>div.callaction>p.infos {
+    margin-bottom: 0;
+}
+
 div.content h1 {
     align-self: flex-start;
 }
