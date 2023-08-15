@@ -118,7 +118,7 @@ export default function Dashboard() {
                                 </div>
                             </> : <>
                                 <div className={styles.mainExams}>
-                                    {exames[Math.round(Math.random() * exames.length) | 0]}
+                                    {exames[0]}
                                 </div>
                                 <div className={styles.callaction}>
                                     <p>
