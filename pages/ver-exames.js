@@ -41,12 +41,28 @@ export default function Exams() {
     const [isLoading, setIsLoading] = useState(true);
 
     const [exames, setExames] = useState([]);
+    const [examesBuscados, setExamesBuscados] = useState([]);
 
     useEffect(() => {
         tryLogin(setIsLoading, axios, false);
         setIsLoading(true);
         getExames(setErrorMessages, setIsLoading).then((response) => setExames(response));
     }, []);
+
+    useEffect(() => {
+        search('');
+    }, [exames]);
+
+    function search(string) {
+        if (string === '') {
+            setExamesBuscados(exames);
+            return;
+        }
+
+        const searchedExams = exames.filter((exam) => exam.key.toUpperCase().startsWith(string.toUpperCase()));
+        setExamesBuscados(searchedExams);
+        return;
+    }
 
     return (
         <>
@@ -86,7 +102,10 @@ export default function Exams() {
                     <main className='content' style={{ justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column', marginBottom: '25px' }}>
                         <div className={styles.exams}>
                             <h2 className='subtitle' style={{ marginBottom: "30px" }}>Meus exames</h2>
-                            {exames}
+                            {exames.length > 0 ? <>
+                                <input onChange={(e) => search(e.target.value)} className={styles.search} placeholder='Pesquise exames'></input>
+                                {examesBuscados}
+                            </> : <></>}
                             <div className={[styles.card_chart, styles.novosexames].join(" ")}>
                                 <p>
                                     Adicione novos exames para acompanhar sua evolução.
