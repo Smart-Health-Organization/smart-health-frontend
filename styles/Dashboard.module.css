@@ -122,10 +122,24 @@ aside.aside>div.imc>div.body>div.result>h3 {
     font-size: 1.6rem;
 }
 
+aside.aside>div.imc>div.body>div.result>h4.alert {
+    color: #000;
+    border-radius: 8px;
+    background: #FFF;
+    padding: 6px 10px;
+}
+
 aside.aside>div.imc>div.body>div.result>h4.alertGreen {
     color: #000;
     border-radius: 8px;
     background: #D6FFDD;
+    padding: 6px 10px;
+}
+
+aside.aside>div.imc>div.body>div.result>h4.alertOrange {
+    color: #000;
+    border-radius: 8px;
+    background: #F8DEBD;
     padding: 6px 10px;
 }
 

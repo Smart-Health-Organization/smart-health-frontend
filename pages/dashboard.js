@@ -21,6 +21,10 @@ export default function Dashboard() {
     const [saudacao, setSaudacao] = useState('Olá');
     const [exames, setExames] = useState([]);
 
+    const [peso, setPeso] = useState(0);
+    const [altura, setAltura] = useState(0);
+    const [imc, setImc] = useState({ valor: 0, classificacao: 'Resultado aqui!', className: styles.alert });
+
     useEffect(() => {
         tryLogin(setIsLoading, axios, false);
         setIsLoading(true);
@@ -39,6 +43,18 @@ export default function Dashboard() {
 
         getExames(setErrorMessages, setIsLoading).then((response) => setExames(response));
     }, []);
+
+    function onEnter(e) {
+        if (e.key == 'Enter') {
+            document.querySelector('#peso').focus();
+        }
+    }
+
+    useEffect(() => {
+        if (peso <= 0 || altura <= 0) return;
+
+        setImc(calcIMC((altura/100), peso));
+    }, [peso, altura]);
 
     return (
         <>
@@ -124,17 +140,17 @@ export default function Dashboard() {
                                 <div className={styles.info}>
                                     <div className={styles.altura}>
                                         <img src="./peso_altura.png"></img>
-                                        <p><span>Altura: </span><input type="number" placeholder="185 cm"></input></p>
+                                        <p><span>Altura: </span><input onChange={(e) => setAltura(Number(e.target.value))} onKeyDown={onEnter} id="altura" type="number" placeholder="185 cm"></input></p>
                                     </div>
                                     <div className={styles.peso}>
                                         <img src="./peso_altura.png"></img>
-                                        <p><span>Peso: </span><input type="number" placeholder="82 kg"></input></p>
+                                        <p><span>Peso: </span><input onChange={(e) => setPeso(Number(e.target.value))} id="peso" type="number" placeholder="82 kg"></input></p>
                                     </div>
                                 </div>
                                 <div className={styles.result}>
                                     <h4>Índice de Massa Corporal (IMC)</h4>
-                                    <h3>0 Kg/m²</h3>
-                                    <h4 className={styles.alertGreen}>IMC Normal</h4>
+                                    <h3>{imc.valor} Kg/m²</h3>
+                                    <h4 className={imc.className}>{imc.classificacao}</h4>
                                 </div>
                             </div>
                         </div>
@@ -152,4 +168,36 @@ export default function Dashboard() {
             </div>
         </>
     )
+}
+
+function calcIMC(altura, peso) {
+    let imc = peso / (altura * altura);
+    let classificacao = 'Resultado aqui!';
+    let className = styles.alert;
+
+    if (imc < 18.5) {
+        classificacao = 'Abaixo do peso';
+        className = styles.alertOrange;
+    } else if (imc >= 18.5 && imc <= 24.9) {
+        classificacao = 'Peso normal';
+        className = styles.alertGreen;
+    } else if (imc >= 25 && imc <= 29.9) {
+        classificacao = 'Sobrepeso';
+        className = styles.alertOrange;
+    } else if (imc >= 30 && imc <= 34.9) {
+        classificacao = 'Obesidade grau 1';
+        className = styles.alertOrange;
+    } else if (imc >= 35 && imc <= 39.9) {
+        classificacao = 'Obesidade grau 2';
+        className = styles.alertOrange;
+    } else if (imc >= 40) {
+        classificacao = 'Obesidade grau 3';
+        className = styles.alertOrange;
+    }
+
+    return {
+        valor: imc.toFixed(2),
+        classificacao,
+        className
+    }
 }
