@@ -233,7 +233,10 @@ div.content h1 {
 }
 
 div.mainExams {
-    width: 80%;
+    width: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 div.mainExams>div {
@@ -242,6 +245,7 @@ div.mainExams>div {
     height: auto;
     padding: 25px;
     align-items: flex-start;
+    width: calc(100% - 50px);
 }
 
 div.mainExams>div>div {

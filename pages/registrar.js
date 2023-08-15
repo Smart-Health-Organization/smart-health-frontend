@@ -48,7 +48,7 @@ export default function Register() {
       sessionStorage.setItem("token", "Bearer " + response.data.token);
       sessionStorage.setItem("user", response.data.usuario.id);
 
-      window.location.replace("/perfil");
+      window.location.replace("/dashboard");
     }
     catch (error) {
       if (error.response)
