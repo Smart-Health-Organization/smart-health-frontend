@@ -38,7 +38,7 @@ export default function Login() {
       sessionStorage.setItem("token", "Bearer " + response.data.token);
       sessionStorage.setItem("user", response.data.usuario.id);
 
-      window.location.replace("/ver-exames");
+      window.location.replace("/dashboard");
     }
     catch (error) {
       if (error.response)

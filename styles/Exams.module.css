@@ -174,3 +174,21 @@ div.exams > div.card_chart.novosexames {
 div.exams > div.card_chart.novosexames > p {
   width: 70%;
 }
+
+input.search {
+  margin-bottom: 15px;
+  width: 90%;
+  
+  background: #FFFFFF;
+  border: 1px solid #E8E7E7;
+  box-shadow: 0px 1px 50px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  
+  width: 90%;
+  max-width: 700px;
+
+  padding: 15px;
+
+  font-size: 15px;
+  font-weight: 600;
+}

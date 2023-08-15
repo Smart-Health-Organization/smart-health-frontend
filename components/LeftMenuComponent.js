@@ -1,11 +1,12 @@
 import styles from '@/styles/LeftMenu.module.css'
 import { faIdCard } from '@fortawesome/free-regular-svg-icons';
-import { faFileCirclePlus, faHospitalUser, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { faFileCirclePlus, faHospitalUser, faRightFromBracket, faTableColumns } from '@fortawesome/free-solid-svg-icons';
 import LeftMenuItem from './LeftMenuItem';
 
 const pages = [
+    { name: "Dashboard", path: "/dashboard", icon: faTableColumns },
     { name: "Ver Exames", path: "/ver-exames", icon: faHospitalUser },
-    { name: "Cadastrar Exame", path: "/adicionar-exames", icon: faFileCirclePlus },
+    { name: "Carregar Exames", path: "/adicionar-exames", icon: faFileCirclePlus },
     { name: "Meu Perfil", path: "/perfil", icon: faIdCard },
     { name: "Sair", path: "/sair", icon: faRightFromBracket }];
 
