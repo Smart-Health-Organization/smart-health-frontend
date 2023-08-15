@@ -2,8 +2,38 @@ import LeftMenu from "@/components/LeftMenuComponent";
 import TopBar from "@/components/TopBar";
 import Head from "next/head";
 import styles from '@/styles/Dashboard.module.css';
+import { useEffect, useState } from "react";
+import Loading from "@/components/LoadingComponent";
+import SnackBar from "@/components/SnackBarComponent";
+import tryLogin from "@/functions/tryLogin";
+import axios from "axios";
+import Link from "next/link";
 
 export default function Dashboard() {
+    const [errorMessages, setErrorMessages] = useState([]);
+    const [typeOfMessage, setTypeOfMessage] = useState('warning');
+    const [isLoading, setIsLoading] = useState(true);
+
+    const [userName, setUserName] = useState('Usuário');
+    const [saudacao, setSaudacao] = useState('Olá');
+
+    useEffect(() => {
+        tryLogin(setIsLoading, axios, false);
+        setIsLoading(true);
+
+        if (new Date().getHours() >= 6 && new Date().getHours() < 12) setSaudacao('Bom dia');
+        else if (new Date().getHours() >= 12 && new Date().getHours() < 18) setSaudacao('Boa tarde');
+        else if (new Date().getHours() >= 18 || new Date().getHours() < 6) setSaudacao('Boa noite');
+
+        fetch(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem('user'), {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': sessionStorage.getItem('token')
+            }
+        }).then(async (response) => setUserName((await response.json()).nome.split(' ')[0])).finally(() => setIsLoading(false));
+    }, []);
+
     return (
         <>
             <Head>
@@ -26,6 +56,10 @@ export default function Dashboard() {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.png" />
             </Head>
+
+            <SnackBar option={typeOfMessage} message={errorMessages}></SnackBar>
+            <Loading on={isLoading}></Loading>
+
             <div className='container'>
 
                 <LeftMenu actualpage="/dashboard" ></LeftMenu>
@@ -35,7 +69,22 @@ export default function Dashboard() {
                     <main className='content'>
                         <TopBar actualpage="/dashboard"></TopBar>
 
+                        <div className={styles.content}>
+                            <h1>{saudacao}, {userName}!</h1>
 
+                            <div className={styles.callaction}>
+                                <p>
+                                    Bem-vindo(a) ao <strong>Smart Health</strong>, a plataforma web para armazenamento, acompanhamento e compartilhamento seguro de resultados de exames e informações de saúde.
+                                </p>
+                            </div>
+
+                            <div className={styles.callaction}>
+                                <p>
+                                    Adicione novos exames para acompanhar sua evolução!
+                                </p>
+                                <Link className='ajuda' href='/adicionar-exames'>Adicionar</Link>
+                            </div>
+                        </div>
                     </main>
 
                     <aside className={styles.aside}>
@@ -56,7 +105,7 @@ export default function Dashboard() {
                                 </div>
                                 <div className={styles.result}>
                                     <h4>Índice de Massa Corporal (IMC)</h4>
-                                    <h3>0 Kg/m³</h3>
+                                    <h3>0 Kg/m²</h3>
                                     <h4 className={styles.alertGreen}>IMC Normal</h4>
                                 </div>
                             </div>

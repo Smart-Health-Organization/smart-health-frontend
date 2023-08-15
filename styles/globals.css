@@ -222,9 +222,13 @@ a {
     width: 100%;
   }
 
-  div.main.authPage.dashboard .topbar {
+  div.main.authPage.dashboard>main.content {
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  div.main.authPage.dashboard>main.content>* {
     width: 95%;
-    align-self: center;
   }
 }
 
