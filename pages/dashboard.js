@@ -8,6 +8,9 @@ import SnackBar from "@/components/SnackBarComponent";
 import tryLogin from "@/functions/tryLogin";
 import axios from "axios";
 import Link from "next/link";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFileCirclePlus, faHospitalUser, faShare } from "@fortawesome/free-solid-svg-icons";
+import { getExames } from "./ver-exames";
 
 export default function Dashboard() {
     const [errorMessages, setErrorMessages] = useState([]);
@@ -16,6 +19,7 @@ export default function Dashboard() {
 
     const [userName, setUserName] = useState('Usuário');
     const [saudacao, setSaudacao] = useState('Olá');
+    const [exames, setExames] = useState([]);
 
     useEffect(() => {
         tryLogin(setIsLoading, axios, false);
@@ -32,6 +36,8 @@ export default function Dashboard() {
                 'Authorization': sessionStorage.getItem('token')
             }
         }).then(async (response) => setUserName((await response.json()).nome.split(' ')[0])).finally(() => setIsLoading(false));
+
+        getExames(setErrorMessages, setIsLoading).then((response) => setExames(response));
     }, []);
 
     return (
@@ -72,18 +78,40 @@ export default function Dashboard() {
                         <div className={styles.content}>
                             <h1>{saudacao}, {userName}!</h1>
 
-                            <div className={styles.callaction}>
-                                <p>
-                                    Bem-vindo(a) ao <strong>Smart Health</strong>, a plataforma web para armazenamento, acompanhamento e compartilhamento seguro de resultados de exames e informações de saúde.
-                                </p>
-                            </div>
+                            {exames.length == 0 ? <>
+                                <div className={styles.callaction}>
+                                    <p>
+                                        Bem-vindo(a) ao <strong>Smart Health</strong>, a plataforma web para armazenamento, acompanhamento e compartilhamento seguro de resultados de exames e informações de saúde.
+                                    </p>
+                                    <p>
+                                        <strong><FontAwesomeIcon icon={faFileCirclePlus} /> Carregue exames: </strong>Carregue seus exames e informações de saúde de forma facilitada e rápida através de um upload de um arquivo PDF.
+                                    </p>
+                                    <p>
+                                        <strong><FontAwesomeIcon icon={faHospitalUser} /> Acompanhamento: </strong>Acompanhe a sua evolução na saúde através de gráficos, indicações e ferramentas que ajudam a você tomar decisões e definir as metas.
+                                    </p>
+                                    <p>
+                                        <strong><FontAwesomeIcon icon={faShare} /> Compartilhamento: </strong>Compartilhe seus exames e informações de saúde com profissionais da saúde e familiares de forma segura e prática com links de acesso fácil ou QR Code.
+                                    </p>
+                                </div>
 
-                            <div className={styles.callaction}>
-                                <p>
-                                    Adicione novos exames para acompanhar sua evolução!
-                                </p>
-                                <Link className='ajuda' href='/adicionar-exames'>Adicionar</Link>
-                            </div>
+                                <div className={styles.callaction}>
+                                    <p>
+                                        Adicione novos exames para acompanhar sua evolução!
+                                    </p>
+                                    <Link className='ajuda' href='/adicionar-exames'>Adicionar</Link>
+                                </div>
+                            </> : <>
+                                <div className={styles.mainExams}>
+                                    {exames[0]}
+                                </div>
+                                <div className={styles.callaction}>
+                                    <p>
+                                        Veja todos os seus exames aqui!
+                                    </p>
+                                    <Link className='ajuda' href='/ver-exames'>Ver exames</Link>
+                                </div>
+                            </>
+                            }
                         </div>
                     </main>
 

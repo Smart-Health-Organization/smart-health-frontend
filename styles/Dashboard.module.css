@@ -183,7 +183,7 @@ main>div.content {
     height: 100%;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
 }
 
@@ -201,9 +201,35 @@ div.content>div.callaction {
     justify-content: space-around;
     flex-wrap: wrap;
     margin: 15px 0;
-    align-self: center;
 }
 
 div.content>div.callaction>* {
     text-align: center;
+}
+
+div.content h1 {
+    align-self: flex-start;
+}
+
+@media (max-width: 1200px) {
+
+    div.conten>h1 {
+        align-self: unset;
+    }
+}
+
+div.mainExams {
+    width: 80%;
+}
+
+div.mainExams>div {
+    height: auto;
+    flex-direction: column;
+    height: auto;
+    padding: 25px;
+    align-items: flex-start;
+}
+
+div.mainExams>div>div {
+    width: 100%;
 }
