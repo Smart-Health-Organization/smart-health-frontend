@@ -1,0 +1,245 @@
+div.exams {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+div.chart_info {
+  height: 100%;
+  width: 100%;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+
+  flex-direction: column;
+}
+
+div.chart_container {
+  position: relative;
+  height: 100%;
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+div.card_chart {
+  background: #FFFFFF;
+  border: 1px solid #E8E7E7;
+  box-shadow: 0px 1px 50px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 250px;
+
+  margin: 15px;
+  padding: 25px;
+  cursor: pointer;
+
+  max-width: 80%;
+}
+
+@media (max-width: 1200px) {
+  div.card_chart {
+    padding: 10px !important;
+  }
+}
+
+div.card_chart h3 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  margin: 0;
+}
+
+div.card_chart h3 svg {
+  color: #E79B38;
+  background-color: #F8DEBD;
+  padding: 5px;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+div.card_chart h3.gray {
+  color: #818181;
+  margin-top: 15px;
+}
+
+div.card_chart h2 {
+  margin: 0;
+  font-weight: 400;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+div.card_chart h2 span.umedida {
+  font-size: 15px;
+  margin: 0;
+  font-weight: 400;
+  color: #818181;
+  margin-left: 7px;
+}
+
+div.card_chart h2 span.isAlterado {
+  background: #F8DEBD;
+  border-radius: 4px;
+  padding: 5px;
+  color: #000;
+  font-size: 14px;
+  margin-left: 7px;
+}
+
+div.card_chart h2 span.isAlterado[data-isalterado="false"] {
+  background: #55C66E;
+  color: #fff;
+}
+
+.tooltip {
+  position: relative;
+  cursor: pointer;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px;
+  border-radius: 6px;
+
+  position: absolute;
+  z-index: 1;
+  width: 120px;
+  top: 100%;
+  left: 50%;
+  margin-left: -60px;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+div.exams>div.novosexames {
+  background: #FFFFFF;
+  border: 1px solid #E8E7E7;
+  box-shadow: 0px 1px 50px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+
+  width: 90%;
+  max-width: 700px;
+  height: 150px;
+
+  margin: 15px 0;
+
+  padding: 25px 35px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+
+  min-height: 60px;
+  max-height: 60px;
+}
+
+div.exams>div.novosexames>p {
+  width: 70%;
+}
+
+input.search {
+  margin-bottom: 15px;
+  width: 90%;
+
+  background: #FFFFFF;
+  border: 1px solid #E8E7E7;
+  box-shadow: 0px 1px 50px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+
+  width: 90%;
+  max-width: 700px;
+
+  padding: 15px;
+
+  font-size: 15px;
+  font-weight: 600;
+}
+
+div.examsList {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 90%;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 1200px) {
+  div.examsList {
+    width: 100%;
+  }
+}
+
+div.exams button {
+  margin: 30px 0;
+}
+
+div.exams div.selected {
+  border: 2px dashed #E79B38;
+  background-color: #FFFFFF50;
+}
+
+div.exams>h3 {
+  font-weight: 500;
+}
+
+div.callaction {
+  border-radius: 12px;
+  border: 1px solid #E8E7E7;
+  background: #FFF;
+  box-shadow: 0px 1px 50px 0px rgba(0, 0, 0, 0.08);
+
+  width: calc(95% - 30px);
+  max-width: 650px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  margin: 15px 0;
+}
+
+div.callaction * {
+  font-weight: 300;
+}
+
+div.callaction ul {
+  margin: 0;
+}
+
+div.callaction p:last-child {
+  margin-bottom: 0;
+}
+
+div.callaction p:first-child {
+  margin-top: 0;
+}

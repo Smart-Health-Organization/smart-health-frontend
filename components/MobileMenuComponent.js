@@ -1,6 +1,6 @@
 import styles from '@/styles/MobileMenu.module.css'
 import { faIdCard } from '@fortawesome/free-regular-svg-icons';
-import { faFileCirclePlus, faHospitalUser, faRightFromBracket, faTableColumns } from '@fortawesome/free-solid-svg-icons';
+import { faFileCirclePlus, faHospitalUser, faRightFromBracket, faShare, faTableColumns } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect } from 'react';
 import MobileMenuItem from './MobileMenuItem';
@@ -9,6 +9,7 @@ const pages = [
     { name: "Dashboard", path: "/dashboard", icon: <FontAwesomeIcon icon={faTableColumns} /> },
     { name: "Ver Exames", path: "/ver-exames", icon: <FontAwesomeIcon icon={faHospitalUser} /> },
     { name: "Carregar Exames", path: "/adicionar-exames", icon: <FontAwesomeIcon icon={faFileCirclePlus} /> },
+    { name: "Compartilhamento", path: "/compartilhamento", icon: <FontAwesomeIcon icon={faShare} /> },
     { name: "Meu Perfil", path: "/perfil", icon: <FontAwesomeIcon icon={faIdCard} /> },
     { name: "Sair", path: "/sair", icon: <FontAwesomeIcon icon={faRightFromBracket} /> }];
 
