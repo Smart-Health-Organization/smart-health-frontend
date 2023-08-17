@@ -42,13 +42,15 @@ div.card_chart {
   align-items: center;
   justify-content: space-between;
 
-  width: 250px;
+  width: 300px;
+  height: 300px;
 
   margin: 15px;
   padding: 25px;
   cursor: pointer;
 
-  max-width: 80%;
+  max-width: 95%;
+  box-sizing: border-box;
 }
 
 @media (max-width: 1200px) {
@@ -195,10 +197,12 @@ div.examsList {
 @media (max-width: 1200px) {
   div.examsList {
     width: 100%;
+    align-items: center;
+    justify-content: center;
   }
 }
 
-div.exams button {
+div.exams>button:last-child {
   margin: 30px 0;
 }
 

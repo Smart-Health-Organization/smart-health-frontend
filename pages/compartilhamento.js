@@ -23,6 +23,7 @@ import {
 import { Line } from 'react-chartjs-2'
 import TopBar from '@/components/TopBar'
 import Link from 'next/link'
+import { fakerPT_BR } from '@faker-js/faker'
 
 ChartJS.register(
     CategoryScale,
@@ -42,16 +43,34 @@ export default function Exams() {
 
     const [exames, setExames] = useState([]);
     const [examesBuscados, setExamesBuscados] = useState([]);
+    const [selectedAll, setSelectedAll] = useState(false);
+    const [titulo, setTitulo] = useState('');
 
     useEffect(() => {
         tryLogin(setIsLoading, axios, false);
         setIsLoading(true);
-        getExamesMini(setErrorMessages, setIsLoading).then((response) => setExames(response));
+        getExamesMini(setErrorMessages, setIsLoading, setTypeOfMessage).then((response) => setExames(response));
     }, []);
 
     useEffect(() => {
         search('');
     }, [exames]);
+
+    function selectAll(e) {
+        if (!selectedAll) {
+            setSelectedAll(true);
+            document.querySelectorAll('.' + styles.card_chart).forEach((exam) => {
+                exam.classList.add(styles.selected);
+            });
+            e.target.innerText = 'Desmarcar tudo';
+            return;
+        }
+        setSelectedAll(false);
+        document.querySelectorAll('.' + styles.card_chart).forEach((exam) => {
+            exam.classList.remove(styles.selected);
+        });
+        e.target.innerText = 'Selecionar tudo';
+    }
 
     function search(string) {
         if (string === '') {
@@ -62,6 +81,61 @@ export default function Exams() {
         const searchedExams = exames.filter((exam) => exam.key.toUpperCase().startsWith(string.toUpperCase()));
         setExamesBuscados(searchedExams);
         return;
+    }
+
+    async function compartilha() {
+
+        if (titulo === '') {
+            setTypeOfMessage('info');
+            setErrorMessages([<li key={0}>Informe um título para o compartilhamento.</li>]);
+            document.querySelector('#titulo').focus();
+            return;
+        }
+
+        if (document.querySelectorAll('.' + styles.selected).length === 0) {
+            setTypeOfMessage('info');
+            setErrorMessages([<li key={0}>Selecione pelo menos um exame para o compartilhamento.</li>]);
+            document.querySelector('.' + styles.examsList).focus();
+            return;
+        }
+
+        setIsLoading(true);
+
+        let examesSelecionados = {};
+
+        document.querySelectorAll('.' + styles.selected).forEach((exam) => {
+            const exameSelecionado = JSON.parse(exam.getAttribute('data-data'));
+            const index = Object.keys(exameSelecionado)[0];
+            examesSelecionados[index] = exameSelecionado[index];
+        });
+
+        const senha = fakerPT_BR.location.country().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replaceAll(' ', '')
+
+        const data = { titulo, itens: examesSelecionados, senha, confirmacaoSenha: senha };
+
+        console.log(data);
+
+        try {
+            await axios.post(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem('user') + '/exames-compartilhados', data, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': sessionStorage.getItem('token')
+                }
+            });
+
+            setTypeOfMessage('success');
+            setErrorMessages([<li key={0}>Compartilhado com sucesso.</li>]);
+        } catch (error) {
+            setTypeOfMessage('warning');
+            if (error.response.data.message.map)
+                setErrorMessages(error.response.data.message.map((message, index) => {
+                    return <li key={index}>{message}</li>
+                }));
+            else
+                setErrorMessages([<li key={0}>{error.response.data.message}</li>]);
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     return (
@@ -112,10 +186,11 @@ export default function Exams() {
                                 <p>Pronto! Agora é só enviar o link (ou QR Code) com a senha gerada para quem você deseja compartilhar seus exames.</p>
                             </div>
                             <h3>Escolha um título (Esse título irá aparecer para a pessoa que receber o link):</h3>
-                            <input className={styles.search} placeholder='Digite um título'></input>
+                            <input id='titulo' onChange={(e) => setTitulo(e.target.value)} className={styles.search} placeholder='Digite um título'></input>
                             <h3>Selecione os exames que deseja compartilhar:</h3>
-                            {exames.length > 0 ? <>
+                            {(exames && exames.length && exames.length > 0) ? <>
                                 <input onChange={(e) => search(e.target.value)} className={styles.search} placeholder='Pesquise exames'></input>
+                                <button className='ajuda' onClick={selectAll}>Selecionar tudo</button>
                                 <div className={styles.examsList}>
                                     {examesBuscados}
                                 </div>
@@ -125,7 +200,7 @@ export default function Exams() {
                                 </p>
                                 <Link className='ajuda' href='/adicionar-exames'>Adicionar</Link>
                             </div>}
-                            <button className='ajuda'><FontAwesomeIcon icon={faShare} /> Compartilhar</button>
+                            <button disabled={isLoading} onClick={compartilha} className='ajuda'><FontAwesomeIcon icon={faShare} /> Compartilhar</button>
                         </div>
                     </main>
 
@@ -135,7 +210,7 @@ export default function Exams() {
     )
 }
 
-export async function getExamesMini(setErrorMessages, setIsLoading) {
+export async function getExamesMini(setErrorMessages, setIsLoading, setTypeOfMessage) {
     try {
         const response = await axios.get(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem("user") + '/exame-itens',
             { headers: { Authorization: sessionStorage.getItem("token") } });
@@ -174,7 +249,7 @@ export async function getExamesMini(setErrorMessages, setIsLoading) {
                 maintainAspectRatio: false,
             }
 
-            examesLista.push(<div className={styles.card_chart} key={examitem} onClick={selected}>
+            examesLista.push(<div className={styles.card_chart} key={examitem} onClick={selected} data-data={JSON.stringify({ [examitem]: dados[examitem] })}>
                 <div className={styles.chart_info}>
                     <h3><FontAwesomeIcon icon={faDna} /> {examitem}</h3>
                     <h3 className={styles.gray}>ATUAL</h3>

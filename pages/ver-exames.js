@@ -46,7 +46,7 @@ export default function Exams() {
     useEffect(() => {
         tryLogin(setIsLoading, axios, false);
         setIsLoading(true);
-        getExames(setErrorMessages, setIsLoading).then((response) => setExames(response));
+        getExames(setErrorMessages, setIsLoading, setTypeOfMessage).then((response) => setExames(response));
     }, []);
 
     useEffect(() => {
@@ -121,7 +121,7 @@ export default function Exams() {
     )
 }
 
-export async function getExames(setErrorMessages, setIsLoading) {
+export async function getExames(setErrorMessages, setIsLoading, setTypeOfMessage) {
     try {
         const response = await axios.get(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem("user") + '/exame-itens',
             { headers: { Authorization: sessionStorage.getItem("token") } });

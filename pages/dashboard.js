@@ -41,7 +41,7 @@ export default function Dashboard() {
             }
         }).then(async (response) => setUserName((await response.json()).nome.split(' ')[0])).finally(() => setIsLoading(false));
 
-        getExames(setErrorMessages, setIsLoading).then((response) => setExames(response));
+        getExames(setErrorMessages, setIsLoading, setTypeOfMessage).then((response) => setExames(response));
     }, []);
 
     function onEnter(e) {
