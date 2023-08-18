@@ -247,3 +247,12 @@ div.callaction p:last-child {
 div.callaction p:first-child {
   margin-top: 0;
 }
+
+div.callaction strong.copy {
+  cursor: pointer;
+  padding: 2px 7px;
+  margin: 1px 0;
+  background-color: #00000010;
+  border-radius: 4px;
+  display: inline-block;
+}

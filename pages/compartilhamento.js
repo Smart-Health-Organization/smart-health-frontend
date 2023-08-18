@@ -8,7 +8,7 @@ import axios from 'axios'
 import tryLogin from '@/functions/tryLogin'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDna, faShare } from '@fortawesome/free-solid-svg-icons'
-import { faCircleQuestion } from '@fortawesome/free-regular-svg-icons'
+import { faCircleQuestion, faCopy } from '@fortawesome/free-regular-svg-icons'
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -24,6 +24,7 @@ import { Line } from 'react-chartjs-2'
 import TopBar from '@/components/TopBar'
 import Link from 'next/link'
 import { fakerPT_BR } from '@faker-js/faker'
+import QRCode from 'react-qr-code'
 
 ChartJS.register(
     CategoryScale,
@@ -45,6 +46,9 @@ export default function Exams() {
     const [examesBuscados, setExamesBuscados] = useState([]);
     const [selectedAll, setSelectedAll] = useState(false);
     const [titulo, setTitulo] = useState('');
+    const [senha, setSenha] = useState('');
+
+    const [compartilhamento, setCompartilhamento] = useState();
 
     useEffect(() => {
         tryLogin(setIsLoading, axios, false);
@@ -110,13 +114,11 @@ export default function Exams() {
         });
 
         const senha = fakerPT_BR.location.country().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replaceAll(' ', '')
+        setSenha(senha);
 
         const data = { titulo, itens: examesSelecionados, senha, confirmacaoSenha: senha };
-
-        console.log(data);
-
         try {
-            await axios.post(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem('user') + '/exames-compartilhados', data, {
+            const response = await axios.post(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem('user') + '/exames-compartilhados', data, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': sessionStorage.getItem('token')
@@ -124,8 +126,24 @@ export default function Exams() {
             });
 
             setTypeOfMessage('success');
-            setErrorMessages([<li key={0}>Compartilhado com sucesso.</li>]);
+            setErrorMessages([<li key={0}>Compartilhamento criado com sucesso.</li>]);
+
+            setCompartilhamento(<>
+                <h2 className='subtitle' style={{ marginBottom: "30px" }}>Compartilhamento</h2>
+                <div className={styles.callaction}>
+                    <p>O compartilhamento "<strong>{titulo}</strong>" foi criado com sucesso!</p>
+                    <p>Envie o <strong className={styles.copy} onClick={onCopy} data-href={process.env.NEXT_PUBLIC_URL + '/compartilhados/' + response.data.login}>link <FontAwesomeIcon icon={faCopy} /></strong> e a senha <strong className={styles.copy} onClick={onCopy} data-href={senha}>{senha} <FontAwesomeIcon icon={faCopy} /></strong> com quem deseja compartilhar os seus exames.</p>
+                    <p>No lugar do link você pode mostrar o QR Code abaixo para a pessoa que deseja compartilhar:</p>
+                    <QRCode style={{ alignSelf: "center", maxWidth: "100%" }} value={process.env.NEXT_PUBLIC_URL + '/compartilhados/' + response.data.login} />
+                    {navigator.share && <>
+                        <p>Ou se prefirir, clique no botão abaixo e compartilhe diretamente para os seus contatos.</p>
+                        <button style={{ alignSelf: "center" }} onClick={() => onShare(response.data.login, senha)} className='ajuda'><FontAwesomeIcon icon={faShare} /> Compartilhar</button>
+                    </>
+                    }
+                </div>
+            </>);
         } catch (error) {
+            console.log(error);
             setTypeOfMessage('warning');
             if (error.response.data.message.map)
                 setErrorMessages(error.response.data.message.map((message, index) => {
@@ -136,6 +154,20 @@ export default function Exams() {
         } finally {
             setIsLoading(false);
         }
+    }
+
+    function onCopy(e) {
+        navigator.clipboard.writeText(e.target.closest('.' + styles.copy).getAttribute('data-href'));
+        setTypeOfMessage('info');
+        setErrorMessages([<li key={0}>Copiado para a área de transferência.</li>]);
+    }
+
+    function onShare(login, senha) {
+        navigator.share({
+            title: 'Smart Health - Compartilhamento',
+            text: 'Estou compartilhando esses exames com você. A senha é ' + senha + '.',
+            url: process.env.NEXT_PUBLIC_URL + '/compartilhados/' + login
+        });
     }
 
     return (
@@ -175,32 +207,35 @@ export default function Exams() {
 
                     <main className='content' style={{ justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column', marginBottom: '25px' }}>
                         <div className={styles.exams}>
-                            <h2 className='subtitle' style={{ marginBottom: "30px" }}>Compartilhamento</h2>
-                            <div className={styles.callaction}>
-                                <p>Compartilhe seus exames de forma rápida, prática e segura!</p>
-                                <ul>
-                                    <li>Escolha um título;</li>
-                                    <li>Selecione quais exames que deseja compartilhar e;</li>
-                                    <li>Clique no botão compartilhar ao final da página.</li>
-                                </ul>
-                                <p>Pronto! Agora é só enviar o link (ou QR Code) com a senha gerada para quem você deseja compartilhar seus exames.</p>
-                            </div>
-                            <h3>Escolha um título (Esse título irá aparecer para a pessoa que receber o link):</h3>
-                            <input id='titulo' onChange={(e) => setTitulo(e.target.value)} className={styles.search} placeholder='Digite um título'></input>
-                            <h3>Selecione os exames que deseja compartilhar:</h3>
-                            {(exames && exames.length && exames.length > 0) ? <>
-                                <input onChange={(e) => search(e.target.value)} className={styles.search} placeholder='Pesquise exames'></input>
-                                <button className='ajuda' onClick={selectAll}>Selecionar tudo</button>
-                                <div className={styles.examsList}>
-                                    {examesBuscados}
+                            {compartilhamento || <>
+                                <h2 className='subtitle' style={{ marginBottom: "30px" }}>Compartilhamento</h2>
+                                <div className={styles.callaction}>
+                                    <p>Compartilhe seus exames de forma rápida, prática e segura!</p>
+                                    <ul>
+                                        <li>Escolha um título;</li>
+                                        <li>Selecione quais exames que deseja compartilhar e;</li>
+                                        <li>Clique no botão compartilhar ao final da página.</li>
+                                    </ul>
+                                    <p>Pronto! Agora é só enviar o link (ou QR Code) com a senha gerada para quem você deseja compartilhar seus exames.</p>
                                 </div>
-                            </> : <div className={styles.novosexames}>
-                                <p>
-                                    Adicione novos exames para acompanhar sua evolução.
-                                </p>
-                                <Link className='ajuda' href='/adicionar-exames'>Adicionar</Link>
-                            </div>}
-                            <button disabled={isLoading} onClick={compartilha} className='ajuda'><FontAwesomeIcon icon={faShare} /> Compartilhar</button>
+                                <h3>Escolha um título (Esse título irá aparecer para a pessoa que receber o link):</h3>
+                                <input id='titulo' onChange={(e) => setTitulo(e.target.value)} className={styles.search} placeholder='Digite um título'></input>
+                                <h3>Selecione os exames que deseja compartilhar:</h3>
+                                {(exames && exames.length && exames.length > 0) ? <>
+                                    <input onChange={(e) => search(e.target.value)} className={styles.search} placeholder='Pesquise exames'></input>
+                                    <button className='ajuda' onClick={selectAll}>Selecionar tudo</button>
+                                    <div className={styles.examsList}>
+                                        {examesBuscados}
+                                    </div>
+                                </> : <div className={styles.novosexames}>
+                                    <p>
+                                        Adicione novos exames para acompanhar sua evolução.
+                                    </p>
+                                    <Link className='ajuda' href='/adicionar-exames'>Adicionar</Link>
+                                </div>}
+                                <button disabled={isLoading} onClick={compartilha} className='ajuda'><FontAwesomeIcon icon={faShare} /> Criar compartilhamento</button>
+                            </>
+                            }
                         </div>
                     </main>
 
