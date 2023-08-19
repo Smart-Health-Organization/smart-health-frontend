@@ -19,7 +19,6 @@ import {
     Filler
 } from 'chart.js'
 import { Line } from 'react-chartjs-2'
-import TopBar from '@/components/TopBar'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
@@ -53,6 +52,11 @@ export default function Compartilhados() {
     useEffect(() => { verifyId() }, [router.isReady]);
 
     useEffect(() => {
+        if (isValid && document && document.querySelector('#senha'))
+            document.querySelector('#senha').focus();
+    }, [isValid]);
+
+    useEffect(() => {
         search('');
     }, [exames]);
 
@@ -70,8 +74,8 @@ export default function Compartilhados() {
     async function auth(e) {
         if (e.key !== 'Enter') return;
         setIsLoading(true);
-        getExames(router.query.id, e.target.value).then((response) => setExames(response));
-        setAuthed(true);
+        const response = await getExames(router.query.id, e.target.value);
+        setExames(response);
     }
 
     async function verifyId() {
@@ -122,17 +126,17 @@ export default function Compartilhados() {
 
                     <main className='content' style={{ justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column', marginBottom: '25px' }}>
                         <div className={styles.exams}>
-                            {isValid && !isLoading
+                            {isValid
                                 ?
                                 <>
                                     {!authed &&
                                         <h2 className='subtitle' style={{ marginBottom: "30px" }}>Olá, você recebeu esses exames. Insira a senha para acessar: </h2>}
-                                    {exames.length > 0 ? <>
+                                    {(exames && exames.length > 0) ? <>
                                         <h2 className='subtitle' style={{ marginBottom: "30px" }}>{titulo}</h2>
                                         <input onChange={(e) => search(e.target.value)} className={styles.search} placeholder='Pesquise exames'></input>
                                         {examesBuscados}
                                     </> : <>
-                                        <input onKeyDown={auth} className={styles.search} placeholder='Digite a senha' type='password'></input>
+                                        <input id='senha' onKeyDown={auth} className={styles.search} placeholder='Digite a senha' type='password'></input>
                                     </>}
                                 </>
                                 : <></>
@@ -153,17 +157,17 @@ export default function Compartilhados() {
 
     async function getExames(login, senha) {
         try {
-            const response = await axios.post(process.env.NEXT_PUBLIC_API_URL + '/exames-compartilhados', {login, senha},
+            const response = await axios.post(process.env.NEXT_PUBLIC_API_URL + '/exames-compartilhados', { login, senha },
                 { headers: { Authorization: sessionStorage.getItem("token") } });
-    
+
             let examesLista = [];
             const dados = response.data.itens;
             setTitulo(response.data.titulo);
-    
+
             Object.keys(dados).forEach((examitem) => {
                 let dadosExames = [...dados[examitem]];
                 dadosExames = dadosExames.reverse();
-    
+
                 const dadosGraficoExame = {
                     labels: dadosExames.map(row => new Date(row.data).toLocaleDateString()),
                     datasets: [
@@ -177,7 +181,7 @@ export default function Compartilhados() {
                         }
                     ]
                 };
-    
+
                 const configuracaoGraficoExame = {
                     cubicInterpolationMode: 'monotone',
                     plugins: {
@@ -190,7 +194,7 @@ export default function Compartilhados() {
                     },
                     maintainAspectRatio: false,
                 }
-    
+
                 examesLista.push(<div className={styles.card_chart} key={examitem}>
                     <div className={styles.chart_info}>
                         <h3><FontAwesomeIcon icon={faDna} /> {examitem}</h3>
@@ -205,7 +209,10 @@ export default function Compartilhados() {
                     </div>
                 </div>);
             });
-    
+
+            setErrorMessages([]);
+            setAuthed(true);
+
             return examesLista;
         }
         catch (error) {
@@ -219,6 +226,9 @@ export default function Compartilhados() {
                         return <li key={index}>{message}</li>
                     }));
                 }
+
+            if (document && document.querySelector('#senha'))
+                document.querySelector('#senha').focus();
         }
         finally {
             setIsLoading(false);

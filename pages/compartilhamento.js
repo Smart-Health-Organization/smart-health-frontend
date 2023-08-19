@@ -166,7 +166,7 @@ export default function Compartilhamento() {
         navigator.share({
             title: 'Smart Health - Compartilhamento',
             text: 'Estou compartilhando esses exames com você. A senha é ' + senha + '.',
-            url: window.location.host + '/compartilhados/' + login
+            url: '/compartilhados/' + login
         });
     }
 
