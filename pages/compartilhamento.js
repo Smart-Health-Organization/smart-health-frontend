@@ -7,7 +7,7 @@ import Loading from '@/components/LoadingComponent'
 import axios from 'axios'
 import tryLogin from '@/functions/tryLogin'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faDna, faShare } from '@fortawesome/free-solid-svg-icons'
+import { faArrowUpRightFromSquare, faDna, faPlus, faShare } from '@fortawesome/free-solid-svg-icons'
 import { faCircleQuestion, faCopy } from '@fortawesome/free-regular-svg-icons'
 import {
     Chart as ChartJS,
@@ -37,7 +37,7 @@ ChartJS.register(
     Filler
 );
 
-export default function Exams() {
+export default function Compartilhamento() {
     const [errorMessages, setErrorMessages] = useState([]);
     const [typeOfMessage, setTypeOfMessage] = useState('warning');
     const [isLoading, setIsLoading] = useState(true);
@@ -138,8 +138,8 @@ export default function Exams() {
                     {navigator.share && <>
                         <p>Ou se prefirir, clique no botão abaixo e compartilhe diretamente para os seus contatos.</p>
                         <button style={{ alignSelf: "center" }} onClick={() => onShare(response.data.login, senha)} className='ajuda'><FontAwesomeIcon icon={faShare} /> Compartilhar</button>
-                    </>
-                    }
+                    </>}
+                    <p>Se deseja ver todos os compartilhamentos, <Link href="./compartilhamentos">clique aqui <FontAwesomeIcon icon={faArrowUpRightFromSquare} /></Link>.</p>
                 </div>
             </>);
         } catch (error) {
@@ -178,13 +178,13 @@ export default function Exams() {
 
                 <meta name="keywords" content="smart, health, plataforma, web, armazenamento, acompanhamento, compartilhamento, seguro, resultados, exames, informacoes, saude" />
 
-                <meta property="og:title" content="Smart Health - Ver Exame" />
+                <meta property="og:title" content="Smart Health - Compartilhamento" />
                 <meta property="og:type" content="website" />
                 <meta property="og:description" content="Plataforma Web para Armazenamento, Acompanhamento e Compartilhamento Seguro de Resultados de Exames e Informações de Saúde." />
                 <meta property="og:url" content={process.env.NEXT_PUBLIC_URL} />
                 <meta property="og:image" content={process.env.NEXT_PUBLIC_URL + '/favicon.png'} />
 
-                <meta name="twitter:title" content="Smart Health - Ver Exame" />
+                <meta name="twitter:title" content="Smart Health - Compartilhamento" />
                 <meta name="twitter:description" content="Plataforma Web para Armazenamento, Acompanhamento e Compartilhamento Seguro de Resultados de Exames e Informações de Saúde." />
                 <meta name="twitter:image" content={process.env.NEXT_PUBLIC_URL + '/favicon.png'} />
                 <meta name="twitter:card" content="summary_large_image" />
@@ -217,8 +217,9 @@ export default function Exams() {
                                         <li>Clique no botão compartilhar ao final da página.</li>
                                     </ul>
                                     <p>Pronto! Agora é só enviar o link (ou QR Code) com a senha gerada para quem você deseja compartilhar seus exames.</p>
+                                    <p>Se deseja ver todos os compartilhamentos, <Link href="./compartilhamentos">clique aqui <FontAwesomeIcon icon={faArrowUpRightFromSquare} /></Link>.</p>
                                 </div>
-                                <h3>Escolha um título (Esse título irá aparecer para a pessoa que receber o link):</h3>
+                                <h3>Escolha um título (Esse título irá aparecer para a pessoa que receber o compartilhamento):</h3>
                                 <input id='titulo' onChange={(e) => setTitulo(e.target.value)} className={styles.search} placeholder='Digite um título'></input>
                                 <h3>Selecione os exames que deseja compartilhar:</h3>
                                 {(exames && exames.length && exames.length > 0) ? <>
@@ -233,7 +234,7 @@ export default function Exams() {
                                     </p>
                                     <Link className='ajuda' href='/adicionar-exames'>Adicionar</Link>
                                 </div>}
-                                <button disabled={isLoading} onClick={compartilha} className='ajuda'><FontAwesomeIcon icon={faShare} /> Criar compartilhamento</button>
+                                <button disabled={isLoading} onClick={compartilha} className='ajuda'><FontAwesomeIcon icon={faPlus} /> Criar compartilhamento</button>
                             </>
                             }
                         </div>
