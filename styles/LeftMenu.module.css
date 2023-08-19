@@ -33,6 +33,10 @@
   margin-bottom: 0;
 }
 
+.leftMenu>a {
+  margin-top: 5px;
+}
+
 .leftMenu a,
 .leftMenu p {
   color: #000;
