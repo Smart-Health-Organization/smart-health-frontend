@@ -144,8 +144,8 @@ export async function getCompartilhamentos(setErrorMessages, setIsLoading, setTy
                 <div key={dados.id} data-title={dados.titulo} className={[styles.card_chart, styles.compartilhamentos].join(' ')}>
                     <div>
                         <p><strong>Compartilhamento #{dados.id}</strong></p>
-                        <p><strong>Título:</strong> "{dados.titulo}"</p>
-                        <p><strong>Id:</strong> "{dados.login}"</p>
+                        <p><strong>Título:</strong> &quot;{dados.titulo}&quot;</p>
+                        <p><strong>Id:</strong> &quot;{dados.login}&quot;</p>
                     </div>
                     <button className='ajuda delete' onClick={async () => await deleteExameCompartilhado(dados.id)}>Deletar</button>
                 </div>

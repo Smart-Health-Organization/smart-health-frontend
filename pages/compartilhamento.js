@@ -131,7 +131,7 @@ export default function Compartilhamento() {
             setCompartilhamento(<>
                 <h2 className='subtitle' style={{ marginBottom: "30px" }}>Compartilhamento</h2>
                 <div className={styles.callaction}>
-                    <p>O compartilhamento "<strong>{titulo}</strong>" foi criado com sucesso!</p>
+                    <p>O compartilhamento &quot;<strong>{titulo}</strong>&quot; foi criado com sucesso!</p>
                     <p>Envie o <strong className={styles.copy} onClick={onCopy} data-href={window.location.host + '/compartilhados/' + response.data.login}>link <FontAwesomeIcon icon={faCopy} /></strong> e a senha <strong className={styles.copy} onClick={onCopy} data-href={senha}>{senha} <FontAwesomeIcon icon={faCopy} /></strong> com quem deseja compartilhar os seus exames.</p>
                     <p>No lugar do link você pode mostrar o QR Code abaixo para a pessoa que deseja compartilhar:</p>
                     <QRCode style={{ alignSelf: "center", maxWidth: "100%" }} value={window.location.host + '/compartilhados/' + response.data.login} />
