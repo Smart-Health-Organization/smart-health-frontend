@@ -72,9 +72,10 @@ export default function Compartilhados() {
     }
 
     async function auth(e) {
-        if (e.key !== 'Enter') return;
+        if (e.key && e.key !== 'Enter') return;
+        const enteredSenha = document.querySelector('#senha').value;
         setIsLoading(true);
-        const response = await getExames(router.query.id, e.target.value);
+        const response = await getExames(router.query.id, enteredSenha);
         setExames(response);
     }
 
@@ -137,6 +138,7 @@ export default function Compartilhados() {
                                         {examesBuscados}
                                     </> : <>
                                         <input id='senha' onKeyDown={auth} className={styles.search} placeholder='Digite a senha' type='password'></input>
+                                        <button disabled={isLoading} className='ajuda' onClick={auth}>Acessar</button>
                                     </>}
                                 </>
                                 : <></>

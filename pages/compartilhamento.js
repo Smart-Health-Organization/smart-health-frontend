@@ -134,7 +134,7 @@ export default function Compartilhamento() {
                     <p>O compartilhamento &quot;<strong>{titulo}</strong>&quot; foi criado com sucesso!</p>
                     <p>Envie o <strong className={styles.copy} onClick={onCopy} data-href={window.location.host + '/compartilhados/' + response.data.login}>link <FontAwesomeIcon icon={faCopy} /></strong> e a senha <strong className={styles.copy} onClick={onCopy} data-href={senha}>{senha} <FontAwesomeIcon icon={faCopy} /></strong> com quem deseja compartilhar os seus exames.</p>
                     <p>No lugar do link você pode mostrar o QR Code abaixo para a pessoa que deseja compartilhar:</p>
-                    <QRCode style={{ alignSelf: "center", maxWidth: "100%" }} value={window.location.host + '/compartilhados/' + response.data.login} />
+                    <QRCode style={{ alignSelf: "center", maxWidth: "100%" }} value={window.location.origin + '/compartilhados/' + response.data.login} />
                     {navigator.share && <>
                         <p>Ou se prefirir, clique no botão abaixo e compartilhe diretamente para os seus contatos.</p>
                         <button style={{ alignSelf: "center" }} onClick={() => onShare(response.data.login, senha)} className='ajuda'><FontAwesomeIcon icon={faShare} /> Compartilhar</button>
