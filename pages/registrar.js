@@ -34,7 +34,7 @@ export default function Register() {
 
     const newUser = {
       nome: document.querySelector("#name").value,
-      idade: Number(document.querySelector("#age").value),
+      dataDeNascimento: document.querySelector("#age").value + "T00:00:00.000Z",
       sexo: document.querySelector("#sexo").value,
       email: document.querySelector("#email").value,
       senha: document.querySelector("#password").value,
@@ -123,7 +123,7 @@ export default function Register() {
                 </p>
                 <form className={styles.formLogin} style={{ height: '60%' }}>
                   <input onKeyDown={e => onEnter(e, register)} id='name' type='text' placeholder={"Nome"}></input>
-                  <input onKeyDown={e => onEnter(e, register)} id='age' type='number' placeholder={"Idade"}></input>
+                  <input onKeyDown={e => onEnter(e, register)} id='age' type='date' placeholder={"Data de Nascimento"}></input>
                   <select onKeyDown={e => onEnter(e, register)} id='sexo' >
                     <option value=''>Selecione o sexo</option>
                     <option value='masculino'>Masculino</option>

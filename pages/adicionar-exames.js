@@ -140,8 +140,7 @@ export default function AddExam() {
             setErrorMessages([<li key={0}>Selecione uma data</li>]);
             return;
         }
-        const examDateFormatted = new Date(examDate);
-        const examDateFormattedString = ('0' + (examDateFormatted.getDate())).slice(-2) + "/" + ('0' + (examDateFormatted.getMonth() + 1)).slice(-2) + "/" + examDateFormatted.getFullYear();
+        const examDateFormatted = examDate + "T03:00:00.000Z";
 
         const examList = document.querySelectorAll('div[class*="exam_item"]');
 
@@ -172,7 +171,7 @@ export default function AddExam() {
         }
 
         const data = {
-            data: examDateFormattedString,
+            data: examDateFormatted,
             itens: exams
         }
 

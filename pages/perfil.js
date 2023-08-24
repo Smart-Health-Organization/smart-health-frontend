@@ -13,11 +13,11 @@ export default function Profile() {
   const [typeOfMessage, setTypeOfMessage] = useState('warning');
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
-  const [idade, setIdade] = useState(0);
+  const [dataDeNascimento, setDataDeNascimento] = useState('');
   const [sexo, setSexo] = useState('');
   const [nomeRef, setNomeRef] = useState('');
   const [emailRef, setEmailRef] = useState('');
-  const [idadeRef, setIdadeRef] = useState(0);
+  const [dataDeNascimentoRef, setDataDeNascimentoRef] = useState('');
   const [sexoRef, setSexoRef] = useState('');
 
   useEffect(() => {
@@ -31,11 +31,11 @@ export default function Profile() {
 
         setNome(response.data.nome);
         setEmail(response.data.email);
-        setIdade(response.data.idade);
+        setDataDeNascimentoRef(response.data.dataDeNascimento);
         setSexo(response.data.sexo);
         setNomeRef(response.data.nome);
         setEmailRef(response.data.email);
-        setIdadeRef(response.data.idade);
+        setDataDeNascimento(response.data.dataDeNascimento);
         setSexoRef(response.data.sexo);
       }
       catch {
@@ -99,7 +99,7 @@ export default function Profile() {
 
     let newUser = {
       nome: nome != nomeRef ? nome : null,
-      idade: idade != idadeRef ? idade : null,
+      dataDeNascimento: dataDeNascimento != dataDeNascimentoRef ? (dataDeNascimento + "T00:00:00.000Z") : null,
       sexo: sexo != sexoRef ? sexo : null,
       email: email != emailRef ? email : null,
     }
@@ -229,7 +229,7 @@ export default function Profile() {
               <h3 className={styles.userInfos} id='userName'>{nomeRef || "Nome Sobrenome"}</h3>
               <p className={styles.userInfos} id='userEmail'>{emailRef || "email@mail.com"}</p>
               <p className={styles.userInfos2}>
-                {idadeRef || 0} anos, {' ' + (sexoRef ? sexoRef[0].toUpperCase() + sexoRef.slice(1) : "Sexo")}.
+                {(new Date().getFullYear() - new Date(dataDeNascimento).getFullYear()) || 0} anos, {' ' + (sexoRef ? sexoRef[0].toUpperCase() + sexoRef.slice(1) : "Sexo")}.
               </p>
 
               <hr className={styles.hr}></hr>
@@ -250,7 +250,7 @@ export default function Profile() {
                       <option value='feminino'>Feminino</option>
                     </select>
                   </label>
-                  <label><strong>Idade:</strong> <input className={styles.edit} id='age2' onKeyDown={patch} onChange={(e) => setIdade(Number(e.target.value))} placeholder='Idade' type='number' value={idade}></input></label>
+                  <label><strong>Data de Nascimento:</strong> <input className={styles.edit} id='age2' onKeyDown={patch} onChange={(e) => setDataDeNascimento(e.target.value)} placeholder='Data de Nascimento' type='date' value={dataDeNascimento.split("T")[0]}></input></label>
                 </div>
               </div>
               <button style={{ marginBottom: '30px' }} disabled={isLoading} onClick={patch} className='ajuda'>
