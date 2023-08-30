@@ -160,7 +160,8 @@ export default function Dashboard() {
                                 <h3>Antropometria</h3>
                             </div>
                             <div className={styles.body}>
-                                <h1>Em breve!</h1>
+                                <p>Você não tem uma Meta definida ainda.</p>
+                                <a className="ajuda" href="/adicionar-metas">Criar uma Meta</a>
                             </div>
                         </div>
                     </aside>
