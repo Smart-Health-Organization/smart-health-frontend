@@ -11,6 +11,7 @@ import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileCirclePlus, faHospitalUser, faShare } from "@fortawesome/free-solid-svg-icons";
 import { getExames } from "./ver-exames";
+import { faCalendar } from "@fortawesome/free-regular-svg-icons";
 
 export default function Dashboard() {
     const [errorMessages, setErrorMessages] = useState([]);
@@ -20,6 +21,8 @@ export default function Dashboard() {
     const [userName, setUserName] = useState('Usuário');
     const [saudacao, setSaudacao] = useState('Olá');
     const [exames, setExames] = useState([]);
+
+    const [meta, setMeta] = useState({});
 
     const [peso, setPeso] = useState(0);
     const [altura, setAltura] = useState(0);
@@ -42,6 +45,8 @@ export default function Dashboard() {
         }).then(async (response) => setUserName((await response.json()).nome.split(' ')[0])).finally(() => setIsLoading(false));
 
         getExames(setErrorMessages, setIsLoading, setTypeOfMessage).then((response) => setExames(response));
+
+        getMeta(setIsLoading).then((response) => setMeta(response));
     }, []);
 
     function onEnter(e) {
@@ -160,7 +165,22 @@ export default function Dashboard() {
                                 <h3>Antropometria</h3>
                             </div>
                             <div className={styles.body}>
-                                <h1>Em breve!</h1>
+                                <div className={styles.result}>
+                                    {isLoading ? <></> :
+                                        meta ?
+                                            <>
+                                                <p><strong><FontAwesomeIcon icon={faCalendar} /> Prazo:</strong> {(new Date(meta.dataFim)).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</p>
+                                                <p><strong>Massa Magra Alvo:</strong> {meta.massaMagra}Kg</p>
+                                                <p><strong>Gordura Corporal Alvo:</strong> {meta.gorduraCorporal}%</p>
+                                                <Link className="ajuda" href="/acompanhar-meta">Ver mais detalhe</Link>
+                                            </>
+                                            :
+                                            <>
+                                                <p>Você não tem uma Meta definida ainda.</p>
+                                                <Link className="ajuda" href="/adicionar-meta">Criar uma Meta</Link>
+                                            </>
+                                    }
+                                </div>
                             </div>
                         </div>
                     </aside>
@@ -168,6 +188,22 @@ export default function Dashboard() {
             </div>
         </>
     )
+}
+
+export async function getMeta(setIsLoading) {
+    setIsLoading(true);
+
+    const response = await axios.get(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem('user') + '/metas', {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': sessionStorage.getItem('token')
+        }
+    });
+
+    const meta = response.data.find((meta) => meta.isConcluida == false);
+
+    setIsLoading(false);
+    return meta;
 }
 
 function calcIMC(altura, peso) {

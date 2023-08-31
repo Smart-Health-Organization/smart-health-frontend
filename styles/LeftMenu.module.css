@@ -50,6 +50,8 @@
   color: #303030;
   padding: 15px;
   border-radius: 12px;
+  width: 25px !important;
+  min-width: 25px !important;
 }
 
 .leftMenu img {
@@ -80,7 +82,7 @@
 .leftMenu:hover .descriptionItemMenuLogo {
   display: unset;
   animation-name: openMenu;
-  animation-duration: 200ms;
+  animation-duration: 250ms;
 }
 
 .leftMenu:hover a,
