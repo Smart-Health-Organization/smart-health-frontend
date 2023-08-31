@@ -34,7 +34,7 @@ export default function MobileMenu(props = { actualpage: "/" }) {
 
     useEffect(() => {
         document.body.addEventListener("click", (e) => {
-            if (e.target.id != "menu" && e.target.id != "openMenu" && e.target.parentNode.id != "openMenu" && e.target.parentNode.parentNode.id != "openMenu") {
+            if (e.target.id != "menu" && e.target.id != "openMenu" && e.target.parentNode && e.target.parentNode.id != "openMenu" && e.target.parentNode.parentNode.id != "openMenu") {
                 closeMenu();
             }
         });

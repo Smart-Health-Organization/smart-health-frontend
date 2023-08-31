@@ -21,6 +21,8 @@ export default function Dashboard() {
     const [saudacao, setSaudacao] = useState('Olá');
     const [exames, setExames] = useState([]);
 
+    const [meta, setMeta] = useState({});
+
     const [peso, setPeso] = useState(0);
     const [altura, setAltura] = useState(0);
     const [imc, setImc] = useState({ valor: 0, classificacao: 'Resultado aqui!', className: styles.alert });
@@ -42,6 +44,8 @@ export default function Dashboard() {
         }).then(async (response) => setUserName((await response.json()).nome.split(' ')[0])).finally(() => setIsLoading(false));
 
         getExames(setErrorMessages, setIsLoading, setTypeOfMessage).then((response) => setExames(response));
+
+        getMeta(setIsLoading).then((response) => setMeta(response));
     }, []);
 
     function onEnter(e) {
@@ -160,8 +164,17 @@ export default function Dashboard() {
                                 <h3>Antropometria</h3>
                             </div>
                             <div className={styles.body}>
-                                <p>Você não tem uma Meta definida ainda.</p>
-                                <a className="ajuda" href="/adicionar-metas">Criar uma Meta</a>
+                                {isLoading ? <></> :
+                                    meta ?
+                                        <>
+                                            <a className="ajuda" href="/acompanhar-meta">Acompanhar Meta</a>
+                                        </>
+                                        :
+                                        <>
+                                            <p>Você não tem uma Meta definida ainda.</p>
+                                            <a className="ajuda" href="/adicionar-meta">Criar uma Meta</a>
+                                        </>
+                                }
                             </div>
                         </div>
                     </aside>
@@ -169,6 +182,22 @@ export default function Dashboard() {
             </div>
         </>
     )
+}
+
+export async function getMeta(setIsLoading) {
+    setIsLoading(true);
+
+    const response = await axios.get(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem('user') + '/metas', {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': sessionStorage.getItem('token')
+        }
+    });
+
+    const meta = response.data.find((meta) => meta.isConcluida == false);
+
+    setIsLoading(false);
+    return meta;
 }
 
 function calcIMC(altura, peso) {

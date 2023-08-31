@@ -7,6 +7,7 @@ import Loading from '@/components/LoadingComponent'
 import axios from 'axios'
 import tryLogin from '@/functions/tryLogin'
 import TopBar from '@/components/TopBar'
+import { getMeta } from './dashboard'
 
 export default function AddMeta() {
     const [errorMessages, setErrorMessages] = useState([]);
@@ -15,14 +16,25 @@ export default function AddMeta() {
 
     const [titulo, setTitulo] = useState('');
     const [data, setData] = useState(new Date(Date.now()).toISOString());
-    const [mmagra, setMmagra] = useState('');
-    const [gcorporal, setGcorporal] = useState('');
+    const [mmagra, setMmagra] = useState(0);
+    const [gcorporal, setGcorporal] = useState(0);
+
+    const [meta, setMeta] = useState({});
 
     useEffect(() => {
         tryLogin(setIsLoading, axios, false);
-        if (document)
-            document.querySelector('#titulo').focus();
+
+        getMeta(setIsLoading).then((response) => setMeta(response));
     }, []);
+
+    useEffect(() => {
+        setErrorMessages([]);
+    }, [titulo, data, mmagra, gcorporal]);
+
+    useEffect(() => {
+        if (document && document.querySelector('#titulo'))
+            document.querySelector('#titulo').focus();
+    }, [meta]);
 
     function onEnter(e) {
         if (e.key !== 'Enter') return;
@@ -35,7 +47,9 @@ export default function AddMeta() {
         e.target.parentElement.nextSibling.focus();
     }
 
-    function postMeta() {
+    async function postMeta() {
+        setIsLoading(true);
+
         const requestData = {
             titulo,
             dataInicio: new Date(Date.now()).toISOString(),
@@ -44,7 +58,28 @@ export default function AddMeta() {
             gorduraCorporal: gcorporal,
         };
 
-        console.log(requestData);
+        try {
+            await axios.post(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem("user") + '/metas', requestData, { headers: { Authorization: sessionStorage.getItem("token") } });
+
+            setTypeOfMessage('success');
+            setErrorMessages([<li key={0}>Meta criada com sucesso!</li>]);
+            setTimeout(() => window.location.href = '/acompanhar-meta', 1000);
+        }
+        catch (error) {
+            setTypeOfMessage('warning');
+            if (error.response)
+                if (!error.response.data.message.map) {
+                    setErrorMessages([<li key={0}>{error.response.data.message}</li>]);
+                }
+                else {
+                    setErrorMessages(error.response.data.message.map((message, index) => {
+                        return <li key={index}>{message}</li>
+                    }));
+                }
+        }
+        finally {
+            setIsLoading(false);
+        }
     }
 
     return (
@@ -84,21 +119,33 @@ export default function AddMeta() {
                     <main className='content' style={{ justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column', marginBottom: '25px' }}>
                         <div className={styles.addexam}>
                             <h2 className='subtitle'>Adicionar Meta</h2>
-                            <div className={styles.form}>
-                                <label>
-                                    Título: <input id="titulo" type="text" placeholder='Digite um título' onKeyDown={onEnter} onChange={(e) => setTitulo(e.target.value)}></input>
-                                </label>
-                                <label>
-                                    Data alvo: <input id="data" type='date' onKeyDown={onEnter} onChange={(e) => setData(e.target.value)}></input>
-                                </label>
-                                <label>
-                                    Massa magra almejada: <input id="mmagra" type="number" placeholder='Digite a massa magra em Kg' onKeyDown={onEnter} onChange={(e) => setMmagra(e.target.value)}></input>
-                                </label>
-                                <label>
-                                    Gordura Corporal almejado: <input id='gcorporal' type="number" placeholder='Digite a gordura corporal em percentual' onKeyDown={onEnter} onChange={(e) => setGcorporal(e.target.value)}></input>
-                                </label>
-                            </div>
-                            <button onClick={postMeta} className='ajuda'>Criar Meta</button>
+                            {isLoading ? <></> :
+                                meta ?
+                                    <>
+                                        <div className={styles.form}>
+                                            <h3>Você já tem uma Meta em andamento!</h3>
+                                        </div>
+                                        <a href='/acompanhar-meta' className='ajuda'>Acompanhar Meta</a>
+                                    </>
+                                    :
+                                    <>
+                                        <div className={styles.form}>
+                                            <label>
+                                                Título: <input id="titulo" type="text" placeholder='Digite um título' onKeyDown={onEnter} onChange={(e) => setTitulo(e.target.value)}></input>
+                                            </label>
+                                            <label>
+                                                Data alvo: <input id="data" type='date' onKeyDown={onEnter} onChange={(e) => setData(e.target.value)}></input>
+                                            </label>
+                                            <label>
+                                                Massa magra almejada: <input id="mmagra" type="number" placeholder='Digite a massa magra em Kg' onKeyDown={onEnter} onChange={(e) => setMmagra(e.target.value)}></input>
+                                            </label>
+                                            <label>
+                                                Gordura Corporal almejado: <input id='gcorporal' type="number" placeholder='Digite a gordura corporal em percentual' onKeyDown={onEnter} onChange={(e) => setGcorporal(e.target.value)}></input>
+                                            </label>
+                                        </div>
+                                        <button onClick={postMeta} className='ajuda'>Criar Meta</button>
+                                    </>
+                            }
                         </div>
                     </main>
 
