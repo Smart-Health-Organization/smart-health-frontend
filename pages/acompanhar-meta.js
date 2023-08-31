@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCalendar } from '@fortawesome/free-regular-svg-icons'
 import ProgressBar from '@/components/ProgressBar'
 import { getMeta } from './dashboard'
+import Link from 'next/link'
 
 export default function SeeMeta() {
     const [errorMessages, setErrorMessages] = useState([]);
@@ -40,6 +41,8 @@ export default function SeeMeta() {
     }, []);
 
     async function finalizaMeta() {
+        if (!confirm('Tem certeza que deseja finalizar essa meta?')) return;
+
         setIsLoading(true);
 
         try {
@@ -94,11 +97,11 @@ export default function SeeMeta() {
 
             <div className='container'>
 
-                <LeftMenu actualpage='/dashboard'></LeftMenu>
+                <LeftMenu actualpage='/acompanhar-meta'></LeftMenu>
 
                 <div className='main authPage'>
 
-                    <TopBar actualpage='/dashboard'></TopBar>
+                    <TopBar actualpage='/acompanhar-meta'></TopBar>
 
                     <main className='content' style={{ justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column', marginBottom: '25px' }}>
                         <div className={styles.addexam}>
@@ -115,11 +118,11 @@ export default function SeeMeta() {
                                             <div className={styles.body}>
                                                 <div>
                                                     <p>Falta <strong>{mmagra}Kg</strong> para atingir a Massa Magra Almejada.</p>
-                                                    <ProgressBar color='#E79B38' progress={0} />
+                                                    <ProgressBar color='#55C66E' progress={0} />
                                                 </div>
                                                 <div>
                                                     <p>Falta <strong>{gcorporal}%</strong> para atingir a Gordura Corporal Almejada.</p>
-                                                    <ProgressBar color='#E79B38' progress={0} />
+                                                    <ProgressBar color='#55C66E' progress={0} />
                                                 </div>
                                                 <button disabled className='ajuda'>Adicionar Antropometria</button>
                                                 <button onClick={finalizaMeta} className='ajuda'>Finalizar Meta</button>
@@ -134,12 +137,12 @@ export default function SeeMeta() {
                                             </div>
 
                                             <div className={styles.body}>
-                                                <a href='/adicionar-meta' className='ajuda'>Criar uma Meta</a>
+                                                <Link href='/adicionar-meta' className='ajuda'>Criar uma Meta</Link>
                                             </div>
                                         </div>
                                     </>
                             }
-                            <button disabled href='/todas-metas' className='ajuda'>Ver todas as Metas</button>
+                            <Link href='/todas-metas' className='ajuda'>Ver todas as Metas</Link>
                         </div>
                     </main>
 

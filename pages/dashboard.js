@@ -11,6 +11,7 @@ import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileCirclePlus, faHospitalUser, faShare } from "@fortawesome/free-solid-svg-icons";
 import { getExames } from "./ver-exames";
+import { faCalendar } from "@fortawesome/free-regular-svg-icons";
 
 export default function Dashboard() {
     const [errorMessages, setErrorMessages] = useState([]);
@@ -164,17 +165,22 @@ export default function Dashboard() {
                                 <h3>Antropometria</h3>
                             </div>
                             <div className={styles.body}>
-                                {isLoading ? <></> :
-                                    meta ?
-                                        <>
-                                            <a className="ajuda" href="/acompanhar-meta">Acompanhar Meta</a>
-                                        </>
-                                        :
-                                        <>
-                                            <p>Você não tem uma Meta definida ainda.</p>
-                                            <a className="ajuda" href="/adicionar-meta">Criar uma Meta</a>
-                                        </>
-                                }
+                                <div className={styles.result}>
+                                    {isLoading ? <></> :
+                                        meta ?
+                                            <>
+                                                <p><strong><FontAwesomeIcon icon={faCalendar} /> Prazo:</strong> {(new Date(meta.dataFim)).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</p>
+                                                <p><strong>Massa Magra Alvo:</strong> {meta.massaMagra}Kg</p>
+                                                <p><strong>Gordura Corporal Alvo:</strong> {meta.gorduraCorporal}%</p>
+                                                <Link className="ajuda" href="/acompanhar-meta">Ver mais detalhe</Link>
+                                            </>
+                                            :
+                                            <>
+                                                <p>Você não tem uma Meta definida ainda.</p>
+                                                <Link className="ajuda" href="/adicionar-meta">Criar uma Meta</Link>
+                                            </>
+                                    }
+                                </div>
                             </div>
                         </div>
                     </aside>

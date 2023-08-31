@@ -8,6 +8,7 @@ import axios from 'axios'
 import tryLogin from '@/functions/tryLogin'
 import TopBar from '@/components/TopBar'
 import { getMeta } from './dashboard'
+import Link from 'next/link'
 
 export default function AddMeta() {
     const [errorMessages, setErrorMessages] = useState([]);
@@ -110,11 +111,11 @@ export default function AddMeta() {
 
             <div className='container'>
 
-                <LeftMenu actualpage='/dashboard'></LeftMenu>
+                <LeftMenu actualpage='/acompanhar-meta'></LeftMenu>
 
                 <div className='main authPage'>
 
-                    <TopBar actualpage='/dashboard'></TopBar>
+                    <TopBar actualpage='/acompanhar-meta'></TopBar>
 
                     <main className='content' style={{ justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column', marginBottom: '25px' }}>
                         <div className={styles.addexam}>
@@ -125,7 +126,7 @@ export default function AddMeta() {
                                         <div className={styles.form}>
                                             <h3>Você já tem uma Meta em andamento!</h3>
                                         </div>
-                                        <a href='/acompanhar-meta' className='ajuda'>Acompanhar Meta</a>
+                                        <Link href='/acompanhar-meta' className='ajuda'>Acompanhar Meta</Link>
                                     </>
                                     :
                                     <>
