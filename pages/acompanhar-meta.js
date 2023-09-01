@@ -13,6 +13,30 @@ import ProgressBar from '@/components/ProgressBar'
 import { getMeta } from './dashboard'
 import Link from 'next/link'
 
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
+    Filler
+} from 'chart.js'
+import { Line } from 'react-chartjs-2'
+
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
+    Filler
+)
+
 export default function SeeMeta() {
     const [errorMessages, setErrorMessages] = useState([]);
     const [typeOfMessage, setTypeOfMessage] = useState('warning');
@@ -24,6 +48,8 @@ export default function SeeMeta() {
     const [gcorporal, setGcorporal] = useState(0);
 
     const [meta, setMeta] = useState({});
+    const [antropometrias, setAntropometrias] = useState([]);
+    const [antropometriasShow, setAntropometriasShow] = useState([]);
 
     useEffect(() => {
         tryLogin(setIsLoading, axios, false);
@@ -38,7 +64,90 @@ export default function SeeMeta() {
                 setGcorporal(response.gorduraCorporal);
             }
         });
+
     }, []);
+
+    useEffect(() => {
+        if (meta.id)
+            getAntropometriasByMedidas().then((response) => { setAntropometrias(response) });
+    }, [meta]);
+
+    useEffect(() => {
+        const antropometriasLista = [];
+
+        Object.keys(antropometrias).forEach((antropometriaItem) => {
+            let dadosAntropometria = [...antropometrias[antropometriaItem]];
+            dadosAntropometria = dadosAntropometria.reverse();
+
+            const dadosGraficoAntropometria = {
+                labels: dadosAntropometria.map(row => new Date(row.data).toLocaleDateString()),
+                datasets: [
+                    {
+                        label: antropometriaItem + ' - cm',
+                        data: dadosAntropometria.map(row => row.medida),
+                        borderColor: "#F3A53F",
+                        backgroundColor: "rgba(248, 222, 189, 0.6)",
+                        borderWidth: 4,
+                        fill: true,
+                    }
+                ]
+            };
+
+            const configuracaoGraficoAntropometria = {
+                cubicInterpolationMode: 'monotone',
+                plugins: {
+                    legend: {
+                        display: false,
+                    },
+                    tooltip: {
+                        enabled: true,
+                    }
+                },
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        grid: {
+                            display: false,
+                        }
+                    },
+                    y: {
+                        grid: {
+                            display: false,
+                        }
+                    }
+                }
+            }
+
+            antropometriasLista.push(<div className={styles.form} key={antropometriaItem}>
+                <div className={styles.left}>
+                    <h3>{antropometriaItem}</h3>
+                    <h3>ATUAL</h3>
+                    <h2>{antropometrias[antropometriaItem][0].medida} <span>cm</span></h2>
+                </div>
+                <div className={styles.right}>
+                    <Line
+                        data={dadosGraficoAntropometria}
+                        options={configuracaoGraficoAntropometria}
+                    />
+                </div>
+            </div>);
+        });
+        setAntropometriasShow(antropometriasLista);
+    }, [antropometrias]);
+
+    async function getAntropometriasByMedidas() {
+        setIsLoading(true);
+
+        const response = await axios.get(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem('user') + '/metas/' + meta.id + '/antropometrias/comparativos', {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': sessionStorage.getItem('token')
+            }
+        });
+
+        setIsLoading(false);
+        return response.data;
+    }
 
     async function finalizaMeta() {
         if (!confirm('Tem certeza que deseja finalizar essa meta?')) return;
@@ -124,6 +233,7 @@ export default function SeeMeta() {
                                                     <p>Falta <strong>{gcorporal}%</strong> para atingir a Gordura Corporal Almejada.</p>
                                                     <ProgressBar color='#55C66E' progress={0} />
                                                 </div>
+                                                {antropometriasShow.length > 0 ? antropometriasShow : <></>}
                                                 <Link href='/adicionar-antropometria' className='ajuda'>Adicionar Antropometria</Link>
                                                 <Link href='/ver-antropometrias' className='ajuda'>Ver todas medições</Link>
                                                 <hr></hr>

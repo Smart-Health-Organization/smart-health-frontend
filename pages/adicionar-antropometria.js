@@ -36,37 +36,40 @@ export default function AddAntropometrias() {
     }, [altura, peso, atividadeFisicaSemanal, coxa, abdominal, triceps, suprailiaca]);
 
     useEffect(() => {
-        if (document && document.querySelector('#titulo'))
-            document.querySelector('#titulo').focus();
+        if (document && document.querySelector('#altura'))
+            document.querySelector('#altura').focus();
     }, [meta]);
 
     function onEnter(e) {
         if (e.key !== 'Enter') return;
 
-        if (e.target.id === 'gcorporal') {
-            postMeta();
+        if (e.target.id === 'suprailiaca') {
+            postAntropometria();
             return;
         }
 
         e.target.parentElement.nextSibling.focus();
     }
 
-    async function postMeta() {
+    async function postAntropometria() {
         setIsLoading(true);
 
         const requestData = {
-            titulo,
-            dataInicio: new Date(Date.now()).toISOString(),
-            dataFim: data + "T00:00:00.000Z",
-            massaMagra: mmagra,
-            gorduraCorporal: gcorporal,
+            altura,
+            peso,
+            atividadeFisicaSemanal,
+            data: new Date(Date.now()).toISOString(),
+            coxa,
+            abdominal,
+            triceps,
+            suprailiaca,
         };
 
         try {
-            await axios.post(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem("user") + '/metas', requestData, { headers: { Authorization: sessionStorage.getItem("token") } });
+            await axios.post(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem("user") + '/metas/' + meta.id + '/antropometrias', requestData, { headers: { Authorization: sessionStorage.getItem("token") } });
 
             setTypeOfMessage('success');
-            setErrorMessages([<li key={0}>Meta criada com sucesso!</li>]);
+            setErrorMessages([<li key={0}>Antropometria adicionada com sucesso!</li>]);
             setTimeout(() => window.location.href = '/acompanhar-meta', 1000);
         }
         catch (error) {
@@ -128,28 +131,28 @@ export default function AddAntropometrias() {
                                     <>
                                         <div className={styles.form}>
                                             <label>
-                                                Altura: <input id="altura" type="number" min={0} placeholder='Digite a altura em cm' onKeyDown={onEnter} onChange={(e) => setAltura(e.target.value)}></input>
+                                                Altura: <input id="altura" type="number" min={0} placeholder='Digite a altura em cm' onKeyDown={onEnter} onChange={(e) => setAltura(Number(e.target.value))}></input>
                                             </label>
                                             <label>
-                                                Peso: <input id="peso" type="number" min={0} placeholder='Digite o peso em Kg' onKeyDown={onEnter} onChange={(e) => setPeso(e.target.value)}></input>
+                                                Peso: <input id="peso" type="number" min={0} placeholder='Digite o peso em Kg' onKeyDown={onEnter} onChange={(e) => setPeso(Number(e.target.value))}></input>
                                             </label>
                                             <label>
-                                                Atividade Física Semanal: <input id="atividadeFisicaSemanal" type="number" min={0} max={7} placeholder='Em dias' onKeyDown={onEnter} onChange={(e) => setAtividadeFisicaSemanal(e.target.value)}></input>
+                                                Atividade Física Semanal: <input id="atividadeFisicaSemanal" type="number" min={0} max={7} placeholder='Em dias' onKeyDown={onEnter} onChange={(e) => setAtividadeFisicaSemanal(Number(e.target.value))}></input>
                                             </label>
                                             <label>
-                                                Coxa: <input id="coxa" type="number" min={0} placeholder='Digite em cm' onKeyDown={onEnter} onChange={(e) => setCoxa(e.target.value)}></input>
+                                                Coxa: <input id="coxa" type="number" min={0} placeholder='Digite em cm' onKeyDown={onEnter} onChange={(e) => setCoxa(Number(e.target.value))}></input>
                                             </label>
                                             <label>
-                                                Abdominal: <input id="abdominal" min={0} type="number" placeholder='Digite em cm' onKeyDown={onEnter} onChange={(e) => setAbdominal(e.target.value)}></input>
+                                                Abdominal: <input id="abdominal" min={0} type="number" placeholder='Digite em cm' onKeyDown={onEnter} onChange={(e) => setAbdominal(Number(e.target.value))}></input>
                                             </label>
                                             <label>
-                                                Tríceps: <input id="triceps" type="number" min={0} placeholder='Digite em cm' onKeyDown={onEnter} onChange={(e) => setTriceps(e.target.value)}></input>
+                                                Tríceps: <input id="triceps" type="number" min={0} placeholder='Digite em cm' onKeyDown={onEnter} onChange={(e) => setTriceps(Number(e.target.value))}></input>
                                             </label>
                                             <label>
-                                                Suprailíaca: <input id="suprailiaca" type="number" min={0} placeholder='Digite em cm' onKeyDown={onEnter} onChange={(e) => setSuprailiaca(e.target.value)}></input>
+                                                Suprailíaca: <input id="suprailiaca" type="number" min={0} placeholder='Digite em cm' onKeyDown={onEnter} onChange={(e) => setSuprailiaca(Number(e.target.value))}></input>
                                             </label>
                                         </div>
-                                        <button className='ajuda'>Adicionar Antropometria</button>
+                                        <button onClick={postAntropometria} className='ajuda'>Adicionar Antropometria</button>
                                     </>
                                     :
                                     <>
