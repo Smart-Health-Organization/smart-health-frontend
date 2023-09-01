@@ -68,6 +68,11 @@ div.form>div.body {
   justify-content: center;
 }
 
+div.form>div.body>hr {
+  width: 100%;
+  margin: 10px 0;
+}
+
 div.form>div.body>* {
   margin: 10px 0;
 }

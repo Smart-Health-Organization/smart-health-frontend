@@ -124,7 +124,9 @@ export default function SeeMeta() {
                                                     <p>Falta <strong>{gcorporal}%</strong> para atingir a Gordura Corporal Almejada.</p>
                                                     <ProgressBar color='#55C66E' progress={0} />
                                                 </div>
-                                                <button disabled className='ajuda'>Adicionar Antropometria</button>
+                                                <Link href='/adicionar-antropometria' className='ajuda'>Adicionar Antropometria</Link>
+                                                <Link href='/ver-antropometrias' className='ajuda'>Ver todas medições</Link>
+                                                <hr></hr>
                                                 <button onClick={finalizaMeta} className='ajuda'>Finalizar Meta</button>
                                             </div>
                                         </div>
