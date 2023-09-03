@@ -77,7 +77,7 @@ div.form>div.body>* {
   margin: 10px 0;
 }
 
-div.form>div.body>div:not(div.antropometria) {
+div.form>div.body>div:not(div.antropometria):not(div.macronutrientes) {
   display: block flex;
   flex-direction: column;
   align-items: center;
@@ -224,4 +224,52 @@ div.antropometria>div.right {
     max-width: 100% !important;
     padding: 15px !important;
   }
+}
+
+div.macronutrientes {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 1000px;
+  max-width: 80%;
+  margin: 30px 0;
+  flex-wrap: wrap;
+}
+
+div.macronutrientes>div.macronutrientesItem {
+  width: 145px;
+  max-width: calc(100% - 30px);
+  height: 130px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+  border: 1px solid #C4C4C4;
+  background: #FFF;
+  margin: 7px;
+  padding: 2px 4px;
+}
+
+div.macronutrientes>div.macronutrientesItem>h4 {
+  margin: 0;
+  margin-bottom: 8px;
+  font-weight: 600;
+  text-align: center;
+}
+
+div.macronutrientes>div.macronutrientesItem>h4:last-of-type {
+  margin-bottom: 0;
+}
+
+
+div.macronutrientes>div.macronutrientesItem>h4.gray {
+  color: #818181;
+}
+
+div.macronutrientes>div.macronutrientesItem>h4:first-of-type,
+div.macronutrientes>div.macronutrientesItem>h4:first-of-type>* {
+  color: #E79B38;
 }

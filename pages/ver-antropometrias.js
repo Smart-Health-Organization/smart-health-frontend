@@ -25,16 +25,14 @@ export default function Antropometrias() {
         getAllAntropometrias(setIsLoading).then((response) => {
             let todasAntropometrias = [];
 
-            console.log(antropometrias);
-
             response.map(data => {
                 todasAntropometrias.push(
-                    <div key={data.id} className={styles.meta} style={{marginTop: '0'}}>
+                    <div key={data.id} className={styles.meta} style={{ marginTop: '0' }}>
                         <div className={styles.left}>
                             <h3>Medição#{data.id}</h3>
                             <p><FontAwesomeIcon icon={faCalendar} /> Feito em: {(new Date(data.data)).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</p>
                         </div>
-                        <div className={styles.right} style={{justifyContent: 'center'}}>
+                        <div className={styles.right} style={{ justifyContent: 'center' }}>
                             <button onClick={() => deleteAntropometria(data.id)} className='ajuda delete'> Remover</button>
                         </div>
                     </div>
@@ -135,13 +133,20 @@ export default function Antropometrias() {
 async function getAllAntropometrias(setIsLoading) {
     setIsLoading(true);
 
-    const response = await axios.get(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem('user') + '/metas/' + sessionStorage.getItem('meta') + '/antropometrias', {
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': sessionStorage.getItem('token')
-        }
-    });
+    try {
+        const response = await axios.get(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem('user') + '/metas/' + sessionStorage.getItem('meta') + '/antropometrias', {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': sessionStorage.getItem('token')
+            }
+        });
 
-    setIsLoading(false);
-    return response.data;
+        return response.data;
+    }
+    catch (e) { 
+        return [];
+    }
+    finally {
+        setIsLoading(false);
+    }
 }

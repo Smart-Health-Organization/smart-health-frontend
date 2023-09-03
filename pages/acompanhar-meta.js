@@ -12,6 +12,7 @@ import { faCalendar } from '@fortawesome/free-regular-svg-icons'
 import ProgressBar from '@/components/ProgressBar'
 import { getMeta } from './dashboard'
 import Link from 'next/link'
+import { faArrowDown, faArrowUp, faBowlRice, faEgg, faFish, faMinus } from '@fortawesome/free-solid-svg-icons'
 
 import {
     Chart as ChartJS,
@@ -25,7 +26,6 @@ import {
     Filler
 } from 'chart.js'
 import { Line } from 'react-chartjs-2'
-import { faArrowDown, faArrowUp, faChild, faMinus } from '@fortawesome/free-solid-svg-icons'
 
 ChartJS.register(
     CategoryScale,
@@ -53,6 +53,10 @@ export default function SeeMeta() {
     const [mmagraRestanteProgress, setMmagraRestanteProgress] = useState(0);
     const [gcorporalRestanteProgress, setGcorporalRestanteProgress] = useState(0);
 
+    const [consumoProteinasRecomendado, setConsumoProteinasRecomendado] = useState({ min: 0, max: 0 });
+    const [consumoCarboidratosRecomendado, setConsumoCarboidratosRecomendado] = useState({ min: 0, max: 0 });
+    const [consumoGorduraRecomendado, setConsumoGorduraRecomendado] = useState({ min: 0, max: 0 });
+
     const [meta, setMeta] = useState({});
     const [antropometrias, setAntropometrias] = useState([]);
     const [antropometriasShow, setAntropometriasShow] = useState([]);
@@ -76,6 +80,8 @@ export default function SeeMeta() {
     useEffect(() => {
         if (meta.id)
             getAntropometriasByMedidas().then((response) => {
+                if (!response.length) return;
+
                 setAntropometrias(response);
                 setMmagraRestante((mmagra - response["massaMagra"][0].medida).toFixed(1));
                 setGcorporalRestante((gcorporal - response["gorduraCorporal"][0].medida).toFixed(1));
@@ -83,6 +89,24 @@ export default function SeeMeta() {
                 setGcorporalRestanteProgress(100 - Math.abs(((response["gorduraCorporal"][0].medida * 100) / gcorporal) - 100).toFixed(1));
             });
     }, [meta]);
+
+    useEffect(() => {
+        if (!antropometrias["caloriasDiarias"]) return;
+
+        const calorias = antropometrias["caloriasDiarias"].reverse()[0].medida;
+
+        const proteinaMin = (calorias * 0.1);
+        const proteinaMax = (calorias * 0.35);
+        setConsumoProteinasRecomendado({ min: proteinaMin.toFixed(1), max: proteinaMax.toFixed(1) });
+
+        const carboidratoMin = (calorias * 0.45);
+        const carboidratoMax = (calorias * 0.65);
+        setConsumoCarboidratosRecomendado({ min: carboidratoMin.toFixed(1), max: carboidratoMax.toFixed(1) });
+
+        const gorduraMin = (calorias * 0.2);
+        const gorduraMax = (calorias * 0.35);
+        setConsumoGorduraRecomendado({ min: gorduraMin.toFixed(1), max: gorduraMax.toFixed(1) });
+    }, [antropometrias]);
 
     useEffect(() => {
         const antropometriasLista = [];
@@ -184,15 +208,22 @@ export default function SeeMeta() {
     async function getAntropometriasByMedidas() {
         setIsLoading(true);
 
-        const response = await axios.get(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem('user') + '/metas/' + meta.id + '/antropometrias/comparativos', {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': sessionStorage.getItem('token')
-            }
-        });
+        try {
+            const response = await axios.get(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem('user') + '/metas/' + meta.id + '/antropometrias/comparativos', {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': sessionStorage.getItem('token')
+                }
+            });
 
-        setIsLoading(false);
-        return response.data;
+            return response.data;
+        }
+        catch (e) {
+            return [];
+        }
+        finally {
+            setIsLoading(false);
+        }
     }
 
     async function finalizaMeta() {
@@ -293,6 +324,31 @@ export default function SeeMeta() {
                                                             <ProgressBar color='#55C66E' progress={0} />
                                                         </div>
                                                     </>
+                                                }
+
+                                                {antropometriasShow.length > 0 ?
+                                                    <>
+                                                        <h3>Consumo de Macronutrientes Recomendados</h3>
+                                                        <div className={styles.macronutrientes}>
+                                                            <div className={styles.macronutrientesItem}>
+                                                                <h4><FontAwesomeIcon icon={faEgg} /> Proteínas</h4>
+                                                                <h4>{consumoProteinasRecomendado.min} ~ {consumoProteinasRecomendado.max} kcal</h4>
+                                                                <h4 className={styles.gray}>Ao dia</h4>
+                                                            </div>
+                                                            <div className={styles.macronutrientesItem}>
+                                                                <h4><FontAwesomeIcon icon={faBowlRice} /> Carboidratos</h4>
+                                                                <h4>{consumoCarboidratosRecomendado.min} ~ {consumoCarboidratosRecomendado.max} kcal</h4>
+                                                                <h4 className={styles.gray}>Ao dia</h4>
+                                                            </div>
+                                                            <div className={styles.macronutrientesItem}>
+                                                                <h4><FontAwesomeIcon icon={faFish} /> Gordura</h4>
+                                                                <h4>{consumoGorduraRecomendado.min} ~ {consumoGorduraRecomendado.max} kcal</h4>
+                                                                <h4 className={styles.gray}>Ao dia</h4>
+                                                            </div>
+                                                        </div>
+                                                    </>
+                                                    :
+                                                    <></>
                                                 }
 
                                                 <h3>Antropometria</h3>
