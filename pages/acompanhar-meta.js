@@ -80,7 +80,7 @@ export default function SeeMeta() {
     useEffect(() => {
         if (meta.id)
             getAntropometriasByMedidas().then((response) => {
-                if (!response.length) return;
+                if (!Object.keys(response).length) return;
 
                 setAntropometrias(response);
                 setMmagraRestante((mmagra - response["massaMagra"][0].medida).toFixed(1));
@@ -219,7 +219,7 @@ export default function SeeMeta() {
             return response.data;
         }
         catch (e) {
-            return [];
+            return {};
         }
         finally {
             setIsLoading(false);
@@ -302,7 +302,7 @@ export default function SeeMeta() {
                                             </div>
 
                                             <div className={styles.body}>
-                                                {antropometrias.length ?
+                                                {Object.keys(antropometrias).length ?
                                                     <>
                                                         <div>
                                                             <p>Falta <strong>{mmagraRestante}Kg</strong> para atingir a Massa Magra Almejada de <strong>{mmagra}Kg</strong>.</p>
@@ -326,7 +326,7 @@ export default function SeeMeta() {
                                                     </>
                                                 }
 
-                                                {antropometriasShow.length > 0 ?
+                                                {antropometriasShow.length ?
                                                     <>
                                                         <h3>Consumo de Macronutrientes Recomendados</h3>
                                                         <div className={styles.macronutrientes}>
