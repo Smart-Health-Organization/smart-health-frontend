@@ -383,7 +383,7 @@ export default function SeeMeta() {
     )
 }
 
-const dicionarioAntropometrias = {
+export const dicionarioAntropometrias = {
     "densidadeCorporal": {
         nome: "Densidade Corporal",
         umedida: "g/cm³"
