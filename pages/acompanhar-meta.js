@@ -302,7 +302,7 @@ export default function SeeMeta() {
                                             </div>
 
                                             <div className={styles.body}>
-                                                {antropometrias ?
+                                                {antropometrias.length ?
                                                     <>
                                                         <div>
                                                             <p>Falta <strong>{mmagraRestante}Kg</strong> para atingir a Massa Magra Almejada de <strong>{mmagra}Kg</strong>.</p>
