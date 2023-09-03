@@ -42,7 +42,7 @@ div.form {
   align-items: flex-start;
   justify-content: space-between;
   width: 600px;
-  max-width: 90%;
+  max-width: calc(90% - 60px );
   margin: 30px 0;
   padding: 30px;
 
@@ -75,4 +75,15 @@ div.form>label>input {
 
   font-size: 15px;
   font-weight: 600;
+}
+
+@media (max-width: 1200px) {
+
+  div.form>label {
+    flex-direction: column;
+  }
+
+  div.form>label>input {
+    width: 80%;
+  }
 }

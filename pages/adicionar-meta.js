@@ -53,7 +53,7 @@ export default function AddMeta() {
 
         const requestData = {
             titulo,
-            dataInicio: new Date(Date.now()).toISOString(),
+            dataInicio: new Date(Date.now() + 300000).toISOString(),
             dataFim: data + "T00:00:00.000Z",
             massaMagra: mmagra,
             gorduraCorporal: gcorporal,

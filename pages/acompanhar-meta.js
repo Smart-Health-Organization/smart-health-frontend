@@ -78,7 +78,7 @@ export default function SeeMeta() {
     }, []);
 
     useEffect(() => {
-        if (meta.id)
+        if (meta && meta.id)
             getAntropometriasByMedidas().then((response) => {
                 if (!Object.keys(response).length) return;
 
