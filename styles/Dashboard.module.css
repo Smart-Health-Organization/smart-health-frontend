@@ -157,10 +157,20 @@ aside.aside>hr {
     border-top: #4f4f4f solid 1px;
 }
 
-aside.aside>div.antropometria h1,
 aside.aside>div.antropometria p {
     color: #FFF;
+    margin: 8px;
 }
+
+aside.aside>div.antropometria p:last-of-type {
+    margin-bottom: 16px;
+}
+
+aside.aside>div.antropometria h3 {
+    font-weight: 300;
+    color: #FFF;
+}
+
 
 aside.aside>div.antropometria>div.body {
     display: flex;
@@ -229,7 +239,7 @@ div.content>div.callaction {
     align-items: center;
     justify-content: space-around;
     flex-wrap: wrap;
-    margin: 15px 0;
+    margin: 7px 0;
 }
 
 div.content>div.callaction>* {

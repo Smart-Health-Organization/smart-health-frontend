@@ -7,7 +7,7 @@ import Loading from '@/components/LoadingComponent'
 import axios from 'axios'
 import tryLogin from '@/functions/tryLogin'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowUpRightFromSquare, faDna, faPlus, faShare } from '@fortawesome/free-solid-svg-icons'
+import { faArrowUpRightFromSquare, faChild, faDna, faPlus, faShare } from '@fortawesome/free-solid-svg-icons'
 import { faCircleQuestion, faCopy } from '@fortawesome/free-regular-svg-icons'
 import {
     Chart as ChartJS,
@@ -25,6 +25,7 @@ import TopBar from '@/components/TopBar'
 import Link from 'next/link'
 import { fakerPT_BR } from '@faker-js/faker'
 import QRCode from 'react-qr-code'
+import { getMeta } from './dashboard'
 
 ChartJS.register(
     CategoryScale,
@@ -42,6 +43,7 @@ export default function Compartilhamento() {
     const [typeOfMessage, setTypeOfMessage] = useState('warning');
     const [isLoading, setIsLoading] = useState(true);
 
+    const [meta, setMeta] = useState({});
     const [exames, setExames] = useState([]);
     const [examesBuscados, setExamesBuscados] = useState([]);
     const [selectedAll, setSelectedAll] = useState(false);
@@ -54,6 +56,7 @@ export default function Compartilhamento() {
         tryLogin(setIsLoading, axios, false);
         setIsLoading(true);
         getExamesMini(setErrorMessages, setIsLoading, setTypeOfMessage).then((response) => setExames(response));
+        getMeta(setIsLoading).then((response) => setMeta(response));
     }, []);
 
     useEffect(() => {
@@ -98,7 +101,7 @@ export default function Compartilhamento() {
 
         if (document.querySelectorAll('.' + styles.selected).length === 0) {
             setTypeOfMessage('info');
-            setErrorMessages([<li key={0}>Selecione pelo menos um exame para o compartilhamento.</li>]);
+            setErrorMessages([<li key={0}>Selecione pelo menos um exame ou uma antropometria para o compartilhamento.</li>]);
             document.querySelector('.' + styles.examsList).focus();
             return;
         }
@@ -106,8 +109,14 @@ export default function Compartilhamento() {
         setIsLoading(true);
 
         let examesSelecionados = {};
+        let antropometriaSelecionada = 0;
 
         document.querySelectorAll('.' + styles.selected).forEach((exam) => {
+            if (exam.id === 'antropometria') {
+                antropometriaSelecionada = JSON.parse(exam.getAttribute('data-data')).antropometriaId;
+                return;
+            }
+
             const exameSelecionado = JSON.parse(exam.getAttribute('data-data'));
             const index = Object.keys(exameSelecionado)[0];
             examesSelecionados[index] = exameSelecionado[index];
@@ -117,6 +126,9 @@ export default function Compartilhamento() {
         setSenha(senha);
 
         const data = { titulo, itens: examesSelecionados, senha, confirmacaoSenha: senha };
+
+        if (antropometriaSelecionada !== 0) data.metaId = antropometriaSelecionada;
+
         try {
             const response = await axios.post(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem('user') + '/exames-compartilhados', data, {
                 headers: {
@@ -213,7 +225,8 @@ export default function Compartilhamento() {
                                     <p>Compartilhe seus exames de forma rápida, prática e segura!</p>
                                     <ul>
                                         <li>Escolha um título;</li>
-                                        <li>Selecione quais exames que deseja compartilhar e;</li>
+                                        <li>Selecione quais exames que deseja compartilhar;</li>
+                                        <li>Selecione a antropometria para compartilhar e;</li>
                                         <li>Clique no botão compartilhar ao final da página.</li>
                                     </ul>
                                     <p>Pronto! Agora é só enviar o link (ou QR Code) com a senha gerada para quem você deseja compartilhar seus exames.</p>
@@ -234,6 +247,21 @@ export default function Compartilhamento() {
                                     </p>
                                     <Link className='ajuda' href='/adicionar-exames'>Adicionar</Link>
                                 </div>}
+                                {meta ?
+                                    <>
+                                        <h3>Selecione a antropometria para compartilhar:</h3>
+                                        <div className={[styles.card_chart, styles.antropometria].join(' ')} id="antropometria" onClick={selected} data-data={JSON.stringify({ antropometriaId: meta.id })}>
+                                            <div className={styles.chart_info}>
+                                                <h3><FontAwesomeIcon icon={faChild} /> {meta.titulo}</h3>
+                                                <h4>Data alvo: {(new Date((meta.dataFim || "01-01-1900"))).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</h4>
+                                                <h4>Massa Magra Alvo: {meta.massaMagra}</h4>
+                                                <h4>Gordura Corporal Alvo: {meta.gorduraCorporal}</h4>
+                                            </div>
+                                        </div>
+                                    </>
+                                    :
+                                    <></>
+                                }
                                 <button disabled={isLoading} onClick={compartilha} className='ajuda'><FontAwesomeIcon icon={faPlus} /> Criar compartilhamento</button>
                             </>
                             }
@@ -317,13 +345,13 @@ export async function getExamesMini(setErrorMessages, setIsLoading, setTypeOfMes
     finally {
         setIsLoading(false);
     }
+}
 
-    function selected(e) {
-        const element = e.target.closest('.' + styles.card_chart);
-        if (element.classList.contains(styles.selected)) {
-            element.classList.remove(styles.selected);
-            return;
-        }
-        element.classList.add(styles.selected);
+function selected(e) {
+    const element = e.target.closest('.' + styles.card_chart);
+    if (element.classList.contains(styles.selected)) {
+        element.classList.remove(styles.selected);
+        return;
     }
+    element.classList.add(styles.selected);
 }

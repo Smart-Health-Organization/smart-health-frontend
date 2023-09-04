@@ -11,5 +11,5 @@
 .progressBar>div {
     height: 100%;
     border-radius: 12px;
-    min-width: 5%;
+    min-width: 30px;
 }

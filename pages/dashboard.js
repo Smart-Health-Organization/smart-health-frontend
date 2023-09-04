@@ -169,10 +169,11 @@ export default function Dashboard() {
                                     {isLoading ? <></> :
                                         meta ?
                                             <>
-                                                <p><strong><FontAwesomeIcon icon={faCalendar} /> Prazo:</strong> {(new Date(meta.dataFim)).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</p>
-                                                <p><strong>Massa Magra Alvo:</strong> {meta.massaMagra}Kg</p>
-                                                <p><strong>Gordura Corporal Alvo:</strong> {meta.gorduraCorporal}%</p>
-                                                <Link className="ajuda" href="/acompanhar-meta">Ver mais detalhe</Link>
+                                                <h3>{meta.titulo || 'Título'}</h3>
+                                                <p><strong><FontAwesomeIcon icon={faCalendar} /> Prazo:</strong> {(new Date((meta.dataFim || "01-01-1900"))).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</p>
+                                                <p><strong>Massa Magra Alvo:</strong> {meta.massaMagra || 0}Kg</p>
+                                                <p><strong>Gordura Corporal Alvo:</strong> {meta.gorduraCorporal || 0}%</p>
+                                                <Link style={{marginTop: '16px'}} className="ajuda" href="/acompanhar-meta">Acompanhar Meta</Link>
                                             </>
                                             :
                                             <>

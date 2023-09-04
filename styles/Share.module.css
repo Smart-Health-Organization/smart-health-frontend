@@ -76,6 +76,7 @@ div.card_chart h3 svg {
   padding: 5px;
   border-radius: 4px;
   margin-right: 10px;
+  width: 15px;
 }
 
 div.card_chart h3.gray {
@@ -253,4 +254,19 @@ div.callaction strong.copy {
   background-color: #00000010;
   border-radius: 4px;
   display: inline-block;
+}
+
+div.card_chart.antropometria {
+  height: unset;
+  padding: 30px !important;
+}
+
+div.card_chart.antropometria>div.chart_info>h3 {
+  font-size: 1.2rem;
+}
+
+div.card_chart.antropometria>div.chart_info>h4 {
+  font-weight: 600;
+  margin: 0;
+  margin-top: 16px;
 }

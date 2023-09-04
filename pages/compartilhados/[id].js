@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import styles from '@/styles/Exams.module.css'
+import styles from '@/styles/Shared.module.css'
 import { useEffect, useState } from 'react'
 import SnackBar from '@/components/SnackBarComponent'
 import Loading from '@/components/LoadingComponent'
@@ -23,6 +23,8 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
 import DateComponent from '@/components/DateComponent'
+import { dicionarioAntropometrias } from '../acompanhar-meta'
+import ProgressBar from '@/components/ProgressBar'
 
 ChartJS.register(
     CategoryScale,
@@ -42,8 +44,7 @@ export default function Compartilhados() {
     const [typeOfMessage, setTypeOfMessage] = useState('warning');
     const [isLoading, setIsLoading] = useState(true);
 
-    const [exames, setExames] = useState([]);
-    const [examesBuscados, setExamesBuscados] = useState([]);
+    const [compartilhamentos, setCompartilhamentos] = useState([]);
     const [titulo, setTitulo] = useState('');
 
     const [authed, setAuthed] = useState(false);
@@ -56,27 +57,12 @@ export default function Compartilhados() {
             document.querySelector('#senha').focus();
     }, [isValid]);
 
-    useEffect(() => {
-        search('');
-    }, [exames]);
-
-    function search(string) {
-        if (string === '') {
-            setExamesBuscados(exames);
-            return;
-        }
-
-        const searchedExams = exames.filter((exam) => exam.key.toUpperCase().startsWith(string.toUpperCase()));
-        setExamesBuscados(searchedExams);
-        return;
-    }
-
     async function auth(e) {
         if (e.key && e.key !== 'Enter') return;
         const enteredSenha = document.querySelector('#senha').value;
         setIsLoading(true);
-        const response = await getExames(router.query.id, enteredSenha);
-        setExames(response);
+        const response = await getCompartilhamentos(router.query.id, enteredSenha);
+        setCompartilhamentos(response);
     }
 
     async function verifyId() {
@@ -132,10 +118,9 @@ export default function Compartilhados() {
                                 <>
                                     {!authed &&
                                         <h2 className='subtitle' style={{ marginBottom: "30px" }}>Olá, você recebeu esses exames. Insira a senha para acessar: </h2>}
-                                    {(exames && exames.length > 0) ? <>
+                                    {(compartilhamentos && compartilhamentos.length > 0) ? <>
                                         <h2 className='subtitle' style={{ marginBottom: "30px" }}>{titulo}</h2>
-                                        <input onChange={(e) => search(e.target.value)} className={styles.search} placeholder='Pesquise exames'></input>
-                                        {examesBuscados}
+                                        {compartilhamentos}
                                     </> : <>
                                         <input id='senha' onKeyDown={auth} className={styles.search} placeholder='Digite a senha' type='password'></input>
                                         <button disabled={isLoading} className='ajuda' onClick={auth}>Acessar</button>
@@ -157,65 +142,164 @@ export default function Compartilhados() {
         </>
     )
 
-    async function getExames(login, senha) {
+    async function getCompartilhamentos(login, senha) {
         try {
             const response = await axios.post(process.env.NEXT_PUBLIC_API_URL + '/exames-compartilhados', { login, senha },
                 { headers: { Authorization: sessionStorage.getItem("token") } });
 
-            let examesLista = [];
-            const dados = response.data.itens;
             setTitulo(response.data.titulo);
 
-            Object.keys(dados).forEach((examitem) => {
-                let dadosExames = [...dados[examitem]];
-                dadosExames = dadosExames.reverse();
+            let examesLista = [];
+            if (response.data.itens) {
+                examesLista.push(<h2 key="titulo">Exames</h2>);
 
-                const dadosGraficoExame = {
-                    labels: dadosExames.map(row => new Date(row.data).toLocaleDateString()),
-                    datasets: [
-                        {
-                            label: examitem + ' - ' + dadosExames[0].unidade,
-                            data: dadosExames.map(row => row.medida),
-                            borderColor: "#F3A53F",
-                            backgroundColor: "rgba(248, 222, 189, 0.6)",
-                            borderWidth: 4,
-                            fill: true,
-                        }
-                    ]
-                };
+                const dados = response.data.itens;
 
-                const configuracaoGraficoExame = {
-                    cubicInterpolationMode: 'monotone',
-                    plugins: {
-                        legend: {
-                            display: false,
+                Object.keys(dados).forEach((examitem) => {
+                    let dadosExames = [...dados[examitem]];
+                    dadosExames = dadosExames.reverse();
+
+                    const dadosGraficoExame = {
+                        labels: dadosExames.map(row => new Date(row.data).toLocaleDateString()),
+                        datasets: [
+                            {
+                                label: examitem + ' - ' + dadosExames[0].unidade,
+                                data: dadosExames.map(row => row.medida),
+                                borderColor: "#F3A53F",
+                                backgroundColor: "rgba(248, 222, 189, 0.6)",
+                                borderWidth: 4,
+                                fill: true,
+                            }
+                        ]
+                    };
+
+                    const configuracaoGraficoExame = {
+                        cubicInterpolationMode: 'monotone',
+                        plugins: {
+                            legend: {
+                                display: false,
+                            },
+                            tooltip: {
+                                enabled: true,
+                            }
                         },
-                        tooltip: {
-                            enabled: true,
-                        }
-                    },
-                    maintainAspectRatio: false,
-                }
+                        maintainAspectRatio: false,
+                    }
 
-                examesLista.push(<div className={styles.card_chart} key={examitem}>
-                    <div className={styles.chart_info}>
-                        <h3><FontAwesomeIcon icon={faDna} /> {examitem}</h3>
-                        <h3 className={styles.gray}>ATUAL</h3>
-                        <h2>{dados[examitem][0].medida} <span className={[styles.gray, styles.umedida].join(" ")}>{dados[examitem][0].unidade}</span> <span data-isalterado={dados[examitem][0].isAlterado} className={styles.isAlterado}>{dados[examitem][0].isAlterado ? "Alterado" : "Normal"} <span className={styles.tooltip}><FontAwesomeIcon icon={faCircleQuestion} /> <span className={styles.tooltiptext}>De acordo com o Ministério da Saúde.</span></span></span></h2>
+                    examesLista.push(<div className={styles.card_chart} key={examitem}>
+                        <div className={styles.chart_info}>
+                            <h3><FontAwesomeIcon icon={faDna} /> {examitem}</h3>
+                            <h3 className={styles.gray}>ATUAL</h3>
+                            <h2>{dados[examitem][0].medida} <span className={[styles.gray, styles.umedida].join(" ")}>{dados[examitem][0].unidade}</span> <span data-isalterado={dados[examitem][0].isAlterado} className={styles.isAlterado}>{dados[examitem][0].isAlterado ? "Alterado" : "Normal"} <span className={styles.tooltip}><FontAwesomeIcon icon={faCircleQuestion} /> <span className={styles.tooltiptext}>De acordo com o Ministério da Saúde.</span></span></span></h2>
+                        </div>
+                        <div className={styles.chart_container}>
+                            <Line
+                                data={dadosGraficoExame}
+                                options={configuracaoGraficoExame}
+                            />
+                        </div>
+                    </div>);
+                });
+            }
+
+            let metaLista = [];
+            if (response.data.meta) {
+                const data = response.data.meta;
+                const comparativos = data.comparativos;
+
+                metaLista.push(<h2 key="titulo" style={{ marginBottom: '0' }}>Meta</h2>);
+
+                let antropometriasLista = [];
+
+                Object.keys(comparativos).forEach((antropometriaItem) => {
+                    let dadosAntropometria = [...comparativos[antropometriaItem]];
+                    dadosAntropometria = dadosAntropometria.reverse();
+
+                    const dadosGraficoAntropometria = {
+                        labels: dadosAntropometria.map(row => new Date(row.data).toLocaleDateString()),
+                        datasets: [
+                            {
+                                label: 'Em ' + dicionarioAntropometrias[antropometriaItem].umedida,
+                                data: dadosAntropometria.map(row => row.medida.toFixed(1)),
+                                borderColor: "#F3A53F",
+                                backgroundColor: "rgba(248, 222, 189, 0.6)",
+                                borderWidth: 4,
+                                fill: true,
+                            }
+                        ]
+                    };
+
+                    const configuracaoGraficoAntropometria = {
+                        cubicInterpolationMode: 'monotone',
+                        plugins: {
+                            legend: {
+                                display: false,
+                            },
+                            tooltip: {
+                                enabled: true,
+                            }
+                        },
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                grid: {
+                                    display: false,
+                                },
+                                display: false,
+                            },
+                            y: {
+                                grid: {
+                                    display: false,
+                                },
+                                display: false,
+                            },
+                        }
+                    }
+
+                    antropometriasLista.push(
+                        <div className={styles.antropometria} key={antropometriaItem}>
+                            <div className={styles.left}>
+                                <h3>{dicionarioAntropometrias[antropometriaItem].nome.toUpperCase()}</h3>
+                                <h3 className={styles.gray}>ATUAL</h3>
+                                <h2>{comparativos[antropometriaItem][0].medida.toFixed(1)} <span className={[styles.gray, styles.umedida].join(" ")}>{dicionarioAntropometrias[antropometriaItem].umedida}</span></h2>
+                            </div>
+                            <div className={styles.right}>
+                                <Line
+                                    data={dadosGraficoAntropometria}
+                                    options={configuracaoGraficoAntropometria}
+                                />
+                            </div>
+                        </div>
+                    );
+                });
+
+                const mmagraRestante = (data.massaMagra - comparativos["massaMagra"][0].medida).toFixed(1);
+                const gcorporalRestante = (data.gorduraCorporal - comparativos["gorduraCorporal"][0].medida).toFixed(1);
+                const mmagraRestanteProgress = 100 - Math.abs(((comparativos["massaMagra"][0].medida * 100) / data.massaMagra) - 100).toFixed(1);
+                const gcorporalRestanteProgress = 100 - Math.abs(((comparativos["gorduraCorporal"][0].medida * 100) / data.gorduraCorporal) - 100).toFixed(1);
+
+                metaLista.push(
+                    <div className={styles.form} key="meta">
+                        <div className={styles.body}>
+                            <div>
+                                <p>Falta <strong>{mmagraRestante}Kg</strong> para atingir a Massa Magra Almejada de <strong>{data.massaMagra}Kg</strong>.</p>
+                                <ProgressBar color='#55C66E' progress={mmagraRestanteProgress} />
+                            </div>
+                            <div>
+                                <p>Falta <strong>{gcorporalRestante}%</strong> para atingir a Gordura Corporal Almejada de <strong>{data.gorduraCorporal}%</strong>.</p>
+                                <ProgressBar color='#55C66E' progress={gcorporalRestanteProgress} />
+                            </div>
+                            <h3>Antropometria</h3>
+                            {antropometriasLista}
+                        </div>
                     </div>
-                    <div className={styles.chart_container}>
-                        <Line
-                            data={dadosGraficoExame}
-                            options={configuracaoGraficoExame}
-                        />
-                    </div>
-                </div>);
-            });
+                );
+            }
 
             setErrorMessages([]);
             setAuthed(true);
 
-            return examesLista;
+            return examesLista.concat(metaLista);
         }
         catch (error) {
             setTypeOfMessage('warning');
