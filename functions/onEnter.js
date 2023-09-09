@@ -1,11 +1,11 @@
 export default function onEnter(e, func) {
     if (e.key != 'Enter') return;
 
-    if (!e.target.nextElementSibling) {
+    if (!e.target.parentElement.nextSibling) {
         e.target.blur();
         func();
         return;
     }
 
-    e.target.nextElementSibling.focus();
+    e.target.parentElement.nextSibling.focus();
 }

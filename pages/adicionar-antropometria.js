@@ -9,6 +9,7 @@ import tryLogin from '@/functions/tryLogin'
 import TopBar from '@/components/TopBar'
 import { getMeta } from './dashboard'
 import Link from 'next/link'
+import onEnter from '@/functions/onEnter'
 
 export default function AddAntropometrias() {
     const [errorMessages, setErrorMessages] = useState([]);
@@ -39,17 +40,6 @@ export default function AddAntropometrias() {
         if (document && document.querySelector('#altura'))
             document.querySelector('#altura').focus();
     }, [meta]);
-
-    function onEnter(e) {
-        if (e.key !== 'Enter') return;
-
-        if (e.target.id === 'suprailiaca') {
-            postAntropometria();
-            return;
-        }
-
-        e.target.parentElement.nextSibling.focus();
-    }
 
     async function postAntropometria() {
         setIsLoading(true);
@@ -131,25 +121,25 @@ export default function AddAntropometrias() {
                                     <>
                                         <div className={styles.form}>
                                             <label>
-                                                Altura: <input id="altura" type="number" min={0} placeholder='Digite a altura em cm' onKeyDown={onEnter} onChange={(e) => setAltura(Number(e.target.value))}></input>
+                                                Altura: <input id="altura" type="number" min={0} placeholder='Digite a altura em cm' onKeyDown={e => onEnter(e, postAntropometria)} onChange={(e) => setAltura(Number(e.target.value))}></input>
                                             </label>
                                             <label>
-                                                Peso: <input id="peso" type="number" min={0} placeholder='Digite o peso em Kg' onKeyDown={onEnter} onChange={(e) => setPeso(Number(e.target.value))}></input>
+                                                Peso: <input id="peso" type="number" min={0} placeholder='Digite o peso em Kg' onKeyDown={e => onEnter(e, postAntropometria)} onChange={(e) => setPeso(Number(e.target.value))}></input>
                                             </label>
                                             <label>
-                                                Atividade Física Semanal: <input id="atividadeFisicaSemanal" type="number" min={0} max={7} placeholder='Em dias' onKeyDown={onEnter} onChange={(e) => setAtividadeFisicaSemanal(Number(e.target.value))}></input>
+                                                Atividade Física Semanal: <input id="atividadeFisicaSemanal" type="number" min={0} max={7} placeholder='Em dias' onKeyDown={e => onEnter(e, postAntropometria)} onChange={(e) => setAtividadeFisicaSemanal(Number(e.target.value))}></input>
                                             </label>
                                             <label>
-                                                Coxa: <input id="coxa" type="number" min={0} placeholder='Digite em cm' onKeyDown={onEnter} onChange={(e) => setCoxa(Number(e.target.value))}></input>
+                                                Coxa: <input id="coxa" type="number" min={0} placeholder='Digite em cm' onKeyDown={e => onEnter(e, postAntropometria)} onChange={(e) => setCoxa(Number(e.target.value))}></input>
                                             </label>
                                             <label>
-                                                Abdominal: <input id="abdominal" min={0} type="number" placeholder='Digite em cm' onKeyDown={onEnter} onChange={(e) => setAbdominal(Number(e.target.value))}></input>
+                                                Abdominal: <input id="abdominal" min={0} type="number" placeholder='Digite em cm' onKeyDown={e => onEnter(e, postAntropometria)} onChange={(e) => setAbdominal(Number(e.target.value))}></input>
                                             </label>
                                             <label>
-                                                Tríceps: <input id="triceps" type="number" min={0} placeholder='Digite em cm' onKeyDown={onEnter} onChange={(e) => setTriceps(Number(e.target.value))}></input>
+                                                Tríceps: <input id="triceps" type="number" min={0} placeholder='Digite em cm' onKeyDown={e => onEnter(e, postAntropometria)} onChange={(e) => setTriceps(Number(e.target.value))}></input>
                                             </label>
                                             <label>
-                                                Suprailíaca: <input id="suprailiaca" type="number" min={0} placeholder='Digite em cm' onKeyDown={onEnter} onChange={(e) => setSuprailiaca(Number(e.target.value))}></input>
+                                                Suprailíaca: <input id="suprailiaca" type="number" min={0} placeholder='Digite em cm' onKeyDown={e => onEnter(e, postAntropometria)} onChange={(e) => setSuprailiaca(Number(e.target.value))}></input>
                                             </label>
                                         </div>
                                         <button onClick={postAntropometria} className='ajuda'>Adicionar Antropometria</button>

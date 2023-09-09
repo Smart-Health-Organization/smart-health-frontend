@@ -6,6 +6,7 @@ import SnackBar from '@/components/SnackBarComponent'
 import Loading from '@/components/LoadingComponent'
 import axios from 'axios'
 import TopBar from '@/components/TopBar'
+import onEnter from '@/functions/onEnter'
 
 export default function Profile() {
   const [errorMessages, setErrorMessages] = useState([]);
@@ -48,19 +49,7 @@ export default function Profile() {
     tryLogin();
   }, []);
 
-  function onEnter(e) {
-    if (e.key != 'Enter') return;
-
-    if (!e.target.nextElementSibling) {
-      return;
-    }
-
-    e.target.nextElementSibling.focus();
-  }
-
-  async function changePassword(e) {
-    if ((e.key && e.key != 'Enter') || isLoading) return;
-
+  async function changePassword() {
     setErrorMessages([]);
 
     setIsLoading(true);
@@ -90,9 +79,7 @@ export default function Profile() {
     }
   }
 
-  async function patch(e) {
-    if ((e.key && e.key != 'Enter') || isLoading) return;
-
+  async function patch() {
     setErrorMessages([]);
 
     setIsLoading(true);
@@ -239,18 +226,18 @@ export default function Profile() {
                   Editar informações
                 </h2>
                 <div className={styles.changePassword}>
-                  <label><strong>Nome:</strong> <input className={styles.edit} id='name' onKeyDown={onEnter} onChange={(e) => setNome(e.target.value)} placeholder='Nome Sobrenome' type='text' value={nome}></input></label>
-                  <label><strong>Email:</strong> <input className={styles.edit} id='email' onKeyDown={onEnter} onChange={(e) => setEmail(e.target.value)} placeholder='email@mail.com' type='email' value={email}></input></label>
+                  <label><strong>Nome:</strong> <input className={styles.edit} id='name' onKeyDown={e => onEnter(e, patch)} onChange={(e) => setNome(e.target.value)} placeholder='Nome Sobrenome' type='text' value={nome}></input></label>
+                  <label><strong>Email:</strong> <input className={styles.edit} id='email' onKeyDown={e => onEnter(e, patch)} onChange={(e) => setEmail(e.target.value)} placeholder='email@mail.com' type='email' value={email}></input></label>
                   <label>
                     <strong>Sexo:</strong>
                     &nbsp;
-                    <select value={sexo} onKeyDown={onEnter} onChange={(e) => setSexo(e.target.value)} id='sexo2'>
+                    <select value={sexo} onKeyDown={e => onEnter(e, patch)} onChange={(e) => setSexo(e.target.value)} id='sexo2'>
                       <option value=''>Selecione o sexo</option>
                       <option value='masculino'>Masculino</option>
                       <option value='feminino'>Feminino</option>
                     </select>
                   </label>
-                  <label><strong>Data de Nascimento:</strong> <input className={styles.edit} id='age2' onKeyDown={patch} onChange={(e) => setDataDeNascimento(e.target.value)} placeholder='Data de Nascimento' type='date' value={dataDeNascimento.split("T")[0]}></input></label>
+                  <label><strong>Data de Nascimento:</strong> <input className={styles.edit} id='age2' onKeyDown={e => onEnter(e, patch)} onChange={(e) => setDataDeNascimento(e.target.value)} placeholder='Data de Nascimento' type='date' value={dataDeNascimento.split("T")[0]}></input></label>
                 </div>
               </div>
               <button style={{ marginBottom: '30px' }} disabled={isLoading} onClick={patch} className='ajuda'>
@@ -264,8 +251,8 @@ export default function Profile() {
                   Trocar senha
                 </h2>
                 <div className={styles.changePassword}>
-                  <input className={styles.edit} id='oldPassword' onKeyDown={onEnter} placeholder='Senha atual' type='password'></input>
-                  <input className={styles.edit} id='newPassword' onKeyDown={changePassword} placeholder='Nova senha' type='password'></input>
+                  <label><input className={styles.edit} id='oldPassword' onKeyDown={e => onEnter(e, changePassword)} placeholder='Senha atual' type='password'></input></label>
+                  <label><input className={styles.edit} id='newPassword' onKeyDown={e => onEnter(e, changePassword)} placeholder='Nova senha' type='password'></input></label>
                 </div>
               </div>
               <button style={{ marginBottom: '30px' }} disabled={isLoading} onClick={changePassword} className='ajuda'>

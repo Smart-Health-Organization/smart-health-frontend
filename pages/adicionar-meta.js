@@ -9,6 +9,7 @@ import tryLogin from '@/functions/tryLogin'
 import TopBar from '@/components/TopBar'
 import { getMeta } from './dashboard'
 import Link from 'next/link'
+import onEnter from '@/functions/onEnter'
 
 export default function AddMeta() {
     const [errorMessages, setErrorMessages] = useState([]);
@@ -36,17 +37,6 @@ export default function AddMeta() {
         if (document && document.querySelector('#titulo'))
             document.querySelector('#titulo').focus();
     }, [meta]);
-
-    function onEnter(e) {
-        if (e.key !== 'Enter') return;
-
-        if (e.target.id === 'gcorporal') {
-            postMeta();
-            return;
-        }
-
-        e.target.parentElement.nextSibling.focus();
-    }
 
     async function postMeta() {
         setIsLoading(true);
@@ -132,16 +122,16 @@ export default function AddMeta() {
                                     <>
                                         <div className={styles.form}>
                                             <label>
-                                                Título: <input id="titulo" type="text" placeholder='Digite um título' onKeyDown={onEnter} onChange={(e) => setTitulo(e.target.value)}></input>
+                                                Título: <input id="titulo" type="text" placeholder='Digite um título' onKeyDown={e => onEnter(e, postMeta)} onChange={(e) => setTitulo(e.target.value)}></input>
                                             </label>
                                             <label>
-                                                Data alvo: <input id="data" type='date' onKeyDown={onEnter} onChange={(e) => setData(e.target.value)}></input>
+                                                Data alvo: <input id="data" type='date' onKeyDown={e => onEnter(e, postMeta)} onChange={(e) => setData(e.target.value)}></input>
                                             </label>
                                             <label>
-                                                Massa magra almejada: <input id="mmagra" type="number" placeholder='Digite a massa magra em Kg' onKeyDown={onEnter} onChange={(e) => setMmagra(e.target.value)}></input>
+                                                Massa magra almejada: <input id="mmagra" type="number" placeholder='Digite a massa magra em Kg' onKeyDown={e => onEnter(e, postMeta)} onChange={(e) => setMmagra(e.target.value)}></input>
                                             </label>
                                             <label>
-                                                Gordura Corporal almejado: <input id='gcorporal' type="number" placeholder='Digite a gordura corporal em percentual' onKeyDown={onEnter} onChange={(e) => setGcorporal(e.target.value)}></input>
+                                                Gordura Corporal almejado: <input id='gcorporal' type="number" placeholder='Digite a gordura corporal em percentual' onKeyDown={e => onEnter(e, postMeta)} onChange={(e) => setGcorporal(e.target.value)}></input>
                                             </label>
                                         </div>
                                         <button onClick={postMeta} className='ajuda'>Criar Meta</button>
