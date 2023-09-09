@@ -17,32 +17,35 @@ export default function AllMetas() {
     const [isLoading, setIsLoading] = useState(false);
 
     const [metas, setMetas] = useState([]);
+    const [formattedMetas, setFormattedMetas] = useState([]);
 
     useEffect(() => {
         tryLogin(setIsLoading, axios, false);
 
-        getAllMeta(setIsLoading).then((response) => {
-            let todasMetas = []
-
-            response.map(meta => {
-                todasMetas.push(
-                    <div key={meta.id} className={styles.meta}>
-                        <div className={styles.left}>
-                            <h3>{meta.titulo}</h3>
-                            <p><FontAwesomeIcon icon={faCalendar} /> Data Inicial: {(new Date(meta.dataInicio)).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</p>
-                            <p><FontAwesomeIcon icon={faCalendar} /> Data Final: {(new Date(meta.dataFim)).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</p>
-                        </div>
-                        <div className={styles.right}>
-                            <h3>{meta.isConcluida ? <><FontAwesomeIcon icon={faCheck} /> Concluída</> : <><FontAwesomeIcon icon={faX} /> Não Concluída</>}</h3>
-                            <button onClick={() => deleteMeta(meta.id)} className='ajuda delete'> Deletar</button>
-                        </div>
-                    </div>
-                )
-            });
-
-            setMetas(todasMetas);
-        });
+        getAllMeta(setIsLoading).then((response) => setMetas(response));
     }, []);
+
+    useEffect(() => {
+        let todasMetas = []
+
+        metas.map(meta => {
+            todasMetas.push(
+                <div key={meta.id} className={styles.meta}>
+                    <div className={styles.left}>
+                        <h3>{meta.titulo}</h3>
+                        <p><FontAwesomeIcon icon={faCalendar} /> Data Inicial: {(new Date(meta.dataInicio)).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</p>
+                        <p><FontAwesomeIcon icon={faCalendar} /> Data Final: {(new Date(meta.dataFim)).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</p>
+                    </div>
+                    <div className={styles.right}>
+                        <h3>{meta.isConcluida ? <><FontAwesomeIcon icon={faCheck} /> Concluída</> : <><FontAwesomeIcon icon={faX} /> Não Concluída</>}</h3>
+                        <button onClick={() => deleteMeta(meta.id)} className='ajuda delete'> Deletar</button>
+                    </div>
+                </div>
+            )
+        });
+
+        setFormattedMetas(todasMetas);
+    }, [metas]);
 
     async function deleteMeta(id) {
         if (!confirm('Tem certeza que deseja deletar essa meta?')) return;
@@ -59,7 +62,7 @@ export default function AllMetas() {
 
             setTypeOfMessage('success');
             setErrorMessages([<li key={0}>Meta deletada com sucesso!</li>]);
-            setTimeout(() => window.location.href = '/todas-metas', 1000);
+            getAllMeta(setIsLoading).then((response) => setMetas(response));
         }
         catch (error) {
             setTypeOfMessage('warning');
@@ -115,7 +118,7 @@ export default function AllMetas() {
                     <main className='content' style={{ justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column', marginBottom: '25px' }}>
                         <div className={styles.addexam}>
                             <h2 className='subtitle'>Todas as Metas</h2>
-                            {metas}
+                            {formattedMetas}
                         </div>
                     </main>
 

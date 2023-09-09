@@ -57,7 +57,7 @@ export default function SeeMeta() {
     const [consumoCarboidratosRecomendado, setConsumoCarboidratosRecomendado] = useState({ min: 0, max: 0 });
     const [consumoGorduraRecomendado, setConsumoGorduraRecomendado] = useState({ min: 0, max: 0 });
 
-    const [meta, setMeta] = useState({});
+    const [meta, setMeta] = useState(undefined);
     const [antropometrias, setAntropometrias] = useState([]);
     const [antropometriasShow, setAntropometriasShow] = useState([]);
 
@@ -292,7 +292,7 @@ export default function SeeMeta() {
                     <main className='content' style={{ justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column', marginBottom: '25px' }}>
                         <div className={styles.addexam}>
                             <h2 className='subtitle'>Acompanhar Meta</h2>
-                            {isLoading ? <></> :
+                            {(isLoading && !meta) ? <></> :
                                 meta ?
                                     <>
                                         <div className={styles.form}>

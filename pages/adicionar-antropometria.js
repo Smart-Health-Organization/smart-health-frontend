@@ -73,8 +73,6 @@ export default function AddAntropometrias() {
                         return <li key={index}>{message}</li>
                     }));
                 }
-        }
-        finally {
             setIsLoading(false);
         }
     }

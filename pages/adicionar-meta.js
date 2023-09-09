@@ -21,7 +21,7 @@ export default function AddMeta() {
     const [mmagra, setMmagra] = useState(0);
     const [gcorporal, setGcorporal] = useState(0);
 
-    const [meta, setMeta] = useState({});
+    const [meta, setMeta] = useState(undefined);
 
     useEffect(() => {
         tryLogin(setIsLoading, axios, false);
@@ -67,8 +67,6 @@ export default function AddMeta() {
                         return <li key={index}>{message}</li>
                     }));
                 }
-        }
-        finally {
             setIsLoading(false);
         }
     }
