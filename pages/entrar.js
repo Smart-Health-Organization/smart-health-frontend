@@ -112,8 +112,8 @@ export default function Login() {
                   Insira email e senha
                 </p>
                 <form className={styles.formLogin}>
-                  <input onKeyDown={e => onEnter(e, login)} id='email' type='email' placeholder={"Email"}></input>
-                  <input onKeyDown={e => onEnter(e, login)} id='password' type='password' placeholder={"Senha"}></input>
+                  <label><input onKeyDown={e => onEnter(e, login)} id='email' type='email' placeholder={"Email"}></input></label>
+                  <label><input onKeyDown={e => onEnter(e, login)} id='password' type='password' placeholder={"Senha"}></input></label>
                 </form>
                 <button disabled={isLoading} onClick={login}>ENTRAR</button>
               </div>

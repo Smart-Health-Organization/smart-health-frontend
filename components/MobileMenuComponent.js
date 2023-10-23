@@ -47,7 +47,7 @@ export default function MobileMenu(props = { actualpage: "/" }) {
     }
 
     return (
-        <div className={styles.divMenuMobile}>
+        <div data-testid="mobileMenu" className={styles.divMenuMobile}>
             <a id="openMenu" className={styles.mobileMenu} onClick={openMenu}>
                 <img alt={"logo"} src={'/favicon.png'} height={30} style={{ width: 'auto' }} />
             </a>

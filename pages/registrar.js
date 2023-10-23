@@ -122,15 +122,17 @@ export default function Register() {
                   Preencha o formulário
                 </p>
                 <form className={styles.formLogin} style={{ height: '60%' }}>
-                  <input onKeyDown={e => onEnter(e, register)} id='name' type='text' placeholder={"Nome"}></input>
-                  <input onKeyDown={e => onEnter(e, register)} id='age' type='date' placeholder={"Data de Nascimento"}></input>
-                  <select onKeyDown={e => onEnter(e, register)} id='sexo' >
-                    <option value=''>Selecione o sexo</option>
-                    <option value='masculino'>Masculino</option>
-                    <option value='feminino'>Feminino</option>
-                  </select>
-                  <input onKeyDown={e => onEnter(e, register)} id='email' type='email' placeholder={"Email"}></input>
-                  <input onKeyDown={e => onEnter(e, register)} id='password' type='password' placeholder={"Senha"}></input>
+                  <label><input onKeyDown={e => onEnter(e, register)} id='name' type='text' placeholder={"Nome"}></input></label>
+                  <label><input onKeyDown={e => onEnter(e, register)} id='age' type='date' placeholder={"Data de Nascimento"}></input></label>
+                  <label>
+                    <select onKeyDown={e => onEnter(e, register)} id='sexo' >
+                      <option value=''>Selecione o sexo</option>
+                      <option value='masculino'>Masculino</option>
+                      <option value='feminino'>Feminino</option>
+                    </select>
+                  </label>
+                  <label><input onKeyDown={e => onEnter(e, register)} id='email' type='email' placeholder={"Email"}></input></label>
+                  <label><input onKeyDown={e => onEnter(e, register)} id='password' type='password' placeholder={"Senha"}></input></label>
                 </form>
                 <button disabled={isLoading} onClick={register}>CADASTRAR</button>
               </div>

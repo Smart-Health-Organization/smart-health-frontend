@@ -6,61 +6,32 @@ import SnackBar from '@/components/SnackBarComponent'
 import Loading from '@/components/LoadingComponent'
 import axios from 'axios'
 import TopBar from '@/components/TopBar'
+import onEnter from '@/functions/onEnter'
+import tryLogin from '@/functions/tryLogin'
 
 export default function Profile() {
   const [errorMessages, setErrorMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [typeOfMessage, setTypeOfMessage] = useState('warning');
+
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [dataDeNascimento, setDataDeNascimento] = useState('');
   const [sexo, setSexo] = useState('');
-  const [nomeRef, setNomeRef] = useState('');
-  const [emailRef, setEmailRef] = useState('');
-  const [dataDeNascimentoRef, setDataDeNascimentoRef] = useState('');
-  const [sexoRef, setSexoRef] = useState('');
+  const [userInfoRef, setUserInfoRef] = useState({});
 
   useEffect(() => {
-    async function tryLogin() {
-      setIsLoading(true);
-      try {
-        if (!(sessionStorage.getItem("token") && sessionStorage.getItem("user"))) {
-          window.location.replace("/entrar");
-        }
-        const response = await axios.get(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem("user"), { headers: { Authorization: sessionStorage.getItem("token") } });
+    tryLogin(setIsLoading, axios, false).then((response) => {
+      setNome(response.nome);
+      setEmail(response.email);
+      setDataDeNascimento(response.dataDeNascimento);
+      setSexo(response.sexo);
 
-        setNome(response.data.nome);
-        setEmail(response.data.email);
-        setDataDeNascimentoRef(response.data.dataDeNascimento);
-        setSexo(response.data.sexo);
-        setNomeRef(response.data.nome);
-        setEmailRef(response.data.email);
-        setDataDeNascimento(response.data.dataDeNascimento);
-        setSexoRef(response.data.sexo);
-      }
-      catch {
-        window.location.replace("/entrar");
-      }
-      finally {
-        setIsLoading(false);
-      }
-    }
-    tryLogin();
+      setUserInfoRef(response);
+    });
   }, []);
 
-  function onEnter(e) {
-    if (e.key != 'Enter') return;
-
-    if (!e.target.nextElementSibling) {
-      return;
-    }
-
-    e.target.nextElementSibling.focus();
-  }
-
-  async function changePassword(e) {
-    if ((e.key && e.key != 'Enter') || isLoading) return;
-
+  async function changePassword() {
     setErrorMessages([]);
 
     setIsLoading(true);
@@ -90,18 +61,16 @@ export default function Profile() {
     }
   }
 
-  async function patch(e) {
-    if ((e.key && e.key != 'Enter') || isLoading) return;
-
+  async function patch() {
     setErrorMessages([]);
 
     setIsLoading(true);
 
     let newUser = {
-      nome: nome != nomeRef ? nome : null,
-      dataDeNascimento: dataDeNascimento != dataDeNascimentoRef ? (dataDeNascimento + "T00:00:00.000Z") : null,
-      sexo: sexo != sexoRef ? sexo : null,
-      email: email != emailRef ? email : null,
+      nome: nome != userInfoRef.nome ? nome : null,
+      dataDeNascimento: dataDeNascimento != userInfoRef.dataDeNascimento ? (dataDeNascimento + "T00:00:00.000Z") : null,
+      sexo: sexo != userInfoRef.sexo ? sexo : null,
+      email: email != userInfoRef.email ? email : null,
     }
 
     newUser = Object.fromEntries(Object.entries(newUser).filter(([_, v]) => v != null));
@@ -220,65 +189,67 @@ export default function Profile() {
 
           <TopBar actualpage='/perfil'></TopBar>
 
-          <main className='content' style={{ justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column', marginBottom: '25px' }}>
+          <main className='content' style={{ flexDirection: 'column', marginBottom: '25px' }}>
             <div className={styles.profile}>
               <h2 className={'subtitle'}>
                 Meu Perfil
               </h2>
 
-              <h3 className={styles.userInfos} id='userName'>{nomeRef || "Nome Sobrenome"}</h3>
-              <p className={styles.userInfos} id='userEmail'>{emailRef || "email@mail.com"}</p>
-              <p className={styles.userInfos2}>
-                {(new Date().getFullYear() - new Date(dataDeNascimento).getFullYear()) || 0} anos, {' ' + (sexoRef ? sexoRef[0].toUpperCase() + sexoRef.slice(1) : "Sexo")}.
-              </p>
+              <div className={styles.form}>
+                <h3 className={styles.userInfos} id='userName'>{userInfoRef.nome || "Nome Sobrenome"}</h3>
+                <p className={styles.userInfos} id='userEmail'>{userInfoRef.email || "email@mail.com"}</p>
+                <p className={styles.userInfos2}>
+                  {(new Date().getFullYear() - new Date(dataDeNascimento).getFullYear()) || 0} anos, {' ' + (userInfoRef.sexo ? userInfoRef.sexo[0].toUpperCase() + userInfoRef.sexo.slice(1) : "Sexo")}.
+                </p>
 
-              <hr className={styles.hr}></hr>
+                <hr className={styles.hr}></hr>
 
-              <div className={styles.userInfos}>
-                <h2 className={'subtitle'}>
-                  Editar informações
-                </h2>
-                <div className={styles.changePassword}>
-                  <label><strong>Nome:</strong> <input className={styles.edit} id='name' onKeyDown={onEnter} onChange={(e) => setNome(e.target.value)} placeholder='Nome Sobrenome' type='text' value={nome}></input></label>
-                  <label><strong>Email:</strong> <input className={styles.edit} id='email' onKeyDown={onEnter} onChange={(e) => setEmail(e.target.value)} placeholder='email@mail.com' type='email' value={email}></input></label>
-                  <label>
-                    <strong>Sexo:</strong>
-                    &nbsp;
-                    <select value={sexo} onKeyDown={onEnter} onChange={(e) => setSexo(e.target.value)} id='sexo2'>
-                      <option value=''>Selecione o sexo</option>
-                      <option value='masculino'>Masculino</option>
-                      <option value='feminino'>Feminino</option>
-                    </select>
-                  </label>
-                  <label><strong>Data de Nascimento:</strong> <input className={styles.edit} id='age2' onKeyDown={patch} onChange={(e) => setDataDeNascimento(e.target.value)} placeholder='Data de Nascimento' type='date' value={dataDeNascimento.split("T")[0]}></input></label>
+                <div className={styles.userInfos}>
+                  <h2 className={'subtitle'}>
+                    Editar informações
+                  </h2>
+                  <div className={styles.changePassword}>
+                    <label><strong>Nome:</strong> <input className={styles.edit} id='name' onKeyDown={e => onEnter(e, patch)} onChange={(e) => setNome(e.target.value)} placeholder='Nome Sobrenome' type='text' value={nome}></input></label>
+                    <label><strong>Email:</strong> <input className={styles.edit} id='email' onKeyDown={e => onEnter(e, patch)} onChange={(e) => setEmail(e.target.value)} placeholder='email@mail.com' type='email' value={email}></input></label>
+                    <label>
+                      <strong>Sexo:</strong>
+                      &nbsp;
+                      <select value={sexo} onKeyDown={e => onEnter(e, patch)} onChange={(e) => setSexo(e.target.value)} id='sexo2'>
+                        <option value=''>Selecione o sexo</option>
+                        <option value='masculino'>Masculino</option>
+                        <option value='feminino'>Feminino</option>
+                      </select>
+                    </label>
+                    <label><strong>Data de Nascimento:</strong> <input className={styles.edit} id='age2' onKeyDown={e => onEnter(e, patch)} onChange={(e) => setDataDeNascimento(e.target.value)} placeholder='Data de Nascimento' type='date' value={dataDeNascimento.split("T")[0]}></input></label>
+                  </div>
                 </div>
-              </div>
-              <button style={{ marginBottom: '30px' }} disabled={isLoading} onClick={patch} className='ajuda'>
-                Alterar os dados
-              </button>
+                <button style={{ marginBottom: '30px' }} disabled={isLoading} onClick={patch} className='ajuda'>
+                  Alterar os dados
+                </button>
 
-              <hr className={styles.hr}></hr>
+                <hr className={styles.hr}></hr>
 
-              <div className={styles.userInfos}>
-                <h2 className={'subtitle'}>
+                <div className={styles.userInfos}>
+                  <h2 className={'subtitle'}>
+                    Trocar senha
+                  </h2>
+                  <div className={styles.changePassword}>
+                    <label><input className={styles.edit} id='oldPassword' onKeyDown={e => onEnter(e, changePassword)} placeholder='Senha atual' type='password'></input></label>
+                    <label><input className={styles.edit} id='newPassword' onKeyDown={e => onEnter(e, changePassword)} placeholder='Nova senha' type='password'></input></label>
+                  </div>
+                </div>
+                <button style={{ marginBottom: '30px' }} disabled={isLoading} onClick={changePassword} className='ajuda'>
                   Trocar senha
-                </h2>
-                <div className={styles.changePassword}>
-                  <input className={styles.edit} id='oldPassword' onKeyDown={onEnter} placeholder='Senha atual' type='password'></input>
-                  <input className={styles.edit} id='newPassword' onKeyDown={changePassword} placeholder='Nova senha' type='password'></input>
+                </button>
+
+                <hr className={styles.hr}></hr>
+
+                <div className={styles.userInfos}>
                 </div>
+                <button style={{ marginBottom: '30px' }} disabled={isLoading} onClick={confirmDelete} className='ajuda delete'>
+                  Deletar conta
+                </button>
               </div>
-              <button style={{ marginBottom: '30px' }} disabled={isLoading} onClick={changePassword} className='ajuda'>
-                Trocar senha
-              </button>
-
-              <hr className={styles.hr}></hr>
-
-              <div className={styles.userInfos}>
-              </div>
-              <button style={{ marginBottom: '30px' }} disabled={isLoading} onClick={confirmDelete} className='ajuda delete'>
-                Deletar conta
-              </button>
 
             </div>
           </main>

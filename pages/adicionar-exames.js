@@ -11,8 +11,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCloudArrowUp, faXmark } from '@fortawesome/free-solid-svg-icons'
 import TopBar from '@/components/TopBar'
 
-let firstAddExamRender = true;
-
 export default function AddExam() {
     const [errorMessages, setErrorMessages] = useState([]);
     const [typeOfMessage, setTypeOfMessage] = useState('warning');
@@ -21,14 +19,10 @@ export default function AddExam() {
     const [examList, setExamList] = useState([]);
     const [metricas, setMetricas] = useState([]);
 
-
     useEffect(() => {
-        if (firstAddExamRender) {
-            tryLogin(setIsLoading, axios, false);
-            getMetricas();
-            firstAddExamRender = false;
-        }
-    });
+        tryLogin(setIsLoading, axios, false);
+        getMetricas();
+    }, []);
 
     async function getMetricas() {
         await axios.get(process.env.NEXT_PUBLIC_API_URL + '/metricas', { headers: { Authorization: sessionStorage.getItem("token") } }).then(response => {
@@ -90,11 +84,15 @@ export default function AddExam() {
 
             const response = await axios.post(process.env.NEXT_PUBLIC_API_URL + '/exames/pdf', formData, { headers: { Authorization: sessionStorage.getItem("token") } });
 
-            setExamList([]);
-
+            const list = [];
             for (let item of response.data.itens) {
-                addExamItem(null, item.metrica, item.medida, item.unidade, metricas);
+                list.push(addExamItem(null, item.metrica, item.medida, item.unidade, metricas));
             }
+            setExamList(list);
+
+            setTimeout(() => {
+                document.querySelector('#examList').lastChild.scrollIntoView();
+            });
 
             setTypeOfMessage('success');
             setErrorMessages([<li key={0}>Exame lido com sucesso!</li>]);
@@ -116,14 +114,9 @@ export default function AddExam() {
         }
     }
 
-    async function addExamItem(e, selectedExame = null, medidaItem = "", umedidaItem = "", exameList = []) {
-        setErrorMessages([]);
-
-        await setExamList(examList => [...examList, <ExamItem key={uuidv4()} examItemId={uuidv4()} exameNome={selectedExame} medida={medidaItem} umedida={umedidaItem} exames={exameList} removeExamItem={removeExamItem}></ExamItem>]);
-
-        setTimeout(() => {
-            document.querySelector('#examList').lastChild.scrollIntoView();
-        });
+    function addExamItem(e, selectedExame = null, medidaItem = "", umedidaItem = "", exameList = []) {
+        const newExame = <ExamItem key={uuidv4()} examItemId={uuidv4()} exameNome={selectedExame} medida={medidaItem} umedida={umedidaItem} exames={exameList} removeExamItem={removeExamItem}></ExamItem>;
+        return newExame;
     }
 
     async function removeExamItem(id) {

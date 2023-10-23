@@ -18,30 +18,33 @@ export default function Antropometrias() {
     const [isLoading, setIsLoading] = useState(true);
 
     const [antropometrias, setAntropometrias] = useState([]);
+    const [formattedAntropometrias, setFormattedAntropometrias] = useState([]);
 
     useEffect(() => {
         tryLogin(setIsLoading, axios, false);
 
-        getAllAntropometrias(setIsLoading).then((response) => {
-            let todasAntropometrias = [];
-
-            response.map(data => {
-                todasAntropometrias.push(
-                    <div key={data.id} className={styles.meta} style={{ marginTop: '0' }}>
-                        <div className={styles.left}>
-                            <h3>Medição#{data.id}</h3>
-                            <p><FontAwesomeIcon icon={faCalendar} /> Feito em: {(new Date(data.data)).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</p>
-                        </div>
-                        <div className={styles.right} style={{ justifyContent: 'center' }}>
-                            <button onClick={() => deleteAntropometria(data.id)} className='ajuda delete'> Remover</button>
-                        </div>
-                    </div>
-                )
-            });
-
-            setAntropometrias(todasAntropometrias);
-        });
+        getAllAntropometrias(setIsLoading).then((response) => setAntropometrias(response));
     }, []);
+
+    useEffect(() => {
+        let todasAntropometrias = [];
+
+        antropometrias.map(data => {
+            todasAntropometrias.push(
+                <div key={data.id} className={styles.meta} style={{ marginTop: '0' }}>
+                    <div className={styles.left}>
+                        <h3>Medição#{data.id}</h3>
+                        <p><FontAwesomeIcon icon={faCalendar} /> Feito em: {(new Date(data.data)).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</p>
+                    </div>
+                    <div className={styles.right} style={{ justifyContent: 'center' }}>
+                        <button onClick={() => deleteAntropometria(data.id)} className='ajuda delete'> Remover</button>
+                    </div>
+                </div>
+            )
+        });
+
+        setFormattedAntropometrias(todasAntropometrias);
+    }, [antropometrias]);
 
     async function deleteAntropometria(id) {
         if (!confirm('Tem certeza que deseja deletar essa medição?')) return;
@@ -58,7 +61,7 @@ export default function Antropometrias() {
 
             setTypeOfMessage('success');
             setErrorMessages([<li key={0}>Medição removida com sucesso!</li>]);
-            setTimeout(() => window.location.href = '/ver-antropometrias', 1000);
+            getAllAntropometrias(setIsLoading).then((response) => setAntropometrias(response));
         }
         catch (error) {
             setTypeOfMessage('warning');
@@ -114,7 +117,7 @@ export default function Antropometrias() {
                     <main className='content' style={{ justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column', marginBottom: '25px' }}>
                         <div className={styles1.exams}>
                             <h2 className='subtitle' style={{ marginBottom: "30px" }}>Minhas medições</h2>
-                            {antropometrias}
+                            {formattedAntropometrias}
                             <div className={[styles1.card_chart, styles1.novosexames].join(" ")}>
                                 <p>
                                     Adicione uma nova medição para acompanhar sua evolução.
@@ -143,7 +146,7 @@ async function getAllAntropometrias(setIsLoading) {
 
         return response.data;
     }
-    catch (e) { 
+    catch (e) {
         return [];
     }
     finally {

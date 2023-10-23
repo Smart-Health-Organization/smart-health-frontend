@@ -29,20 +29,11 @@ export default function Dashboard() {
     const [imc, setImc] = useState({ valor: 0, classificacao: 'Resultado aqui!', className: styles.alert });
 
     useEffect(() => {
-        tryLogin(setIsLoading, axios, false);
-        setIsLoading(true);
+        tryLogin(setIsLoading, axios, false).then(async (response) => setUserName(response.nome.split(' ')[0]));
 
         if (new Date().getHours() >= 6 && new Date().getHours() < 12) setSaudacao('Bom dia');
         else if (new Date().getHours() >= 12 && new Date().getHours() < 18) setSaudacao('Boa tarde');
         else if (new Date().getHours() >= 18 || new Date().getHours() < 6) setSaudacao('Boa noite');
-
-        fetch(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem('user'), {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': sessionStorage.getItem('token')
-            }
-        }).then(async (response) => setUserName((await response.json()).nome.split(' ')[0])).finally(() => setIsLoading(false));
 
         getExames(setErrorMessages, setIsLoading, setTypeOfMessage).then((response) => setExames(response));
 
@@ -173,7 +164,7 @@ export default function Dashboard() {
                                                 <p><strong><FontAwesomeIcon icon={faCalendar} /> Prazo:</strong> {(new Date((meta.dataFim || "01-01-1900"))).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</p>
                                                 <p><strong>Massa Magra Alvo:</strong> {meta.massaMagra || 0}Kg</p>
                                                 <p><strong>Gordura Corporal Alvo:</strong> {meta.gorduraCorporal || 0}%</p>
-                                                <Link style={{marginTop: '16px'}} className="ajuda" href="/acompanhar-meta">Acompanhar Meta</Link>
+                                                <Link style={{ marginTop: '16px' }} className="ajuda" href="/acompanhar-meta">Acompanhar Meta</Link>
                                             </>
                                             :
                                             <>

@@ -1,10 +1,10 @@
-import { render, waitFor } from '@testing-library/react';
-import SnackBarComponent from '../components/SnackBarComponent';
+import { render } from '@testing-library/react';
+import ProgressBar from '../components/ProgressBar';
 
-describe('SnackBarComponent', () => {
-    it('SnackBarComponent return an element when has message', () => {
+describe('ProgressBar', () => {
+    it('ProgressBar return a component', () => {
         // 1. renderizar o componente passando suas props
-        const renderredComponent = render(<SnackBarComponent message={[<li key={0}>Info Message</li>]} />,);
+        const renderredComponent = render(<ProgressBar />,);
 
         // 2. pegar o elemento que será testado
         const returnElement = renderredComponent.container.firstChild;
@@ -16,9 +16,9 @@ describe('SnackBarComponent', () => {
         expect(returnElement).toBeInTheDocument();
     });
 
-    it('SnackBarComponent return null when has not message', () => {
+    it('ProgressBar must have a class named "progressBar"', () => {
         // 1. renderizar o componente passando suas props
-        const renderredComponent = render(<SnackBarComponent />,);
+        const renderredComponent = render(<ProgressBar />,);
 
         // 2. pegar o elemento que será testado
         const returnElement = renderredComponent.container.firstChild;
@@ -27,12 +27,12 @@ describe('SnackBarComponent', () => {
         // nada a fazer
 
         // 4. fazer o teste
-        expect(returnElement).not.toBeInTheDocument();
+        expect(returnElement).toHaveClass('progressBar');
     });
 
-    it('SnackBarComponent must have a class named "snackbar"', () => {
+    it('ProgressBar child must have the same width of the progress prop', () => {
         // 1. renderizar o componente passando suas props
-        const renderredComponent = render(<SnackBarComponent message={[<li key={0}>Info Message</li>]} option='info' />,);
+        const renderredComponent = render(<ProgressBar progress={70} />,);
 
         // 2. pegar o elemento que será testado
         const returnElement = renderredComponent.container.firstChild;
@@ -41,12 +41,12 @@ describe('SnackBarComponent', () => {
         // nada a fazer
 
         // 4. fazer o teste
-        expect(returnElement).toHaveClass('snackbar');
+        expect(returnElement.childNodes.item(0)).toHaveStyle('width: 70%');
     });
-
-    it('SnackBarComponent faded out after 5000', () => {
+    
+    it('ProgressBar child must have the same background color of the color prop', () => {
         // 1. renderizar o componente passando suas props
-        const renderredComponent = render(<SnackBarComponent message={[<li key={0}>Info Message</li>]} option='info' />,);
+        const renderredComponent = render(<ProgressBar color='#000' />,);
 
         // 2. pegar o elemento que será testado
         const returnElement = renderredComponent.container.firstChild;
@@ -55,7 +55,6 @@ describe('SnackBarComponent', () => {
         // nada a fazer
 
         // 4. fazer o teste
-        waitFor(() => expect(returnElement).toHaveClass('snackbarFadeOut'), { interval: 5000, timeout: 5000 });
+        expect(returnElement.childNodes.item(0)).toHaveStyle('backgroundColor: #000');
     });
-
 });
