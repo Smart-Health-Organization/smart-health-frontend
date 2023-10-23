@@ -61,7 +61,6 @@ describe('MobileMenu', () => {
         expect(returnElement.childNodes.item(1)).toBeVisible();
     });
 
-    
     it('When clicked out of MobileMenu, it close', async  () => {
         // 1. renderizar o componente passando suas props
         const renderredComponent = render(<MobileMenu />,);
