@@ -38,7 +38,7 @@ export default function Profile() {
 
     try {
       await axios.patch(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem("user") + '/redefinir-senha',
-        { senhaAntiga: document.querySelector("#oldPassword").value, NovaSenha: document.querySelector("#newPassword").value },
+        { senhaAntiga: document.querySelector("#oldPassword").value, novaSenha: document.querySelector("#newPassword").value },
         { headers: { Authorization: sessionStorage.getItem("token") } });
 
       setTypeOfMessage('success');
