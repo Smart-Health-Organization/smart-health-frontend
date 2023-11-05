@@ -3,13 +3,12 @@ export default async function tryLogin(setIsLoading, axios, redirect = true) {
         if (!sessionStorage.getItem("token") || !sessionStorage.getItem("user")) throw new Error();
 
         setIsLoading(true);
-        if (sessionStorage.getItem("token") && sessionStorage.getItem("user")) {
-            await axios.get(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem("user"), { headers: { Authorization: sessionStorage.getItem("token") } });
-            if (redirect) window.location.replace("/profile");
-        }
+        const response = await axios.get(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem("user"), { headers: { Authorization: sessionStorage.getItem("token") } });
+        if (redirect) window.location.replace("/dashboard");
+        return response.data;
     }
-    catch { 
-        if (!redirect) window.location.replace("/login");
+    catch {
+        if (!redirect) window.location.replace("/entrar");
     }
     finally {
         setIsLoading(false);

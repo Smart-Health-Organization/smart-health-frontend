@@ -1,7 +1,8 @@
 div.exams {
   width: 100%;
   height: 100%;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
 
   display: flex;
   flex-direction: column;
@@ -11,7 +12,7 @@ div.exams {
 
 div.chart_info {
   height: 100%;
-  width: 30%;
+  width: 100%;
 
   display: flex;
   align-items: flex-start;
@@ -23,7 +24,7 @@ div.chart_info {
 div.chart_container {
   position: relative;
   height: 100%;
-  width: 70%;
+  width: 100%;
 
   display: flex;
   align-items: center;
@@ -37,18 +38,25 @@ div.card_chart {
   border-radius: 12px;
 
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   justify-content: space-between;
 
-  width: 90%;
-  max-width: 700px;
-  height: 150px;
-  min-height: 150px;
+  width: 300px;
+  height: 300px;
 
-  margin-bottom: 15px;
+  margin: 15px;
+  padding: 25px;
+  cursor: pointer;
 
-  padding: 25px 35px;
+  max-width: 95%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1200px) {
+  div.card_chart {
+    padding: 10px !important;
+  }
 }
 
 div.card_chart h3 {
@@ -68,6 +76,7 @@ div.card_chart h3 svg {
   padding: 5px;
   border-radius: 4px;
   margin-right: 10px;
+  width: 15px;
 }
 
 div.card_chart h3.gray {
@@ -106,34 +115,6 @@ div.card_chart h2 span.isAlterado[data-isalterado="false"] {
   color: #fff;
 }
 
-
-@media (max-width: 1100px) {
-  div.card_chart {
-    flex-direction: column;
-    height: auto;
-    padding: 25px 0;
-  }
-
-  div.chart_container,
-  div.chart_info {
-    width: 90%;
-  }
-
-  div.chart_info {
-    margin-bottom: 15px;
-  }
-
-  div.exams > div.card_chart.novosexames {
-    justify-content: center !important;
-    max-height: unset !important;
-  }
-  
-  div.exams > div.card_chart.novosexames > p {
-    width: 70%;
-    text-align: center;
-  }
-}
-
 .tooltip {
   position: relative;
   cursor: pointer;
@@ -147,7 +128,7 @@ div.card_chart h2 span.isAlterado[data-isalterado="false"] {
   text-align: center;
   padding: 5px;
   border-radius: 6px;
- 
+
   position: absolute;
   z-index: 1;
   width: 120px;
@@ -160,18 +141,30 @@ div.card_chart h2 span.isAlterado[data-isalterado="false"] {
   visibility: visible;
 }
 
-div.exams > div.card_chart.novosexames {
+div.exams>div.novosexames {
+  background: #FFFFFF;
+  border: 1px solid #E8E7E7;
+  box-shadow: 0px 1px 50px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+
+  width: 90%;
+  max-width: 700px;
+  height: 150px;
+
+  margin: 15px 0;
+
+  padding: 25px 35px;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
 
-  min-height: 60px !important;
+  min-height: 60px;
   max-height: 60px;
 }
 
-div.exams > div.card_chart.novosexames > p {
+div.exams>div.novosexames>p {
   width: 70%;
 }
 
@@ -179,14 +172,101 @@ input.search {
   margin-bottom: 15px;
   width: 80%;
   max-width: 700px;
-  
+
   background: #FFFFFF;
   border: 1px solid #E8E7E7;
   box-shadow: 0px 1px 50px rgba(0, 0, 0, 0.08);
   border-radius: 12px;
-  
+
   padding: 15px;
 
   font-size: 15px;
   font-weight: 600;
+}
+
+div.examsList {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 90%;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 1200px) {
+  div.examsList {
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+div.exams>button:last-child {
+  margin: 30px 0;
+}
+
+div.exams div.selected {
+  border: 2px dashed #E79B38;
+  background-color: #FFFFFF50;
+}
+
+div.exams>h3 {
+  font-weight: 500;
+}
+
+div.callaction {
+  border-radius: 12px;
+  border: 1px solid #E8E7E7;
+  background: #FFF;
+  box-shadow: 0px 1px 50px 0px rgba(0, 0, 0, 0.08);
+
+  width: calc(95% - 30px);
+  max-width: 650px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  margin: 15px 0;
+}
+
+div.callaction * {
+  font-weight: 300;
+}
+
+div.callaction ul {
+  margin: 0;
+}
+
+div.callaction p:last-child {
+  margin-bottom: 0;
+}
+
+div.callaction p:first-child {
+  margin-top: 0;
+}
+
+div.callaction strong.copy {
+  cursor: pointer;
+  padding: 2px 7px;
+  margin: 1px 0;
+  background-color: #00000010;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+div.card_chart.antropometria {
+  height: unset;
+  padding: 30px !important;
+}
+
+div.card_chart.antropometria>div.chart_info>h3 {
+  font-size: 1.2rem;
+}
+
+div.card_chart.antropometria>div.chart_info>h4 {
+  font-weight: 600;
+  margin: 0;
+  margin-top: 16px;
 }

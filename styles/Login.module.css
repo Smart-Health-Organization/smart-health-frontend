@@ -93,31 +93,30 @@ form.formLogin {
   align-items: center;
 }
 
-form.formLogin>input,
-form.formLogin>select {
-  border: none;
+form.formLogin>label {
+  width: 80%;
+  height: 50px;
+  margin: 5px;
+}
 
+form.formLogin>label>input,
+form.formLogin>label>select {
+  border: none;
   background: #D08726;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 16px;
 
-  width: 80%;
-  height: 50px;
-
-  margin: 5px;
+  width: calc(100% - 20px);
+  height: 100%;
+  box-sizing: unset;
 
   font-weight: 600;
   font-size: 18px;
   color: #000;
-
   padding-left: 20px;
 }
 
-form.formLogin>select {
-  width: calc(80% + 20px);
-}
-
-form.formLogin>input::placeholder {
+form.formLogin>label>input::placeholder {
   color: #FFFFFF60;
 }
 
@@ -179,7 +178,4 @@ form.formLogin>input::placeholder {
     width: 100%;
   }
 
-  form.formLogin>input {
-    width: 80%;
-  }
 }

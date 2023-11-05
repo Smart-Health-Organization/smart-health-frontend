@@ -2,13 +2,13 @@ import Head from 'next/head'
 import styles from '@/styles/Login.module.css'
 import Image from 'next/image'
 import Link from 'next/link';
-import DateComponent from '@/components/date';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import SnackBar from '@/components/SnackBar';
-import Loading from '@/components/loading';
+import SnackBar from '@/components/SnackBarComponent';
+import Loading from '@/components/LoadingComponent';
 import onEnter from '@/functions/onEnter';
 import tryLogin from '@/functions/tryLogin';
+import DateComponent from '@/components/DateComponent';
 
 let first = true;
 
@@ -34,7 +34,7 @@ export default function Register() {
 
     const newUser = {
       nome: document.querySelector("#name").value,
-      idade: Number(document.querySelector("#age").value),
+      dataDeNascimento: document.querySelector("#age").value + "T00:00:00.000Z",
       sexo: document.querySelector("#sexo").value,
       email: document.querySelector("#email").value,
       senha: document.querySelector("#password").value,
@@ -48,7 +48,7 @@ export default function Register() {
       sessionStorage.setItem("token", "Bearer " + response.data.token);
       sessionStorage.setItem("user", response.data.usuario.id);
 
-      window.location.replace("/profile");
+      window.location.replace("/dashboard");
     }
     catch (error) {
       if (error.response)
@@ -97,8 +97,8 @@ export default function Register() {
         <div className='main'>
 
           <header className='topbar'>
-            <Link href={"./"}><h1 className='title' ><Image alt={"logo"} src={'/favicon.png'} width={62.25} height={58.5}></Image>  <span className='displayMobile'>Smart Health</span></h1></Link>
-            <DateComponent date={Date.now()}></DateComponent>
+            <Link href={"/"}><h1 className='title' ><Image alt={"logo"} src={'/favicon.png'} width={62.25} height={58.5}></Image>  <span className='displayMobile'>Smart Health</span></h1></Link>
+            <h1 className='title time'><DateComponent date={Date.now()}></DateComponent></h1>
           </header>
 
           <main className='content' style={{ justifyContent: 'center', alignItems: 'center' }}>
@@ -111,7 +111,7 @@ export default function Register() {
                 <p className={styles.description}>
                   Já é cadastrado? Acesse sua conta agora mesmo.
                 </p>
-                <Link href={"/login"}>LOGIN</Link>
+                <Link href={"/entrar"}>LOGIN</Link>
               </div>
 
               <div className={styles.loginDiv}>
@@ -122,15 +122,17 @@ export default function Register() {
                   Preencha o formulário
                 </p>
                 <form className={styles.formLogin} style={{ height: '60%' }}>
-                  <input onKeyDown={e => onEnter(e, register)} id='name' type='text' placeholder={"Nome"}></input>
-                  <input onKeyDown={e => onEnter(e, register)} id='age' type='number' placeholder={"Idade"}></input>
-                  <select onKeyDown={e => onEnter(e, register)} id='sexo' >
-                    <option value=''>Selecione o sexo</option>
-                    <option value='masculino'>Masculino</option>
-                    <option value='feminino'>Feminino</option>
-                  </select>
-                  <input onKeyDown={e => onEnter(e, register)} id='email' type='email' placeholder={"Email"}></input>
-                  <input onKeyDown={e => onEnter(e, register)} id='password' type='password' placeholder={"Senha"}></input>
+                  <label><input onKeyDown={e => onEnter(e, register)} id='name' type='text' placeholder={"Nome"}></input></label>
+                  <label><input onKeyDown={e => onEnter(e, register)} id='age' type='date' placeholder={"Data de Nascimento"}></input></label>
+                  <label>
+                    <select onKeyDown={e => onEnter(e, register)} id='sexo' >
+                      <option value=''>Selecione o sexo</option>
+                      <option value='masculino'>Masculino</option>
+                      <option value='feminino'>Feminino</option>
+                    </select>
+                  </label>
+                  <label><input onKeyDown={e => onEnter(e, register)} id='email' type='email' placeholder={"Email"}></input></label>
+                  <label><input onKeyDown={e => onEnter(e, register)} id='password' type='password' placeholder={"Senha"}></input></label>
                 </form>
                 <button disabled={isLoading} onClick={register}>CADASTRAR</button>
               </div>

@@ -190,3 +190,140 @@ input.search {
   font-size: 15px;
   font-weight: 600;
 }
+
+div.form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: calc(90% - 60px);
+  max-width: 800px;
+  margin: 30px 0;
+  padding: 30px;
+
+  border-radius: 12px;
+  border: 1px solid #E8E7E7;
+  background: #FFF;
+  box-shadow: 0px 1px 50px 0px rgba(0, 0, 0, 0.08);
+}
+
+div.form>div.title {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+div.form>div.body {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+div.form>div.body>hr {
+  width: 100%;
+  margin: 10px 0;
+}
+
+div.form>div.body>* {
+  margin: 10px 0;
+}
+
+div.form>div.body>div:not(div.antropometria):not(div.macronutrientes) {
+  display: block flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+div.form>div.body>div>p {
+  align-self: flex-end;
+}
+
+div.antropometria {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 1000px;
+  max-width: 80%;
+  margin: 30px 0;
+  padding: 30px;
+
+  border-radius: 12px;
+  border: 1px solid #E8E7E7;
+  background: #FFF;
+  box-shadow: 0px 1px 50px 0px rgba(0, 0, 0, 0.08);
+}
+
+div.antropometria>div.left {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+div.antropometria>div.left>h3 {
+  text-align: start;
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0;
+}
+
+div.antropometria>div.left>h3>svg {
+  color: #E79B38;
+  background-color: #F8DEBD;
+  padding: 5px;
+  border-radius: 4px;
+  margin-right: 10px;
+  width: 15px;
+}
+
+div.antropometria>div.left>h3.gray {
+  color: #818181;
+  margin-top: 15px;
+}
+
+div.antropometria>div.left>h2 {
+  margin: 0;
+  font-weight: 400;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+div.antropometria>div.left>h2>span.umedida {
+  font-size: 15px;
+  margin: 0;
+  font-weight: 400;
+  color: #818181;
+  margin-left: 7px;
+}
+
+div.antropometria>div.right {
+  width: 50%;
+  height: 100%;
+}
+
+@media (max-width: 1200px) {
+  div.antropometria {
+    flex-direction: column !important;
+  }
+
+  div.antropometria>div {
+    width: 100% !important;
+  }
+
+  div.antropometria {
+    max-width: 100% !important;
+    padding: 15px !important;
+  }
+}

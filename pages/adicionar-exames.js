@@ -1,18 +1,15 @@
-import LeftMenu from '@/components/leftMenu'
-import MobileMenu from '@/components/mobileMenu'
+import LeftMenu from '@/components/LeftMenuComponent'
 import Head from 'next/head'
 import styles from '@/styles/AddExam.module.css'
-import DateComponent from '@/components/date'
 import { useEffect, useState } from 'react'
-import SnackBar from '@/components/SnackBar'
-import Loading from '@/components/loading'
+import SnackBar from '@/components/SnackBarComponent'
+import Loading from '@/components/LoadingComponent'
 import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid'
 import tryLogin from '@/functions/tryLogin'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCloudArrowUp, faPlus, faXmark } from '@fortawesome/free-solid-svg-icons'
-
-let firstAddExamRender = true;
+import { faCloudArrowUp, faXmark } from '@fortawesome/free-solid-svg-icons'
+import TopBar from '@/components/TopBar'
 
 export default function AddExam() {
     const [errorMessages, setErrorMessages] = useState([]);
@@ -22,14 +19,10 @@ export default function AddExam() {
     const [examList, setExamList] = useState([]);
     const [metricas, setMetricas] = useState([]);
 
-
     useEffect(() => {
-        if (firstAddExamRender) {
-            tryLogin(setIsLoading, axios, false);
-            getMetricas();
-            firstAddExamRender = false;
-        }
-    });
+        tryLogin(setIsLoading, axios, false);
+        getMetricas();
+    }, []);
 
     async function getMetricas() {
         await axios.get(process.env.NEXT_PUBLIC_API_URL + '/metricas', { headers: { Authorization: sessionStorage.getItem("token") } }).then(response => {
@@ -91,11 +84,15 @@ export default function AddExam() {
 
             const response = await axios.post(process.env.NEXT_PUBLIC_API_URL + '/exames/pdf', formData, { headers: { Authorization: sessionStorage.getItem("token") } });
 
-            setExamList([]);
-
+            const list = [];
             for (let item of response.data.itens) {
-                addExamItem(null, item.metrica, item.medida, item.unidade, metricas);
+                list.push(addExamItem(null, item.metrica, item.medida, item.unidade, metricas));
             }
+            setExamList(list);
+
+            setTimeout(() => {
+                document.querySelector('#examList').lastChild.scrollIntoView();
+            });
 
             setTypeOfMessage('success');
             setErrorMessages([<li key={0}>Exame lido com sucesso!</li>]);
@@ -117,14 +114,9 @@ export default function AddExam() {
         }
     }
 
-    async function addExamItem(e, selectedExame = null, medidaItem = "", umedidaItem = "", exameList = []) {
-        setErrorMessages([]);
-
-        await setExamList(examList => [...examList, <ExamItem key={uuidv4()} examItemId={uuidv4()} exameNome={selectedExame} medida={medidaItem} umedida={umedidaItem} exames={exameList} removeExamItem={removeExamItem}></ExamItem>]);
-
-        setTimeout(() => {
-            document.querySelector('#examList').lastChild.scrollIntoView();
-        });
+    function addExamItem(e, selectedExame = null, medidaItem = "", umedidaItem = "", exameList = []) {
+        const newExame = <ExamItem key={uuidv4()} examItemId={uuidv4()} exameNome={selectedExame} medida={medidaItem} umedida={umedidaItem} exames={exameList} removeExamItem={removeExamItem}></ExamItem>;
+        return newExame;
     }
 
     async function removeExamItem(id) {
@@ -141,8 +133,7 @@ export default function AddExam() {
             setErrorMessages([<li key={0}>Selecione uma data</li>]);
             return;
         }
-        const examDateFormatted = new Date(examDate);
-        const examDateFormattedString = ('0' + (examDateFormatted.getDate())).slice(-2) + "/" + ('0' + (examDateFormatted.getMonth() + 1)).slice(-2) + "/" + examDateFormatted.getFullYear();
+        const examDateFormatted = examDate + "T03:00:00.000Z";
 
         const examList = document.querySelectorAll('div[class*="exam_item"]');
 
@@ -173,7 +164,7 @@ export default function AddExam() {
         }
 
         const data = {
-            data: examDateFormattedString,
+            data: examDateFormatted,
             itens: exams
         }
 
@@ -232,15 +223,11 @@ export default function AddExam() {
 
             <div className='container'>
 
-                <LeftMenu></LeftMenu>
+                <LeftMenu actualpage='/adicionar-exames'></LeftMenu>
 
                 <div className='main authPage'>
 
-                    <header className='topbar'>
-                        <h1 className='title displayMobile'>Smart Health</h1>
-                        <MobileMenu></MobileMenu>
-                        <DateComponent date={Date.now()}></DateComponent>
-                    </header>
+                    <TopBar actualpage='/adicionar-exames'></TopBar>
 
                     <main className='content' style={{ justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column', marginBottom: '25px' }}>
                         <div className={styles.addexam}>

@@ -1,69 +1,44 @@
-import LeftMenu from '@/components/leftMenu'
-import MobileMenu from '@/components/mobileMenu'
+import LeftMenu from '@/components/LeftMenuComponent'
 import Head from 'next/head'
 import styles from '@/styles/Profile.module.css'
-import DateComponent from '@/components/date'
 import { useEffect, useState } from 'react'
-import SnackBar from '@/components/SnackBar'
-import Loading from '@/components/loading'
+import SnackBar from '@/components/SnackBarComponent'
+import Loading from '@/components/LoadingComponent'
 import axios from 'axios'
-
-let first = true;
+import TopBar from '@/components/TopBar'
+import onEnter from '@/functions/onEnter'
+import tryLogin from '@/functions/tryLogin'
 
 export default function Profile() {
   const [errorMessages, setErrorMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [typeOfMessage, setTypeOfMessage] = useState('warning');
+
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
-  const [idade, setIdade] = useState(0);
+  const [dataDeNascimento, setDataDeNascimento] = useState('');
   const [sexo, setSexo] = useState('');
+  const [userInfoRef, setUserInfoRef] = useState({});
 
   useEffect(() => {
-    if (first) {
-      async function tryLogin() {
-        try {
-          if (!(sessionStorage.getItem("token") && sessionStorage.getItem("user"))) {
-            window.location.replace("/login");
-          }
-          const response = await axios.get(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem("user"), { headers: { Authorization: sessionStorage.getItem("token") } });
+    tryLogin(setIsLoading, axios, false).then((response) => {
+      setNome(response.nome);
+      setEmail(response.email);
+      setDataDeNascimento(response.dataDeNascimento);
+      setSexo(response.sexo);
 
-          setNome(response.data.nome);
-          setEmail(response.data.email);
-          setIdade(response.data.idade);
-          setSexo(response.data.sexo);
+      setUserInfoRef(response);
+    });
+  }, []);
 
-          setTimeout(() => { document.querySelector("#sexo2").value = response.data.sexo });
-        }
-        catch {
-          window.location.replace("/login");
-        }
-      }
-      tryLogin();
-      first = false;
-    }
-  });
-
-  function onEnter(e) {
-    if (e.key != 'Enter') return;
-
-    if (!e.target.nextElementSibling) {
-      return;
-    }
-
-    e.target.nextElementSibling.focus();
-  }
-
-  async function changePassword(e) {
-    if ((e.key && e.key != 'Enter') || isLoading) return;
-
+  async function changePassword() {
     setErrorMessages([]);
 
     setIsLoading(true);
 
     try {
       await axios.patch(process.env.NEXT_PUBLIC_API_URL + '/usuarios/' + sessionStorage.getItem("user") + '/redefinir-senha',
-        { senhaAntiga: document.querySelector("#oldPassword").value, NovaSenha: document.querySelector("#newPassword").value },
+        { senhaAntiga: document.querySelector("#oldPassword").value, novaSenha: document.querySelector("#newPassword").value },
         { headers: { Authorization: sessionStorage.getItem("token") } });
 
       setTypeOfMessage('success');
@@ -86,18 +61,16 @@ export default function Profile() {
     }
   }
 
-  async function patch(e) {
-    if ((e.key && e.key != 'Enter') || isLoading) return;
-
+  async function patch() {
     setErrorMessages([]);
 
     setIsLoading(true);
 
     let newUser = {
-      nome: document.querySelector("#name").value != nome ? document.querySelector("#name").value : null,
-      idade: Number(document.querySelector("#age2").value) != idade ? Number(document.querySelector("#age2").value) : null,
-      sexo: document.querySelector("#sexo2").value.toLowerCase() != sexo ? document.querySelector("#sexo2").value : null,
-      email: document.querySelector("#email").value != email ? document.querySelector("#email").value : null,
+      nome: nome != userInfoRef.nome ? nome : null,
+      dataDeNascimento: dataDeNascimento != userInfoRef.dataDeNascimento ? (dataDeNascimento + "T00:00:00.000Z") : null,
+      sexo: sexo != userInfoRef.sexo ? sexo : null,
+      email: email != userInfoRef.email ? email : null,
     }
 
     newUser = Object.fromEntries(Object.entries(newUser).filter(([_, v]) => v != null));
@@ -122,7 +95,7 @@ export default function Profile() {
       setTypeOfMessage('success');
       setErrorMessages([<li key={0}>Alteração feita com sucesso!</li>]);
 
-      setTimeout(window.location.replace("/profile"), 3000);
+      setTimeout(window.location.replace("/perfil"), 3000);
     }
     catch (error) {
       setTypeOfMessage('warning');
@@ -163,7 +136,7 @@ export default function Profile() {
       setTypeOfMessage('success');
       setErrorMessages([<li key={0}>Conta deletada com sucesso!</li>]);
 
-      setTimeout(window.location.replace("/exit"), 3000);
+      setTimeout(window.location.replace("/sair"), 3000);
     }
     catch (error) {
       setTypeOfMessage('warning');
@@ -210,74 +183,73 @@ export default function Profile() {
 
       <div className='container'>
 
-        <LeftMenu></LeftMenu>
+        <LeftMenu actualpage='/perfil'></LeftMenu>
 
         <div className='main authPage'>
 
-          <header className='topbar'>
-            <h1 className='title displayMobile'>Smart Health</h1>
-            <MobileMenu></MobileMenu>
-            <DateComponent date={Date.now()}></DateComponent>
-          </header>
+          <TopBar actualpage='/perfil'></TopBar>
 
-          <main className='content' style={{ justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column', marginBottom: '25px' }}>
+          <main className='content' style={{ flexDirection: 'column', marginBottom: '25px' }}>
             <div className={styles.profile}>
               <h2 className={'subtitle'}>
                 Meu Perfil
               </h2>
 
-              <h3 className={styles.userInfos} id='userName'>{nome || "Nome Sobrenome"}</h3>
-              <p className={styles.userInfos} id='userEmail'>{email || "email@mail.com"}</p>
-              <div className={styles.userInfos}>
-                <div>
-                  <label><input className={styles.age} readOnly defaultValue={idade || 0} type='number' id='age'></input> anos</label>
-                  <input readOnly defaultValue={(sexo ? sexo[0].toUpperCase() + sexo.slice(1) : '') || "Sexo"} type='text' id='sexo'></input>
+              <div className={styles.form}>
+                <h3 className={styles.userInfos} id='userName'>{userInfoRef.nome || "Nome Sobrenome"}</h3>
+                <p className={styles.userInfos} id='userEmail'>{userInfoRef.email || "email@mail.com"}</p>
+                <p className={styles.userInfos2}>
+                  {(new Date().getFullYear() - new Date(dataDeNascimento).getFullYear()) || 0} anos, {' ' + (userInfoRef.sexo ? userInfoRef.sexo[0].toUpperCase() + userInfoRef.sexo.slice(1) : "Sexo")}.
+                </p>
+
+                <hr className={styles.hr}></hr>
+
+                <div className={styles.userInfos}>
+                  <h2 className={'subtitle'}>
+                    Editar informações
+                  </h2>
+                  <div className={styles.changePassword}>
+                    <label><strong>Nome:</strong> <input className={styles.edit} id='name' onKeyDown={e => onEnter(e, patch)} onChange={(e) => setNome(e.target.value)} placeholder='Nome Sobrenome' type='text' value={nome}></input></label>
+                    <label><strong>Email:</strong> <input className={styles.edit} id='email' onKeyDown={e => onEnter(e, patch)} onChange={(e) => setEmail(e.target.value)} placeholder='email@mail.com' type='email' value={email}></input></label>
+                    <label>
+                      <strong>Sexo:</strong>
+                      &nbsp;
+                      <select value={sexo} onKeyDown={e => onEnter(e, patch)} onChange={(e) => setSexo(e.target.value)} id='sexo2'>
+                        <option value=''>Selecione o sexo</option>
+                        <option value='masculino'>Masculino</option>
+                        <option value='feminino'>Feminino</option>
+                      </select>
+                    </label>
+                    <label><strong>Data de Nascimento:</strong> <input className={styles.edit} id='age2' onKeyDown={e => onEnter(e, patch)} onChange={(e) => setDataDeNascimento(e.target.value)} placeholder='Data de Nascimento' type='date' value={dataDeNascimento.split("T")[0]}></input></label>
+                  </div>
                 </div>
-              </div>
+                <button style={{ marginBottom: '30px' }} disabled={isLoading} onClick={patch} className='ajuda'>
+                  Alterar os dados
+                </button>
 
-              <hr className={styles.hr}></hr>
+                <hr className={styles.hr}></hr>
 
-              <div className={styles.userInfos}>
-                <h2 className={'subtitle'}>
-                  Editar informações
-                </h2>
-                <div className={styles.changePassword}>
-                  <input className={styles.edit} id='name' onKeyDown={onEnter} placeholder='Nome' type='text' defaultValue={nome || "Nome Sobrenome"}></input>
-                  <input className={styles.edit} id='email' onKeyDown={onEnter} placeholder='Email' type='email' defaultValue={email || "email@mail.com"}></input>
-                  <select onKeyDown={onEnter} id='sexo2'>
-                    <option value=''>Selecione o sexo</option>
-                    <option value='masculino'>Masculino</option>
-                    <option value='feminino'>Feminino</option>
-                  </select>
-                  <input className={styles.edit} id='age2' onKeyDown={patch} placeholder='Idade' type='number' defaultValue={idade || 0}></input>
+                <div className={styles.userInfos}>
+                  <h2 className={'subtitle'}>
+                    Trocar senha
+                  </h2>
+                  <div className={styles.changePassword}>
+                    <label><input className={styles.edit} id='oldPassword' onKeyDown={e => onEnter(e, changePassword)} placeholder='Senha atual' type='password'></input></label>
+                    <label><input className={styles.edit} id='newPassword' onKeyDown={e => onEnter(e, changePassword)} placeholder='Nova senha' type='password'></input></label>
+                  </div>
                 </div>
-              </div>
-              <button style={{ marginBottom: '30px' }} disabled={isLoading} onClick={patch} className='ajuda'>
-                Alterar os dados
-              </button>
-
-              <hr className={styles.hr}></hr>
-
-              <div className={styles.userInfos}>
-                <h2 className={'subtitle'}>
+                <button style={{ marginBottom: '30px' }} disabled={isLoading} onClick={changePassword} className='ajuda'>
                   Trocar senha
-                </h2>
-                <div className={styles.changePassword}>
-                  <input className={styles.edit} id='oldPassword' onKeyDown={onEnter} placeholder='Senha atual' type='password'></input>
-                  <input className={styles.edit} id='newPassword' onKeyDown={changePassword} placeholder='Nova senha' type='password'></input>
+                </button>
+
+                <hr className={styles.hr}></hr>
+
+                <div className={styles.userInfos}>
                 </div>
+                <button style={{ marginBottom: '30px' }} disabled={isLoading} onClick={confirmDelete} className='ajuda delete'>
+                  Deletar conta
+                </button>
               </div>
-              <button style={{ marginBottom: '30px' }} disabled={isLoading} onClick={changePassword} className='ajuda'>
-                Trocar senha
-              </button>
-
-              <hr className={styles.hr}></hr>
-
-              <div className={styles.userInfos}>
-              </div>
-              <button style={{ marginBottom: '30px' }} disabled={isLoading} onClick={confirmDelete} className='ajuda delete'>
-                Deletar conta
-              </button>
 
             </div>
           </main>
