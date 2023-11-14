@@ -126,10 +126,10 @@ export default function AddMeta() {
                                                 Data alvo: <input id="data" type='date' onKeyDown={e => onEnter(e, postMeta)} onChange={(e) => setData(e.target.value)}></input>
                                             </label>
                                             <label>
-                                                Massa magra almejada: <input id="mmagra" type="number" placeholder='Digite a massa magra em Kg' onKeyDown={e => onEnter(e, postMeta)} onChange={(e) => setMmagra(e.target.value)}></input>
+                                                Massa magra almejada: <input id="mmagra" type="number" placeholder='Digite a massa magra em Kg' onKeyDown={e => onEnter(e, postMeta)} onChange={(e) => setMmagra(Number(e.target.value))}></input>
                                             </label>
                                             <label>
-                                                Gordura Corporal almejado: <input id='gcorporal' type="number" placeholder='Digite a gordura corporal em percentual' onKeyDown={e => onEnter(e, postMeta)} onChange={(e) => setGcorporal(e.target.value)}></input>
+                                                Gordura Corporal almejado: <input id='gcorporal' type="number" placeholder='Digite a gordura corporal em percentual' onKeyDown={e => onEnter(e, postMeta)} onChange={(e) => setGcorporal(Number(e.target.value))}></input>
                                             </label>
                                         </div>
                                         <button onClick={postMeta} className='ajuda'>Criar Meta</button>
