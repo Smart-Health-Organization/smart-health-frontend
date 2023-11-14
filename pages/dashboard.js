@@ -202,20 +202,21 @@ function calcIMC(altura, peso) {
     let imc = peso / (altura * altura);
     let classificacao = 'Resultado aqui!';
     let className = styles.alert;
+    imc = imc.toFixed(2);
 
     if (imc < 18.5) {
         classificacao = 'Abaixo do peso';
         className = styles.alertOrange;
-    } else if (imc >= 18.5 && imc <= 24.9) {
+    } else if (imc >= 18.5 && imc < 25) {
         classificacao = 'Peso normal';
         className = styles.alertGreen;
-    } else if (imc >= 25 && imc <= 29.9) {
+    } else if (imc >= 25 && imc < 30) {
         classificacao = 'Sobrepeso';
         className = styles.alertOrange;
-    } else if (imc >= 30 && imc <= 34.9) {
+    } else if (imc >= 30 && imc < 35) {
         classificacao = 'Obesidade grau 1';
         className = styles.alertOrange;
-    } else if (imc >= 35 && imc <= 39.9) {
+    } else if (imc >= 35 && imc < 40) {
         classificacao = 'Obesidade grau 2';
         className = styles.alertOrange;
     } else if (imc >= 40) {
@@ -224,7 +225,7 @@ function calcIMC(altura, peso) {
     }
 
     return {
-        valor: imc.toFixed(2),
+        valor: imc,
         classificacao,
         className
     }
